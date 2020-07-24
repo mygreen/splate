@@ -28,7 +28,7 @@ public class ElseNode extends ContainerNode {
     }
 
     @Override
-    public void accept(ProcessContext ctx) {
+    public void accept(final ProcessContext ctx) {
         super.accept(ctx);
         ctx.setEnabled(true);
     }

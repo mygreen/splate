@@ -36,12 +36,12 @@ public class SqlNode extends AbstractNode {
      * SQLを指定して {@link SqlNode} を作成します。
      * @param sql SQL
      */
-    public SqlNode(String sql) {
+    public SqlNode(final String sql) {
         this.sql = sql;
     }
 
     @Override
-    public void accept(ProcessContext ctx) {
+    public void accept(final ProcessContext ctx) {
         ctx.addSql(sql);
     }
 

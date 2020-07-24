@@ -69,6 +69,11 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
             return typeMap.get(requiredType);
         }
 
+        // 列挙型の場合
+        if(requiredType.isEnum()) {
+            return typeMap.get(Enum.class);
+        }
+
         return null;
 
     }

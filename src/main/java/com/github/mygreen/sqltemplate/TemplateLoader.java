@@ -85,7 +85,7 @@ public class TemplateLoader {
      * @param suffixName リロースの接尾語
      * @return 変換したパス
      */
-    private String convertPathWithSuffixed(final String location, final String suffixName) {
+    protected String convertPathWithSuffixed(final String location, final String suffixName) {
 
         final StringBuilder sb = new StringBuilder(location.length());
 

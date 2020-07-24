@@ -2,6 +2,7 @@ package com.github.mygreen.sqltemplate;
 
 import java.util.Optional;
 
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -11,7 +12,6 @@ import com.github.mygreen.sqltemplate.parser.SqlParser;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -20,15 +20,7 @@ import lombok.Setter;
  * @author T.TSUCHIE
  *
  */
-@RequiredArgsConstructor
 public class SqlTemplateEngine {
-
-    /**
-     * テンプレートファイルなどのリソースをロードする処理。
-     * 通常はSpringのDIコンテナから取得します。
-     */
-    @Getter
-    private final ResourceLoader resourceLoader;
 
     /**
      * SQLテンプレートファイルの文字コード名
@@ -44,6 +36,13 @@ public class SqlTemplateEngine {
     @Getter
     @Setter
     private String suffixName;
+
+    /**
+     * テンプレートファイルなどのリソースをロードする処理。
+     */
+    @Getter
+    @Setter
+    private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     /**
      * SQLテンプレートファイルの読み込む処理。

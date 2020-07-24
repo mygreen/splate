@@ -7,6 +7,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 
+/**
+ * SQLテンプレートのファイルを読み込む処理です。
+ * <p>{@literal suffixName} が指定されている場合、接尾語がついているリソースを優先して読み込みます。</p>
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
 public class TemplateLoader {
 
     /**
@@ -39,16 +47,16 @@ public class TemplateLoader {
             final ResourceLoader resourceLoader, final String encoding, final Optional<String> suffixName) {
 
         if(suffixName.isPresent()) {
-            // 方言付きパスの読み込み
-            String dialectPath = convertLocationWithDialect(location, suffixName.get());
+            // 接尾語付きパスの読み込み
+            String suffixedPath = convertPathWithSuffixed(location, suffixName.get());
             try {
-                Resource resource = resourceLoader.getResource(dialectPath);
+                Resource resource = resourceLoader.getResource(suffixedPath);
                 if(resource.isReadable()) {
                     return SqlUtils.readStream(resource.getInputStream(), encoding);
                 }
             } catch(IOException e) {
                 // 読み込めない場合
-                throw new TwoWaySqlException(String.format("Fail load file : %s", dialectPath), e);
+                throw new TwoWaySqlException(String.format("Fail load file : %s", suffixedPath), e);
 
             }
         }
@@ -72,12 +80,12 @@ public class TemplateLoader {
     }
 
     /**
-     * SQLのパスを方言名付きのSQLに変換する。
+     * SQLのパスを接尾語付きのパスに変換する。
      * @param location 変換対象のパス
      * @param suffixName リロースの接尾語
      * @return 変換したパス
      */
-    private String convertLocationWithDialect(final String location, final String suffixName) {
+    private String convertPathWithSuffixed(final String location, final String suffixName) {
 
         final StringBuilder sb = new StringBuilder(location.length());
 

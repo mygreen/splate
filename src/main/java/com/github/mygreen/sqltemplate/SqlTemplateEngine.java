@@ -46,7 +46,7 @@ public class SqlTemplateEngine {
     private String suffixName;
 
     /**
-     * SQLテンプレートファイルの読み込み処理。
+     * SQLテンプレートファイルの読み込む処理。
      */
     @Getter
     @Setter

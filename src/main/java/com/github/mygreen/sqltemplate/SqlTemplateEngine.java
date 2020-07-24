@@ -52,6 +52,13 @@ public class SqlTemplateEngine {
     private TemplateLoader templateLoader = new TemplateLoader();
 
     /**
+     * EL式のパーサ
+     */
+    @Getter
+    @Setter
+    private SpelExpressionParser expressionParser = new SpelExpressionParser();
+
+    /**
      * SQLファイルのリソースパスを指定して、SQLテンプレートを取得します。
      * <p>SQLファイルのリソースは、Springの {@link ResourceLoader} 経由で取得するため、
      *  接頭語を付けることで複数のリソースを参照できます。
@@ -113,8 +120,7 @@ public class SqlTemplateEngine {
      */
     protected SqlParser createSqlParser(final String sql) {
 
-        final SqlParser sqlParser = new SqlParser(sql, new SpelExpressionParser());
-
+        final SqlParser sqlParser = new SqlParser(sql, expressionParser);
         return sqlParser;
     }
 

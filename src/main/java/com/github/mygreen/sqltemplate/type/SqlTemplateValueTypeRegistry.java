@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 
 /**
- * {@link SqlTemplateValueType}
+ * {@link SqlTemplateValueType}の管理クラス。
  *
  *
  * @author T.TSUCHIE
@@ -36,7 +36,7 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
     public SqlTemplateValueTypeRegistry clone() {
         SqlTemplateValueTypeRegistry copy = new SqlTemplateValueTypeRegistry();
         copy.typeMap.putAll(this.typeMap);
-        copy.pathMap.putAll(pathMap);
+        copy.pathMap.putAll(this.pathMap);
 
         return copy;
     }

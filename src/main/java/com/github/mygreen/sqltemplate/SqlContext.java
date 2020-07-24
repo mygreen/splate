@@ -1,7 +1,9 @@
 package com.github.mygreen.sqltemplate;
 
+import java.util.Optional;
+
 import org.springframework.beans.PropertyAccessor;
-import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -22,6 +24,12 @@ public abstract class SqlContext {
      */
     @Getter
     private final SqlTemplateValueTypeRegistry valueTypeRestRegistry;
+
+    /**
+     * EL式を評価する際の{@link StandardEvaluationContext} を作成する際のコールバック処理。
+     */
+    @Getter
+    private Optional<EvaluationContextCallback> evaluationContextCallback = Optional.empty();
 
     public SqlContext() {
         this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry();
@@ -60,6 +68,14 @@ public abstract class SqlContext {
     }
 
     /**
+     * EL式を評価する際の{@link StandardEvaluationContext} を作成する際のコールバック処理。
+     * @param callback コールバック処理
+     */
+    public void setEvaluationContextCallback(final EvaluationContextCallback callback) {
+        this.evaluationContextCallback = Optional.ofNullable(callback);
+    }
+
+    /**
      * SQLテンプレートに渡す変数のアクセッサを作成します。
      * @return SQLテンプレートに渡す変数のアクセッサ。
      */
@@ -69,6 +85,8 @@ public abstract class SqlContext {
      * EL式を評価するときのコンテキストを作成します。
      * @return EL式を評価するときのコンテキスト。
      */
-    public abstract EvaluationContext createEvaluationContext();
+    public abstract StandardEvaluationContext createEvaluationContext();
+
+
 
 }

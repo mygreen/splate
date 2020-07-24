@@ -2,7 +2,6 @@ package com.github.mygreen.sqltemplate;
 
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.beans.PropertyAccessor;
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -20,12 +19,15 @@ import lombok.NonNull;
  */
 public class BeanPropertySqlContext extends SqlContext {
 
+    /**
+     * JavaBeanのインスタンス。
+     */
     @Getter
     private final Object value;
 
     /**
-     *
-     * @param object JavaBeanのインスタンス
+     * JavaBeanを指定するコンストラクタ。
+     * @param object SQLテンプレート中のパラメータとして渡すJavaBeanのインスタンス
      */
     public BeanPropertySqlContext(final @NonNull Object object) {
         super();
@@ -47,8 +49,8 @@ public class BeanPropertySqlContext extends SqlContext {
     }
 
     @Override
-    public EvaluationContext createEvaluationContext() {
-        StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+    public StandardEvaluationContext createEvaluationContext() {
+        final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.setRootObject(value);
         return evaluationContext;
     }

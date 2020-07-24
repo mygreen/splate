@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.context.expression.MapAccessor;
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -24,13 +23,16 @@ public class MapSqlContext extends SqlContext {
 
     private Map<String, Object> values = new HashMap<String, Object>();
 
+    /**
+     * コンストラクタ。
+     */
     public MapSqlContext() {
         super();
     }
 
     /**
-     *
-     * @param variables SQLテンプレート中で使用可能な変数
+     * マップを指定するコンストラクタ。
+     * @param variables SQLテンプレート中のパラメータとして渡すマップ。
      */
     public MapSqlContext(@NonNull Map<String, Object> variables) {
         super();
@@ -61,7 +63,7 @@ public class MapSqlContext extends SqlContext {
     }
 
     @Override
-    public EvaluationContext createEvaluationContext() {
+    public StandardEvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.addPropertyAccessor(new MapAccessor());
         evaluationContext.setRootObject(values);

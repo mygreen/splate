@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.SqlContext;
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
@@ -152,7 +153,9 @@ public class ProcessContext {
      * @return EL式で指定された時の式を評価するためのコンテキスト
      */
     public EvaluationContext getEvaluationContext() {
-        return sqlContext.createEvaluationContext();
+        final StandardEvaluationContext evaluationContext = sqlContext.createEvaluationContext();
+        sqlContext.getEvaluationContextCallback().ifPresent(c -> c.call(evaluationContext));
+        return evaluationContext;
     }
 
     /**

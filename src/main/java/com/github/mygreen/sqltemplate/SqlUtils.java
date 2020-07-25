@@ -81,6 +81,7 @@ public class SqlUtils {
      * @param in リソース
      * @param encoding エンコーディング
      * @return 読み込んだテキスト
+     * @throws IOException リソースの読み込みに失敗した場合にスローされます。
      */
     public static String readStream(final InputStream in, final String encoding) throws IOException {
 
@@ -100,7 +101,7 @@ public class SqlUtils {
     /**
      * 文字列のメッセージダイジェストを作成します。
      * @param text 計算対象の文字列
-     * @param algorthm メッセージダイジェストのアルゴリズム名
+     * @param algorithm メッセージダイジェストのアルゴリズム名
      * @return メッセージダイジェスト
      */
     public static String getMessageDigest(final String text, final String algorithm) {

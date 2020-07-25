@@ -327,8 +327,8 @@ public class SqlParser {
      * @param comment コメント
      * @return {@literal BEGIN} コメントのとき {@literal true} を返します。
      */
-    protected static boolean isBeginComment(String content) {
-        return content != null && "BEGIN".equals(content);
+    protected static boolean isBeginComment(String comment) {
+        return comment != null && "BEGIN".equals(comment);
     }
 
     /**
@@ -337,8 +337,8 @@ public class SqlParser {
      * @param comment コメント
      * @return {@literal END} コメントのとき {@literal true} を返します。
      */
-    protected static boolean isEndComment(String content) {
-        return content != null && "END".equals(content);
+    protected static boolean isEndComment(String comment) {
+        return comment != null && "END".equals(comment);
     }
 
     /**
@@ -353,7 +353,7 @@ public class SqlParser {
      * @param comment コメント
      * @return Oracle のヒントコメントのとき {@literal true} を返します。
      */
-    protected static boolean isHintComment(String content) {
-        return content.startsWith("+");
+    protected static boolean isHintComment(String comment) {
+        return comment.startsWith("+");
     }
 }

@@ -104,7 +104,7 @@ public class ProcessContext {
     /**
      * {@code SQL} を追加します。
      *
-     * @parm sql SQL
+     * @param sql SQL
      */
     public void addSql(String sql) {
         sqlBuf.append(sql);
@@ -114,8 +114,7 @@ public class ProcessContext {
      * {@code SQL} とバインド変数を追加します。
      * @param sql SQL
      * @param bindValue バインドする変数の値
-     * @param bindName バインドする変数の名称
-     * @param valueType バインドする変数のタイプに対応する {@value ValueType}
+     * @param valueType バインドする変数のタイプに対応する {@link SqlTemplateValueType}
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void addSql(String sql, Object bindValue, SqlTemplateValueType valueType) {

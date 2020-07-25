@@ -106,7 +106,7 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
      * {@link SqlTemplateValueType} を登録します。
      * @param <T> 関連付ける型
      * @param type 関連付けるクラスタイプ
-     * @param valueType {@link ValueType}の実装
+     * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void register(@NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
         this.typeMap.put(type, valueType);
@@ -119,7 +119,7 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
      * @param <T> 関連付ける型
      * @param propertyPath プロパティパス／式
      * @param type 関連付けるクラスタイプ
-     * @param valueType {@link TypeValue}の実装
+     * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void register(@NonNull String propertyPath, @NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
         this.pathMap.put(propertyPath, new ValueTypeHolder(type, valueType));

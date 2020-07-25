@@ -12,7 +12,6 @@ public interface SqlTemplateValueType<T> {
     /**
      * SQLのパラメータ変数として値を取得します。
      * <p>JDBCが対応していないタイプの場合は、対応している値に変換します。</p>
-     * <p>{@link SqlParameterValue} として返すことで、特殊な値を対応することができます。</p>
      *
      * @param value 変換する値
      * @return SQLのパラメータ変数。

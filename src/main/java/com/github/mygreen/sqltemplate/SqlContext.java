@@ -47,7 +47,7 @@ public abstract class SqlContext {
      * {@link SqlTemplateValueType} を登録します。
      * @param <T> 関連付ける型
      * @param type 関連付けるクラスタイプ
-     * @param valueType {@link ValueType}の実装
+     * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void registerValueType(@NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
         valueTypeRestRegistry.register(type, valueType);
@@ -60,7 +60,7 @@ public abstract class SqlContext {
      * @param <T> 関連付ける型
      * @param propertyPath プロパティパス／式
      * @param type 関連付けるクラスタイプ
-     * @param valueType {@link TypeValue}の実装
+     * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void registerValueType(@NonNull String propertyPath, @NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
         valueTypeRestRegistry.register(propertyPath, type, valueType);

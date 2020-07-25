@@ -18,7 +18,7 @@ public interface SqlTemplateValueType<T> {
      * @return SQLのパラメータ変数。
      * @throws SqlTypeConversionException SQLで扱う型（JDBCの型）の変換にした場合にスローされます。
      */
-    Object getSqlValue(T value) throws SqlTypeConversionException;
+    Object getBindVariableValue(T value) throws SqlTypeConversionException;
 
     /**
      * SQLに直接埋め込む値として文字列に変換します。
@@ -27,7 +27,7 @@ public interface SqlTemplateValueType<T> {
      * @return 文字列に変換した値
      * @throws TextConversionException 値を文字列への変換に失敗したときにストローされます。
      */
-    default String getAsText(final T value) throws TextConversionException {
+    default String getEmbeddedValue(final T value) throws TextConversionException {
         if(value == null) {
             return null;
         }

@@ -56,7 +56,7 @@ public class EmbeddedValueNode extends AbstractNode {
             Class<?> clazz = accessor.getPropertyType(expression);
             SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
 
-            final String sql = valueType != null ? valueType.getAsText(value) : value.toString();
+            final String sql = valueType != null ? valueType.getEmbeddedValue(value) : value.toString();
             if (sql.indexOf(';') >= 0) {
                 throw new TwoWaySqlException("semicolon is not allowed.");
             }

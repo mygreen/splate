@@ -123,7 +123,7 @@ public class ProcessContext {
         sqlBuf.append(sql);
 
         if(valueType != null) {
-            bindParams.add(valueType.getSqlValue(bindValue));
+            bindParams.add(valueType.getBindVariableValue(bindValue));
         } else {
             bindParams.add(bindValue);
         }

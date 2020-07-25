@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.lang.Nullable;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -45,36 +47,58 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
      * プロパティパスに対応した値の変換処理を取得します。
      * @param requiredType プロパティのクラスタイプ。
      * @param propertyPath プロパティのパス。
-     * @return 対応する変換処理の実装を返します。見つからない場合は {@literal null} を返しまsう。
+     * @return 対応する変換処理の実装を返します。見つからない場合は {@literal null} を返します。
      */
-    public SqlTemplateValueType<?> findValueType(@NonNull Class<?> requiredType, String propertyPath) {
+    @Nullable
+    public SqlTemplateValueType<?> findValueType(@Nullable Class<?> requiredType, @Nullable String propertyPath) {
 
-        // 完全なパスで比較
-        if(pathMap.containsKey(propertyPath)) {
-            return pathMap.get(propertyPath).get(requiredType);
-        }
-
-        // インデックスを除去した形式で比較
-        final List<String> strippedPaths = new ArrayList<>();
-        addStrippedPropertyPaths(strippedPaths, "", propertyPath);
-        for(String strippedPath : strippedPaths) {
-            SqlTemplateValueType<?> valueType = pathMap.get(strippedPath).get(requiredType);
+        if(propertyPath != null) {
+            // 完全なパスで比較
+            SqlTemplateValueType<?> valueType = getValueTypeByPropertyPath(propertyPath, requiredType);
             if(valueType != null) {
                 return valueType;
             }
+
+            // インデックスを除去した形式で比較
+            final List<String> strippedPaths = new ArrayList<>();
+            addStrippedPropertyPaths(strippedPaths, "", propertyPath);
+            for(String strippedPath : strippedPaths) {
+                valueType = getValueTypeByPropertyPath(strippedPath, requiredType);
+                if(valueType != null) {
+                    return valueType;
+                }
+            }
+
         }
 
-        // 見つからない場合は、クラスタイプで比較
-        if(typeMap.containsKey(requiredType)) {
-            return typeMap.get(requiredType);
-        }
+        if(requiredType != null) {
+            // 見つからない場合は、クラスタイプで比較
+            if(typeMap.containsKey(requiredType)) {
+                return typeMap.get(requiredType);
+            }
 
-        // 列挙型の場合
-        if(requiredType.isEnum()) {
-            return typeMap.get(Enum.class);
+            // 列挙型の場合
+            if(requiredType.isEnum()) {
+                return typeMap.get(Enum.class);
+            }
         }
 
         return null;
+
+    }
+
+    /**
+     * 指定したプロパティパスに完全一致する変換処理を取得します。
+     *
+     * @param propertyPath プロパティパス
+     * @param requiredType プロパティのクラスタイプ
+     * @return 対応する対応する変換処理。見つからない場合は、{@literal null} を返します。
+     */
+    @Nullable
+    private SqlTemplateValueType<?> getValueTypeByPropertyPath(final String propertyPath, final Class<?> requiredType) {
+
+        ValueTypeHolder holder = pathMap.get(propertyPath);
+        return (holder != null ? holder.get(requiredType) : null);
 
     }
 

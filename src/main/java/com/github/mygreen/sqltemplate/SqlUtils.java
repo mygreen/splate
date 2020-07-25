@@ -3,6 +3,8 @@ package com.github.mygreen.sqltemplate;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 2Way-SQL機能の中で提供されるユーティリティクラス。
@@ -95,23 +97,29 @@ public class SqlUtils {
         }
     }
 
-//    /**
-//     * 文字列を分割します。
-//     * 分割対象の文字列が空文字またはnullの場合は、サイズ0の文字列の配列({@code new String[0]})を返します。
-//     *
-//     * @param str 文字列
-//     * @param delim 分割するためのデリミタ
-//     * @return 分割された文字列の配列
-//     */
-//    public static String[] split(final String str, final String delim) {
-//        if (isEmpty(str)) {
-//            return EMPTY_STRINGS;
-//        }
-//        List<String> list = new ArrayList<String>();
-//        StringTokenizer st = new StringTokenizer(str, delim);
-//        while (st.hasMoreElements()) {
-//            list.add((String) st.nextElement());
-//        }
-//        return list.toArray(new String[list.size()]);
-//    }
+    /**
+     * 文字列のメッセージダイジェストを作成します。
+     * @param text 計算対象の文字列
+     * @param algorthm メッセージダイジェストのアルゴリズム名
+     * @return メッセージダイジェスト
+     */
+    public static String getMessageDigest(final String text, final String algorithm) {
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            md.update(text.getBytes());
+
+            byte[] hash = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) {
+                sb.append(String.format("%02x", b));
+            }
+
+            return sb.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException("not such algorithm name " + algorithm, e);
+        }
+
+    }
 }

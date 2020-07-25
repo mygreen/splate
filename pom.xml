@@ -296,6 +296,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.6</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Logger -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

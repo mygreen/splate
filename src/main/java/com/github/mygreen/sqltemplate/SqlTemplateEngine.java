@@ -1,6 +1,8 @@
 package com.github.mygreen.sqltemplate;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -59,6 +61,18 @@ public class SqlTemplateEngine {
     private SpelExpressionParser expressionParser = new SpelExpressionParser();
 
     /**
+     * パースしたSQLテンプレートのキャッシュ。
+     */
+    private Map<Object, SqlTemplate> templateCache = new ConcurrentHashMap<>();
+
+    /**
+     * パースしたんプレートをキャッシュするかどうか。
+     */
+    @Getter
+    @Setter
+    private boolean cached;
+
+    /**
      * SQLファイルのリソースパスを指定して、SQLテンプレートを取得します。
      * <p>SQLファイルのリソースは、Springの {@link ResourceLoader} 経由で取得するため、
      *  接頭語を付けることで複数のリソースを参照できます。
@@ -76,11 +90,17 @@ public class SqlTemplateEngine {
      */
     public SqlTemplate getTemplate(@NonNull final String location) {
 
-        final String sqlText = templateLoader.loadByLocation(location, resourceLoader, encoding, Optional.ofNullable(suffixName));
-        SqlParser parser = createSqlParser(sqlText);
-        Node node = parser.parse();
-        return new SqlTemplate(node);
+        if(cached) {
+            return templateCache.computeIfAbsent(location, k -> parseTemplateByLocation(location));
+        } else {
+            return parseTemplateByLocation(location);
+        }
 
+    }
+
+    private SqlTemplate parseTemplateByLocation(final String location) {
+        final String sqlText = templateLoader.loadByLocation(location, resourceLoader, encoding, Optional.ofNullable(suffixName));
+        return parseTemplateByText(sqlText);
     }
 
     /**
@@ -92,10 +112,17 @@ public class SqlTemplateEngine {
      */
     public SqlTemplate getTemplate(@NonNull final Resource resource) {
 
+        if(cached) {
+            return templateCache.computeIfAbsent(resource.getDescription(), k -> parseTemplateByResource(resource));
+        } else {
+            return parseTemplateByResource(resource);
+        }
+
+    }
+
+    private SqlTemplate parseTemplateByResource(final Resource resource) {
         final String sqlText = templateLoader.loadByResource(resource, encoding);
-        SqlParser parser = createSqlParser(sqlText);
-        Node node = parser.parse();
-        return new SqlTemplate(node);
+        return parseTemplateByText(sqlText);
     }
 
     /**
@@ -107,10 +134,19 @@ public class SqlTemplateEngine {
      */
     public SqlTemplate getTemplateByText(@NonNull final String sql) {
 
+        if(cached) {
+            final String key = SqlUtils.getMessageDigest(sql, "SHA-1");
+            return templateCache.computeIfAbsent(key, k ->  parseTemplateByText(sql));
+        } else {
+            return parseTemplateByText(sql);
+        }
+
+    }
+
+    private SqlTemplate parseTemplateByText(final String sql) {
         SqlParser parser = createSqlParser(sql);
         Node node = parser.parse();
         return new SqlTemplate(node);
-
     }
 
     /**

@@ -2,7 +2,6 @@ package com.github.mygreen.sqltemplate;
 
 import java.util.Optional;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
@@ -74,12 +73,6 @@ public abstract class SqlContext {
     public void setEvaluationContextCallback(final EvaluationContextCallback callback) {
         this.evaluationContextCallback = Optional.ofNullable(callback);
     }
-
-    /**
-     * SQLテンプレートに渡す変数のアクセッサを作成します。
-     * @return SQLテンプレートに渡す変数のアクセッサ。
-     */
-    public abstract PropertyAccessor createPropertyAccessor();
 
     /**
      * EL式を評価するときのコンテキストを作成します。

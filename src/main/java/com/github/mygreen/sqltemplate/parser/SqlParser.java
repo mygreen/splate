@@ -228,13 +228,13 @@ public class SqlParser {
         String expr = tokenizer.getToken();
         String s = tokenizer.skipToken();
         if (s.startsWith("(") && s.endsWith(")")) {
-            peek().addChild(new ParenBindVariableNode(expr));
+            peek().addChild(new ParenBindVariableNode(expr, expressionParser));
         } else if (expr.startsWith("$")) {
-            peek().addChild(new EmbeddedValueNode(expr.substring(1)));
-        } else if (expr.equals("orderBy")) {
-            peek().addChild(new EmbeddedValueNode(expr));
+            peek().addChild(new EmbeddedValueNode(expr.substring(1), expressionParser));
+        } else if (expr.equalsIgnoreCase("orderBy")) {
+            peek().addChild(new EmbeddedValueNode(expr, expressionParser));
         } else {
-            peek().addChild(new BindVariableNode(expr));
+            peek().addChild(new BindVariableNode(expr, expressionParser));
         }
     }
 
@@ -243,7 +243,7 @@ public class SqlParser {
      */
     protected void parseBindVariable() {
         String expr = tokenizer.getToken();
-        peek().addChild(new BindVariableNode(expr));
+        peek().addChild(new BindVariableNode(expr, expressionParser));
     }
 
     /**

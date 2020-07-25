@@ -15,8 +15,10 @@
  */
 package com.github.mygreen.sqltemplate.node;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
 
@@ -37,21 +39,29 @@ public class BindVariableNode extends AbstractNode {
     private final String expression;
 
     /**
-     * Creates a <code>BindVariableNode</code> from a string expression.
-     *
-     * @param expression string expression
+     * パース済みの式
      */
-    public BindVariableNode(final String expression) {
+    private final Expression parsedExpression;
+
+
+    /**
+     * {@link BindVariableNode} を作成します。
+     *
+     * @param expression 式
+     * @param expressionParser 式のパーサ
+     */
+    public BindVariableNode(final String expression, final ExpressionParser expressionParser) {
         this.expression = expression;
+        this.parsedExpression = expressionParser.parseExpression(expression);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public void accept(final ProcessContext ctx) {
 
-        final PropertyAccessor accessor = ctx.getPropertyAccessor();
-        Object value = accessor.getPropertyValue(expression);
-        Class<?> clazz = accessor.getPropertyType(expression);
+        EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        Object value = parsedExpression.getValue(evaluationContext);
+        Class<?> clazz = parsedExpression.getValueType(evaluationContext);
 
         SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
         ctx.addSql("?", value, valueType);
@@ -61,6 +71,7 @@ public class BindVariableNode extends AbstractNode {
     public String toString() {
         return new ToStringCreator(this)
                 .append("expression", expression)
+                .append("parsedExpression", parsedExpression)
                 .append("children", children)
                 .toString();
     }

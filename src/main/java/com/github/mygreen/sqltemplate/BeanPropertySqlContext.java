@@ -1,7 +1,5 @@
 package com.github.mygreen.sqltemplate;
 
-import org.springframework.beans.DirectFieldAccessor;
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -41,11 +39,6 @@ public class BeanPropertySqlContext extends SqlContext {
     public BeanPropertySqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, final @NonNull Object object) {
         super(valueTypeRestRegistry);
         this.value = object;
-    }
-
-    @Override
-    public PropertyAccessor createPropertyAccessor() {
-        return new DirectFieldAccessor(value);
     }
 
     @Override

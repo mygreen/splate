@@ -15,8 +15,10 @@
  */
 package com.github.mygreen.sqltemplate.node;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
 
 import com.github.mygreen.sqltemplate.TwoWaySqlException;
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
@@ -36,24 +38,31 @@ public class EmbeddedValueNode extends AbstractNode {
     private final String expression;
 
     /**
+     * パース済みの式
+     */
+    private final Expression parsedExpression;
+
+    /**
      * Creates a <code>EmbeddedValueNode</code> from a string expression.
      *
-     * @param expression the string expression to create the node from.
+     * @param expression 式
+     * @param expressionParser 式のパーサ
      */
-    public EmbeddedValueNode(String expression) {
+    public EmbeddedValueNode(String expression, final ExpressionParser expressionParser) {
         this.expression = expression;
+        this.parsedExpression = expressionParser.parseExpression(expression);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void accept(final ProcessContext ctx) {
 
-        final PropertyAccessor accessor = ctx.getPropertyAccessor();
-        Object value = accessor.getPropertyValue(expression);
+        EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        Object value = parsedExpression.getValue(evaluationContext);
 
         if (value != null) {
             // SQLファイルに埋め込むために、文字列に変換する。
-            Class<?> clazz = accessor.getPropertyType(expression);
+            Class<?> clazz = parsedExpression.getValueType(evaluationContext);
             SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
 
             final String sql = valueType != null ? valueType.getEmbeddedValue(value) : value.toString();
@@ -68,6 +77,7 @@ public class EmbeddedValueNode extends AbstractNode {
     public String toString() {
         return new ToStringCreator(this)
                 .append("expression", expression)
+                .append("parsedExpression", parsedExpression)
                 .append("children", children)
                 .toString();
     }

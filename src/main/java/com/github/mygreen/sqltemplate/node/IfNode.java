@@ -38,6 +38,9 @@ public class IfNode extends ContainerNode {
     @Getter
     private final String expression;
 
+    /**
+     * パース済みの式
+     */
     private final Expression parsedExpression;
 
     /**

@@ -19,8 +19,10 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
 
@@ -42,19 +44,27 @@ public class ParenBindVariableNode extends AbstractNode {
     private final String expression;
 
     /**
+     * パース済みの式
+     */
+    private final Expression parsedExpression;
+
+    /**
      * {@link ParenBindVariableNode} を作成します。
      *
      * @param expression 式
+     * @param expressionParser 式のパーサ
      */
-    public ParenBindVariableNode(final String expression) {
+    public ParenBindVariableNode(final String expression, final ExpressionParser expressionParser) {
         this.expression = expression;
+        this.parsedExpression = expressionParser.parseExpression(expression);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public void accept(final ProcessContext ctx) {
-        final PropertyAccessor accessor = ctx.getPropertyAccessor();
-        final Object var = accessor.getPropertyValue(expression);
+
+        final EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        final Object var = parsedExpression.getValue(evaluationContext);
         if(var == null) {
             return;
         }
@@ -67,7 +77,8 @@ public class ParenBindVariableNode extends AbstractNode {
             bindArray(ctx, var);
         } else {
             // ただのオブジェクトの場合
-            SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(var.getClass(), expression);
+            Class<?> clazz = parsedExpression.getValueType(evaluationContext);
+            SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
             ctx.addSql("?", var, valueType);
         }
 
@@ -122,6 +133,7 @@ public class ParenBindVariableNode extends AbstractNode {
     public String toString() {
         return new ToStringCreator(this)
                 .append("expression", expression)
+                .append("parsedExpression", parsedExpression)
                 .append("children", children)
                 .toString();
     }

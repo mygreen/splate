@@ -3,7 +3,6 @@ package com.github.mygreen.sqltemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -55,11 +54,6 @@ public class MapSqlContext extends SqlContext {
     public MapSqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map<String, Object> variables) {
         super(valueTypeRestRegistry);
         this.values.putAll(variables);
-    }
-
-    @Override
-    public PropertyAccessor createPropertyAccessor() {
-        return new MapPropertyAccessor(values);
     }
 
     @Override

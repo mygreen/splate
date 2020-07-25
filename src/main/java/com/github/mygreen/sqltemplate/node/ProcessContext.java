@@ -18,7 +18,6 @@ package com.github.mygreen.sqltemplate.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.PropertyAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -138,14 +137,6 @@ public class ProcessContext {
         this.sqlBuf.append(sql);
         this.bindParams.addAll(bindParams);
 
-    }
-
-    /**
-     * プロパティ式で指定された時のアクセッサを取得します。
-     * @return プロパティ式で指定された時のアクセッサ
-     */
-    public PropertyAccessor getPropertyAccessor() {
-        return sqlContext.createPropertyAccessor();
     }
 
     /**

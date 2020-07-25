@@ -2,12 +2,12 @@ package com.github.mygreen.sqltemplate;
 
 import static com.github.mygreen.sqltemplate.SqlUtils.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -22,13 +22,13 @@ import org.springframework.core.io.ResourceLoader;
  */
 public class SqlContextTest {
 
-    private SqlTemplateEngine sqlTemplateEndine;
+    private SqlTemplateEngine templateEndine;
 
     private ResourceLoader resourceLoader;
 
     @BeforeEach
     public void setUp() {
-         this.sqlTemplateEndine = new SqlTemplateEngine();
+         this.templateEndine = new SqlTemplateEngine();
          this.resourceLoader = new DefaultResourceLoader();
     }
 
@@ -38,7 +38,7 @@ public class SqlContextTest {
 
         String path = "classpath:template/employee_select.sql";
 
-        SqlTemplate template = sqlTemplateEndine.getTemplate(path);
+        SqlTemplate template = templateEndine.getTemplate(path);
 
         SelectParam param = SelectParam.builder()
                 .salaryMin(new BigDecimal(1200))
@@ -60,7 +60,7 @@ public class SqlContextTest {
 
         String path = "classpath:template/employee_select.sql";
 
-        SqlTemplate template = sqlTemplateEndine.getTemplate(path);
+        SqlTemplate template = templateEndine.getTemplate(path);
 
         Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200), "salaryMax", new BigDecimal(1800));
 
@@ -73,8 +73,40 @@ public class SqlContextTest {
 
     }
 
+    @Disabled
     @Test
     public void testCallback() {
-        fail("まだ実装されていません");
+
+        String sql = "select * from where name like /*#contains(name)*/'S%'";
+
+        SqlTemplate template = templateEndine.getTemplateByText(sql);
+        SqlContext sqlContext = new MapSqlContext(Map.of("name", "abc"));
+
+        // EL式中のカスタム関数の登録
+        sqlContext.setEvaluationContextCallback(c -> {
+            try {
+                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
+            } catch (NoSuchMethodException | SecurityException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        ProcessResult result = template.process(sqlContext);
+
+        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
+        assertThat(result.getParameters()).containsExactly("%abc%");
+
+    }
+
+    /**
+     * SQLテンプレート中で利用可能なカスタム関数
+     *
+     */
+    static class SqlFunctions {
+
+        public static String contains(String value) {
+            return "%" + value + "%";
+        }
+
     }
 }

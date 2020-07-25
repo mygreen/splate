@@ -51,7 +51,7 @@ public class PrefixSqlNode extends AbstractNode {
     }
 
 
-	@Override
+    @Override
     public void accept(final ProcessContext ctx) {
         if (ctx.isEnabled()) {
             ctx.addSql(prefix);

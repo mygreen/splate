@@ -44,12 +44,12 @@ public class EmbeddedValueNode extends AbstractNode {
         this.expression = expression;
     }
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void accept(final ProcessContext ctx) {
 
-	    final PropertyAccessor accessor = ctx.getPropertyAccessor();
-	    Object value = accessor.getPropertyValue(expression);
+        final PropertyAccessor accessor = ctx.getPropertyAccessor();
+        Object value = accessor.getPropertyValue(expression);
 
         if (value != null) {
             // SQLファイルに埋め込むために、文字列に変換する。

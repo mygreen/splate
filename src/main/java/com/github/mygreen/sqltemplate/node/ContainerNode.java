@@ -27,14 +27,14 @@ public class ContainerNode extends AbstractNode {
     public ContainerNode() {
     }
 
-	@Override
+    @Override
     public void accept(final ProcessContext ctx) {
         for (int i = 0; i < getChildSize(); ++i) {
             getChild(i).accept(ctx);
         }
     }
 
-	@Override
+    @Override
     public String toString() {
         return new ToStringCreator(this)
                 .append("children", children)

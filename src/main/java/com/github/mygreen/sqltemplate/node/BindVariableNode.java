@@ -45,16 +45,16 @@ public class BindVariableNode extends AbstractNode {
         this.expression = expression;
     }
 
-	@SuppressWarnings("rawtypes")
+    @SuppressWarnings("rawtypes")
     @Override
     public void accept(final ProcessContext ctx) {
 
-	    final PropertyAccessor accessor = ctx.getPropertyAccessor();
-	    Object value = accessor.getPropertyValue(expression);
-	    Class<?> clazz = accessor.getPropertyType(expression);
+        final PropertyAccessor accessor = ctx.getPropertyAccessor();
+        Object value = accessor.getPropertyValue(expression);
+        Class<?> clazz = accessor.getPropertyType(expression);
 
-	    SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
-	    ctx.addSql("?", value, valueType);
+        SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
+        ctx.addSql("?", value, valueType);
     }
 
     @Override

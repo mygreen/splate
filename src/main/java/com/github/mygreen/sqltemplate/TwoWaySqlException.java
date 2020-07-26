@@ -4,7 +4,7 @@ import org.springframework.core.NestedRuntimeException;
 
 
 /**
- * 2Way-SQLのパース時の例外。
+ * 2Way-SQL テンプレート処理の例外。
  *
  * @author T.TSUCHIE
  *

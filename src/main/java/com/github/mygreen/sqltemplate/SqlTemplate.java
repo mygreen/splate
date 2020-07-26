@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * SQLテンプレート。
+ * パースしたSQLテンプレート情報を保持します。
  *
  *
  * @author T.TSUCHIE

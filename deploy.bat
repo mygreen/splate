@@ -13,6 +13,6 @@ if NOT "%M2_HOME%" == "" (
 
 set PATH=%PATH%;%JAVA_HOME%\bin;%M2_HOME%\bin;
 
-mvn -Dmaven.test.skip=true deploy source:jar -Dgpg.passphrase=%1
+mvn -Dmaven.test.skip=true source:jar javadoc:jar deploy -Dgpg.passphrase=%1
 
 

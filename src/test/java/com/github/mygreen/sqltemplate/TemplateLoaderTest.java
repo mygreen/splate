@@ -64,6 +64,28 @@ public class TemplateLoaderTest {
         assertThat(actual).isEqualTo("select * from test2 limit /*$limit*/;");
     }
 
+    @DisplayName("接尾語指定 - 拡張子がない場合")
+    @Test
+    public void testLoadByLocation_nosuffix_noExtention() {
+
+        String location = "template/suffix";
+        Optional<String> suffixName = Optional.empty();
+
+        String actual = templateLoader.loadByLocation(location, resourceLoader, "UTF-8", suffixName);
+        assertThat(actual).isEqualTo("/*no_extension*/select * from test limit /*$limit*/;");
+    }
+
+    @DisplayName("接尾語指定 - 拡張子がない場合")
+    @Test
+    public void testLoadByLocation_suffix_noExtention() {
+
+        String location = "template/suffix";
+        Optional<String> suffixName = Optional.of("oracle");
+
+        String actual = templateLoader.loadByLocation(location, resourceLoader, "UTF-8", suffixName);
+        assertThat(actual).isEqualTo("/*no_extension*/select * from (select * from test) where rownum < /*$limit*/;");
+    }
+
     @Test
     public void testLoadByResource() throws Exception {
 

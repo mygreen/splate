@@ -36,6 +36,11 @@ public class SqlTemplateEngineTest {
         // 結果をキャッシュしているので値は同じになる。
         assertThat(template).isEqualTo(template2);
 
+        // キャッシュをクリアした場合
+        sqlTemplateEngine.clearCache();
+        SqlTemplate template3 = sqlTemplateEngine.getTemplate(path);
+        assertThat(template).isNotEqualTo(template3);
+
     }
 
     @Test
@@ -51,6 +56,10 @@ public class SqlTemplateEngineTest {
         // 結果をキャッシュしているので値は同じになる。
         assertThat(template).isEqualTo(template2);
 
+        // キャッシュをクリアした場合
+        sqlTemplateEngine.clearCache();
+        SqlTemplate template3 = sqlTemplateEngine.getTemplate(resource);
+        assertThat(template).isNotEqualTo(template3);
     }
 
     @Test
@@ -66,5 +75,9 @@ public class SqlTemplateEngineTest {
         // 結果をキャッシュしているので値は同じになる。
         assertThat(template).isEqualTo(template2);
 
+        // キャッシュをクリアした場合
+        sqlTemplateEngine.clearCache();
+        SqlTemplate template3 = sqlTemplateEngine.getTemplateByText(sql);
+        assertThat(template).isNotEqualTo(template3);
     }
 }

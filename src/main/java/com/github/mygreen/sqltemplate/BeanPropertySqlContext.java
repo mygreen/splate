@@ -1,5 +1,6 @@
 package com.github.mygreen.sqltemplate;
 
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -42,7 +43,7 @@ public class BeanPropertySqlContext extends SqlContext {
     }
 
     @Override
-    public StandardEvaluationContext createEvaluationContext() {
+    public EvaluationContext createEvaluationContext() {
         final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.setRootObject(value);
         return evaluationContext;

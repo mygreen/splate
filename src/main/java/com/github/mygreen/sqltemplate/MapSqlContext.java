@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.expression.MapAccessor;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
@@ -57,7 +58,7 @@ public class MapSqlContext extends SqlContext {
     }
 
     @Override
-    public StandardEvaluationContext createEvaluationContext() {
+    public EvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.addPropertyAccessor(new MapAccessor());
         evaluationContext.setRootObject(values);

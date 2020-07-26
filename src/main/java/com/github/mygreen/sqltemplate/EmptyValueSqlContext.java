@@ -1,5 +1,6 @@
 package com.github.mygreen.sqltemplate;
 
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 public class EmptyValueSqlContext extends SqlContext {
 
     @Override
-    public StandardEvaluationContext createEvaluationContext() {
+    public EvaluationContext createEvaluationContext() {
         return new StandardEvaluationContext();
     }
 }

@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -73,30 +72,30 @@ public class SqlContextTest {
 
     }
 
-    @Disabled
-    @Test
-    public void testCallback() {
-
-        String sql = "select * from where name like /*#contains(name)*/'S%'";
-
-        SqlTemplate template = templateEndine.getTemplateByText(sql);
-        SqlContext sqlContext = new MapSqlContext(Map.of("name", "abc"));
-
-        // EL式中のカスタム関数の登録
-        sqlContext.setEvaluationContextCallback(c -> {
-            try {
-                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
-            } catch (NoSuchMethodException | SecurityException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        ProcessResult result = template.process(sqlContext);
-
-        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
-        assertThat(result.getParameters()).containsExactly("%abc%");
-
-    }
+//    @Disabled
+//    @Test
+//    public void testCallback() {
+//
+//        String sql = "select * from where name like /*#contains(name)*/'S%'";
+//
+//        SqlTemplate template = templateEndine.getTemplateByText(sql);
+//        SqlContext sqlContext = new MapSqlContext(Map.of("name", "abc"));
+//
+//        // EL式中のカスタム関数の登録
+//        sqlContext.setEvaluationContextCallback(c -> {
+//            try {
+//                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
+//            } catch (NoSuchMethodException | SecurityException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//
+//        ProcessResult result = template.process(sqlContext);
+//
+//        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
+//        assertThat(result.getParameters()).containsExactly("%abc%");
+//
+//    }
 
     /**
      * SQLテンプレート中で利用可能なカスタム関数

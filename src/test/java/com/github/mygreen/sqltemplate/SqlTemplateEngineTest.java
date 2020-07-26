@@ -7,9 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes=TestConfig.class)
-//@ContextConfiguration(locations = "classpath:/SqlTemplateContext.xml")
+/**
+ * {SqlTemplateEngine}のテスタ。
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
 public class SqlTemplateEngineTest {
 
     private SqlTemplateEngine sqlTemplateEngine;

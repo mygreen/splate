@@ -37,6 +37,3 @@ hs_err_pid*
 /.factorypath
 /.project
 
-## deploy
-deploy.bat
-

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SqlTemplate">
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.9</version>
+	</skin>
+	<body>
+		<menu name="使い方について">
+			<item name="基本的な使い方" href="howtouse.html" />
+			<item name="2Way-Sqlとは" href="2waysql.html" />
+			<item name="型変換処理" href="typeconversion.html" />
+			<item name="設定" href="configuration.html" />
+		</menu>
+		<menu ref="reports" />
+	</body>
+</project>

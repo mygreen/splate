@@ -25,7 +25,8 @@ import lombok.Setter;
 public class SqlTemplateEngine {
 
     /**
-     * SQLテンプレートファイルの文字コード名
+     * SQLテンプレートファイルの文字コード名。
+     * デフォルト値は、{@literal UTF-8} です。
      */
     @Getter
     @Setter
@@ -34,6 +35,7 @@ public class SqlTemplateEngine {
     /**
      * SQLテンプレートのファイル名の接尾語。
      * DBの種類によって読み込み対象のファイルを切り替えたい場合に指定します。
+     * デフォルト値は、{@literal null} です。
      */
     @Getter
     @Setter
@@ -41,6 +43,7 @@ public class SqlTemplateEngine {
 
     /**
      * テンプレートファイルなどのリソースをロードする処理。
+     * デフォルト値は、{@link DefaultResourceLoader} のインスタンスです。
      */
     @Getter
     @Setter
@@ -63,10 +66,11 @@ public class SqlTemplateEngine {
     /**
      * パースしたSQLテンプレートのキャッシュ。
      */
-    private Map<Object, SqlTemplate> templateCache = new ConcurrentHashMap<>();
+    private final Map<Object, SqlTemplate> templateCache = new ConcurrentHashMap<>();
 
     /**
      * パースしたんプレートをキャッシュするかどうか。
+     * デフォルトでは {@literal false} でキャッシュしない設定です。
      */
     @Getter
     @Setter
@@ -81,7 +85,7 @@ public class SqlTemplateEngine {
      *  <li>何もつけない場合 - クラスパスから取得します。ex){@literal /sql/hoge.sql} </li>
      *  <li>{@literal classpath:} - クラスパスから取得します。ex){@literal classpath:/sql/hoge.sql} </li>
      *  <li>{@literal file:} - システムファイルから取得します。ex){@literal file:c:/sql/hoge.sql} </li>
-     *  <li>{@literal http/https:} - URLからファイルを取得します。ex){@literal http://localhost:8080/sql/hoge.sql} </li>
+     *  <li>{@literal http:} - URLからファイルを取得します。ex){@literal http://hoge.com/sql/hoge.sql} </li>
      * </ul>
      *
      * @param location SQLファイルのリソースパス。
@@ -158,6 +162,13 @@ public class SqlTemplateEngine {
 
         final SqlParser sqlParser = new SqlParser(sql, expressionParser);
         return sqlParser;
+    }
+
+    /**
+     * 現在キャッシュしている情報をクリアします。
+     */
+    public void clearCache() {
+        this.templateCache.clear();
     }
 
 }

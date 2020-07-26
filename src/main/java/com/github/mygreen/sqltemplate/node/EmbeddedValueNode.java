@@ -67,6 +67,7 @@ public class EmbeddedValueNode extends AbstractNode {
 
             final String sql = valueType != null ? valueType.getEmbeddedValue(value) : value.toString();
             if (sql.indexOf(';') >= 0) {
+                // SQLインジェクションの原因となるセミコロンが含まれる場合は例外をスローする。
                 throw new TwoWaySqlException("semicolon is not allowed.");
             }
             ctx.addSql(sql);

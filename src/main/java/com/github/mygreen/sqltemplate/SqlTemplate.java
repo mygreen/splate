@@ -23,10 +23,10 @@ public class SqlTemplate {
     private final Node node;
 
     /**
-     * SQLテンプレートを実行します。
+     * SQLテンプレートを評価します。
      *
      * @param sqlContext SQLテンプレートに渡すコンテキスト。
-     * @return SQLテンプレートの評価した結果。
+     * @return SQLテンプレートを評価した結果。
      */
     public ProcessResult process(final SqlContext sqlContext) {
 

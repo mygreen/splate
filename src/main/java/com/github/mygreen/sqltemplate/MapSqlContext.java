@@ -74,5 +74,14 @@ public class MapSqlContext extends SqlContext {
         this.values.put(name, value);
     }
 
+    /**
+     * SQLテンプレート中で使用可能な変数を追加します。
+     *
+     * @param variables 変数のマップ
+     */
+    public void setVariables(@NonNull Map<String, Object> variables) {
+        this.values.putAll(variables);
+    }
+
 
 }

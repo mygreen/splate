@@ -1,6 +1,9 @@
-# SqlTemplate
+# splate
 
-本ライブラリは、 **2Way-SQL** 機能のみを [S2JDBC](http://s2container.seasar.org/2.4/ja/s2jdbc.html) から分離し、使いやすくしたたライブラリです。
+![logo](logo.png)
+
+
+splate（エス・プレート）は、 **2Way-SQL** 機能のみを [S2JDBC](http://s2container.seasar.org/2.4/ja/s2jdbc.html) から分離し、使いやすくしたたライブラリです。
 
 このライブラリは、SpringFrameworkに依存しています。理由は以下の通りです。
 
@@ -25,7 +28,7 @@ App dependency. ex) pom.xml
 ```xml
 <dependency>
 	<groupId>com.github.mygreen</groupId>
-	<artifactId>sqltemplate</artifactId>
+	<artifactId>splate</artifactId>
 	<vesion>0.1</version>
 </dependency>
 ```
@@ -81,7 +84,7 @@ App dependency. ex) pom.xml
 ## Documentation
 
 - Project information and manual.
-  - https://mygreen.github.io/sqltemplate/index.html
+  - https://mygreen.github.io/splate/index.html
 - JavaDoc
-  - https://mygreen.github.io/sqltemplate/apidocs/index.html
+  - https://mygreen.github.io/splate/apidocs/index.html
 

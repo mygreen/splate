@@ -3,21 +3,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mygreen</groupId>
-	<artifactId>sqltemplate</artifactId>
-	<name>SqlTemplate</name>
+	<artifactId>splate</artifactId>
+	<name>splate</name>
 	<packaging>jar</packaging>
 	<version>0.1</version>
-	<description><![CDATA[ SqlTemplate is Java Library for 2Way-Sql Template ]]></description>
+	<description><![CDATA[ splate is Java Library for 2Way-SQL template ]]></description>
 
 	<issueManagement>
 		<system>github</system>
-		<url>https://github.com/mygreen/sqltemplate/issues</url>
+		<url>https://github.com/mygreen/splate/issues</url>
 	</issueManagement>
 
 	<scm>
-		<connection>scm:git:ssh://github.com/mygreen/sqltemplate.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/mygreen/sqltemplate.git</developerConnection>
-		<url>https://github.com/mygreen/sqltemplate</url>
+		<connection>scm:git:ssh://github.com/mygreen/splate.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/mygreen/splate.git</developerConnection>
+		<url>https://github.com/mygreen/splate</url>
 	</scm>
 
 	<distributionManagement>
@@ -40,14 +40,14 @@
 
 	<organization>
 		<name>mygreen</name>
-		<url>http://mygreen.github.io/sqltemplate/</url>
+		<url>http://mygreen.github.io/splate/</url>
 	</organization>
 
 	<developers>
 		<developer>
 			<id>mygreen</id>
 			<name>Tatsuo TSUCHIE</name>
-			<url>http://mygreen.github.io/sqltemplate/</url>
+			<url>http://mygreen.github.io/splate/</url>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -60,7 +60,7 @@
 		<spring.version>5.1.6.RELEASE</spring.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.version>1.2.3</logback.version>
-		<jacoco.include.package>com.github.mygreen.sqltemplate.*</jacoco.include.package>
+		<jacoco.include.package>com.github.mygreen.splate.*</jacoco.include.package>
 	</properties>
 
 	<build>

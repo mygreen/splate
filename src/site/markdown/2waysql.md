@@ -1,4 +1,4 @@
-# 2Way-Sqlとは
+# 2Way-SQLとは
 
 2Way-SQLは普通のSQL文をファイルに保存したものです。
 

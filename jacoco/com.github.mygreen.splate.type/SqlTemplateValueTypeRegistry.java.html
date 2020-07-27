@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlTemplateValueTypeRegistry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate.type</a> &gt; <span class="el_source">SqlTemplateValueTypeRegistry.java</span></div><h1>SqlTemplateValueTypeRegistry.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate.type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.lang.Nullable;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+
+/**
+ * {@link SqlTemplateValueType}の管理クラス。
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
+<span class="fc" id="L21">public class SqlTemplateValueTypeRegistry implements Cloneable {</span>
+
+    /**
+     * クラスタイプで関連付けられた{@link SqlTemplateValueType}のマップ
+     */
+<span class="fc" id="L26">    private Map&lt;Class&lt;?&gt;, SqlTemplateValueType&lt;?&gt;&gt; typeMap = new ConcurrentHashMap&lt;&gt;();</span>
+
+    /**
+     * パスで関連づけられた{@link SqlTemplateValueType}のマップ
+     */
+<span class="fc" id="L31">    private Map&lt;String, ValueTypeHolder&gt; pathMap = new ConcurrentHashMap&lt;&gt;();</span>
+
+    /**
+     * 自身のインスタンスのクローンを作成します。
+     * &lt;p&gt;登録されている{@link SqlTemplateValueType}をシャロ―コピーします。&lt;/p&gt;
+     */
+    @Override
+    public SqlTemplateValueTypeRegistry clone() {
+<span class="nc" id="L39">        SqlTemplateValueTypeRegistry copy = new SqlTemplateValueTypeRegistry();</span>
+<span class="nc" id="L40">        copy.typeMap.putAll(this.typeMap);</span>
+<span class="nc" id="L41">        copy.pathMap.putAll(this.pathMap);</span>
+
+<span class="nc" id="L43">        return copy;</span>
+    }
+
+    /**
+     * プロパティパスに対応した値の変換処理を取得します。
+     * @param requiredType プロパティのクラスタイプ。
+     * @param propertyPath プロパティのパス。
+     * @return 対応する変換処理の実装を返します。見つからない場合は {@literal null} を返します。
+     */
+    @Nullable
+    public SqlTemplateValueType&lt;?&gt; findValueType(@Nullable Class&lt;?&gt; requiredType, @Nullable String propertyPath) {
+
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if(propertyPath != null) {</span>
+            // 完全なパスで比較
+<span class="fc" id="L57">            SqlTemplateValueType&lt;?&gt; valueType = getValueTypeByPropertyPath(propertyPath, requiredType);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            if(valueType != null) {</span>
+<span class="fc" id="L59">                return valueType;</span>
+            }
+
+            // インデックスを除去した形式で比較
+<span class="fc" id="L63">            final List&lt;String&gt; strippedPaths = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L64">            addStrippedPropertyPaths(strippedPaths, &quot;&quot;, propertyPath);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            for(String strippedPath : strippedPaths) {</span>
+<span class="fc" id="L66">                valueType = getValueTypeByPropertyPath(strippedPath, requiredType);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">                if(valueType != null) {</span>
+<span class="fc" id="L68">                    return valueType;</span>
+                }
+<span class="fc" id="L70">            }</span>
+
+        }
+
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if(requiredType != null) {</span>
+            // 見つからない場合は、クラスタイプで比較
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if(typeMap.containsKey(requiredType)) {</span>
+<span class="fc" id="L77">                return typeMap.get(requiredType);</span>
+            }
+
+            // 列挙型の場合
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if(requiredType.isEnum()) {</span>
+<span class="fc" id="L82">                return typeMap.get(Enum.class);</span>
+            }
+        }
+
+<span class="fc" id="L86">        return null;</span>
+
+    }
+
+    /**
+     * 指定したプロパティパスに完全一致する変換処理を取得します。
+     *
+     * @param propertyPath プロパティパス
+     * @param requiredType プロパティのクラスタイプ
+     * @return 対応する対応する変換処理。見つからない場合は、{@literal null} を返します。
+     */
+    @Nullable
+    private SqlTemplateValueType&lt;?&gt; getValueTypeByPropertyPath(final String propertyPath, final Class&lt;?&gt; requiredType) {
+
+<span class="fc" id="L100">        ValueTypeHolder holder = pathMap.get(propertyPath);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        return (holder != null ? holder.get(requiredType) : null);</span>
+
+    }
+
+    /**
+     * {@link SqlTemplateValueType} を登録します。
+     * @param &lt;T&gt; 関連付ける型
+     * @param type 関連付けるクラスタイプ
+     * @param valueType {@link SqlTemplateValueType}の実装
+     */
+<span class="pc bpc" id="L111" title="2 of 4 branches missed.">    public &lt;T&gt; void register(@NonNull Class&lt;T&gt; type, @NonNull SqlTemplateValueType&lt;T&gt; valueType) {</span>
+<span class="fc" id="L112">        this.typeMap.put(type, valueType);</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * プロパティのパスを指定して{@link SqlTemplateValueType} を登録します。
+     * &lt;p&gt;SQLテンプレート中の変数（プロパティパス／式）を元に関連付ける再に使用します。
+     *
+     * @param &lt;T&gt; 関連付ける型
+     * @param propertyPath プロパティパス／式
+     * @param type 関連付けるクラスタイプ
+     * @param valueType {@link SqlTemplateValueType}の実装
+     */
+<span class="pc bpc" id="L124" title="3 of 6 branches missed.">    public &lt;T&gt; void register(@NonNull String propertyPath, @NonNull Class&lt;T&gt; type, @NonNull SqlTemplateValueType&lt;T&gt; valueType) {</span>
+<span class="fc" id="L125">        this.pathMap.put(propertyPath, new ValueTypeHolder(type, valueType));</span>
+<span class="fc" id="L126">    }</span>
+
+    /**
+     * パスからリストのインデックス([1])やマップのキー([key])を除去したものを構成する。
+     * &lt;p&gt;SpringFrameworkの「PropertyEditorRegistrySupport#addStrippedPropertyPaths(...)」の処理&lt;/p&gt;
+     * @param strippedPaths 除去したパス
+     * @param nestedPath 現在のネストしたパス
+     * @param propertyPath 処理対象のパス
+     */
+    protected void addStrippedPropertyPaths(List&lt;String&gt; strippedPaths, String nestedPath, String propertyPath) {
+
+<span class="fc" id="L137">        final int startIndex = propertyPath.indexOf('[');</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (startIndex != -1) {</span>
+<span class="fc" id="L139">            final int endIndex = propertyPath.indexOf(']');</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">            if (endIndex != -1) {</span>
+<span class="fc" id="L141">                final String prefix = propertyPath.substring(0, startIndex);</span>
+<span class="fc" id="L142">                final String key = propertyPath.substring(startIndex, endIndex + 1);</span>
+<span class="fc" id="L143">                final String suffix = propertyPath.substring(endIndex + 1, propertyPath.length());</span>
+
+                // Strip the first key.
+<span class="fc" id="L146">                strippedPaths.add(nestedPath + prefix + suffix);</span>
+
+                // Search for further keys to strip, with the first key stripped.
+<span class="fc" id="L149">                addStrippedPropertyPaths(strippedPaths, nestedPath + prefix, suffix);</span>
+
+                // Search for further keys to strip, with the first key not stripped.
+<span class="fc" id="L152">                addStrippedPropertyPaths(strippedPaths, nestedPath + prefix + key, suffix);</span>
+            }
+        }
+<span class="fc" id="L155">    }</span>
+
+    @RequiredArgsConstructor
+    private static class ValueTypeHolder {
+
+        private final Class&lt;?&gt; registeredType;
+
+        private final SqlTemplateValueType&lt;?&gt; valueType;
+
+        SqlTemplateValueType&lt;?&gt; get(final Class&lt;?&gt; requiredType) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            if(registeredType.isAssignableFrom(requiredType)) {</span>
+<span class="fc" id="L166">                return valueType;</span>
+            }
+
+<span class="fc" id="L169">            return null;</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

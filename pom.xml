@@ -40,14 +40,14 @@
 
 	<organization>
 		<name>mygreen</name>
-		<url>http://mygreen.github.io/splate/</url>
+		<url>https://mygreen.github.io/splate/</url>
 	</organization>
 
 	<developers>
 		<developer>
 			<id>mygreen</id>
 			<name>Tatsuo TSUCHIE</name>
-			<url>http://mygreen.github.io/splate/</url>
+			<url>https://mygreen.github.io/splate/</url>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -266,7 +266,7 @@
 				<configuration>
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 	<version>0.1</version>
 	<description><![CDATA[ splate is Java Library for 2Way-SQL template ]]></description>
+	<url>https://mygreen.github.io/splate/</url>
 
 	<issueManagement>
 		<system>github</system>
@@ -266,7 +267,7 @@
 				<configuration>
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>

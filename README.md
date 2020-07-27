@@ -2,7 +2,6 @@
 
 ![logo](logo.png)
 
-
 splate（エス・プレート）は、 **2Way-SQL** 機能のみを [S2JDBC](http://s2container.seasar.org/2.4/ja/s2jdbc.html) から分離し、使いやすくしたたライブラリです。
 
 このライブラリは、SpringFrameworkに依存しています。理由は以下の通りです。

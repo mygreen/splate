@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.github.mygreen.sqltemplate.node;
+package com.github.mygreen.splate.node;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 
-import com.github.mygreen.sqltemplate.TwoWaySqlException;
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
+import com.github.mygreen.splate.TwoWaySqlException;
+import com.github.mygreen.splate.type.SqlTemplateValueType;
 
 import lombok.Getter;
 

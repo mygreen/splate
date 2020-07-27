@@ -1,6 +1,6 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
-import static com.github.mygreen.sqltemplate.SqlUtils.*;
+import static com.github.mygreen.splate.SqlUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.math.BigDecimal;
@@ -11,6 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+
+import com.github.mygreen.splate.BeanPropertySqlContext;
+import com.github.mygreen.splate.MapSqlContext;
+import com.github.mygreen.splate.ProcessResult;
+import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplate;
+import com.github.mygreen.splate.SqlTemplateEngine;
 
 /**
  * {@link SqlContext} のテスタ。

@@ -13,16 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.github.mygreen.sqltemplate.node;
+package com.github.mygreen.splate.node;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.expression.EvaluationContext;
 
-import com.github.mygreen.sqltemplate.SqlContext;
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
+import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.type.SqlTemplateValueType;
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
 import lombok.Getter;
 import lombok.Setter;

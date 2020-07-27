@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import com.github.mygreen.splate.SqlTemplate;
+import com.github.mygreen.splate.SqlTemplateEngine;
 
 /**
  * {SqlTemplateEngine}のテスタ。

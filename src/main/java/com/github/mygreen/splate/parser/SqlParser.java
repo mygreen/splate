@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.github.mygreen.sqltemplate.parser;
+package com.github.mygreen.splate.parser;
 
 import java.util.Stack;
 
 import org.springframework.expression.ExpressionParser;
 
-import com.github.mygreen.sqltemplate.SqlUtils;
-import com.github.mygreen.sqltemplate.TwoWaySqlException;
-import com.github.mygreen.sqltemplate.node.BeginNode;
-import com.github.mygreen.sqltemplate.node.BindVariableNode;
-import com.github.mygreen.sqltemplate.node.ContainerNode;
-import com.github.mygreen.sqltemplate.node.ElseNode;
-import com.github.mygreen.sqltemplate.node.EmbeddedValueNode;
-import com.github.mygreen.sqltemplate.node.IfNode;
-import com.github.mygreen.sqltemplate.node.Node;
-import com.github.mygreen.sqltemplate.node.ParenBindVariableNode;
-import com.github.mygreen.sqltemplate.node.PrefixSqlNode;
-import com.github.mygreen.sqltemplate.node.SqlNode;
-import com.github.mygreen.sqltemplate.parser.SqlTokenizer.TokenType;
+import com.github.mygreen.splate.SqlUtils;
+import com.github.mygreen.splate.TwoWaySqlException;
+import com.github.mygreen.splate.node.BeginNode;
+import com.github.mygreen.splate.node.BindVariableNode;
+import com.github.mygreen.splate.node.ContainerNode;
+import com.github.mygreen.splate.node.ElseNode;
+import com.github.mygreen.splate.node.EmbeddedValueNode;
+import com.github.mygreen.splate.node.IfNode;
+import com.github.mygreen.splate.node.Node;
+import com.github.mygreen.splate.node.ParenBindVariableNode;
+import com.github.mygreen.splate.node.PrefixSqlNode;
+import com.github.mygreen.splate.node.SqlNode;
+import com.github.mygreen.splate.parser.SqlTokenizer.TokenType;
 
 /**
  * SQLを解析して<code>Node</code>のツリーにするクラスです。

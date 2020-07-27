@@ -13,9 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.github.mygreen.sqltemplate.parser;
+package com.github.mygreen.splate.parser;
 
-import com.github.mygreen.sqltemplate.TwoWaySqlException;
+import com.github.mygreen.splate.TwoWaySqlException;
 
 /**
  * SQLをトークンに分解するクラスです。.

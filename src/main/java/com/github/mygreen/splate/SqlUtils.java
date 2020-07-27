@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

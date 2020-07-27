@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,6 +11,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+
+import com.github.mygreen.splate.TemplateLoader;
 
 /**
  * {@link TemplateLoader}のテスタ。

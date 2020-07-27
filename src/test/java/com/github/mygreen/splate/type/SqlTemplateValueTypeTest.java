@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate.type;
+package com.github.mygreen.splate.type;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -8,11 +8,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mygreen.sqltemplate.MapSqlContext;
-import com.github.mygreen.sqltemplate.ProcessResult;
-import com.github.mygreen.sqltemplate.SqlContext;
-import com.github.mygreen.sqltemplate.SqlTemplate;
-import com.github.mygreen.sqltemplate.SqlTemplateEngine;
+import com.github.mygreen.splate.MapSqlContext;
+import com.github.mygreen.splate.ProcessResult;
+import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplate;
+import com.github.mygreen.splate.SqlTemplateEngine;
+import com.github.mygreen.splate.type.SqlTemplateValueType;
+import com.github.mygreen.splate.type.SqlTypeConversionException;
 
 
 /**

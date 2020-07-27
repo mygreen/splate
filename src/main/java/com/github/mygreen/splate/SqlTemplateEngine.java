@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import java.util.Map;
 import java.util.Optional;
@@ -9,8 +9,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import com.github.mygreen.sqltemplate.node.Node;
-import com.github.mygreen.sqltemplate.parser.SqlParser;
+import com.github.mygreen.splate.node.Node;
+import com.github.mygreen.splate.parser.SqlParser;
 
 import lombok.Getter;
 import lombok.NonNull;

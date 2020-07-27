@@ -1,9 +1,9 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import org.springframework.expression.EvaluationContext;
 
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueType;
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
+import com.github.mygreen.splate.type.SqlTemplateValueType;
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
 import lombok.Getter;
 import lombok.NonNull;

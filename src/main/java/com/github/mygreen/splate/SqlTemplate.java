@@ -1,7 +1,7 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
-import com.github.mygreen.sqltemplate.node.Node;
-import com.github.mygreen.sqltemplate.node.ProcessContext;
+import com.github.mygreen.splate.node.Node;
+import com.github.mygreen.splate.node.ProcessContext;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

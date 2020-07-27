@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate;
+package com.github.mygreen.splate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import com.github.mygreen.sqltemplate.type.SqlTemplateValueTypeRegistry;
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
 import lombok.NonNull;
 

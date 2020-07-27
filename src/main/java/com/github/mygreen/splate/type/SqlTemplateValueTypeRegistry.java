@@ -1,4 +1,4 @@
-package com.github.mygreen.sqltemplate.type;
+package com.github.mygreen.splate.type;
 
 import java.util.ArrayList;
 import java.util.List;

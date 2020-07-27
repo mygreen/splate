@@ -10,9 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mygreen.splate.type.SqlTemplateValueType;
-import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
-import com.github.mygreen.splate.type.SqlTypeConversionException;
 
 /**
  * {@link SqlTemplateValueType}のテスタ

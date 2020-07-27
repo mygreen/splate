@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.github.mygreen.splate.SqlTemplate;
-import com.github.mygreen.splate.SqlTemplateEngine;
 
 /**
  * {SqlTemplateEngine}のテスタ。

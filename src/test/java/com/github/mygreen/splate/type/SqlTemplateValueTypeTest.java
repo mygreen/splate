@@ -13,8 +13,6 @@ import com.github.mygreen.splate.ProcessResult;
 import com.github.mygreen.splate.SqlContext;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateEngine;
-import com.github.mygreen.splate.type.SqlTemplateValueType;
-import com.github.mygreen.splate.type.SqlTypeConversionException;
 
 
 /**

@@ -12,7 +12,6 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.github.mygreen.splate.TemplateLoader;
 
 /**
  * {@link TemplateLoader}のテスタ。

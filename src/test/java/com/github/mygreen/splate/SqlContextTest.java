@@ -12,12 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import com.github.mygreen.splate.BeanPropertySqlContext;
-import com.github.mygreen.splate.MapSqlContext;
-import com.github.mygreen.splate.ProcessResult;
-import com.github.mygreen.splate.SqlContext;
-import com.github.mygreen.splate.SqlTemplate;
-import com.github.mygreen.splate.SqlTemplateEngine;
 
 /**
  * {@link SqlContext} のテスタ。

@@ -5,9 +5,9 @@
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.9</version>
 	</skin>
-	<bannerRight>
+	<bannerLeft>
 		<src>./images/logo.png</src>
-	</bannerRight>
+	</bannerLeft>
 	<body>
 		<head>
 			<![CDATA[<link rel="stylesheet" href="./css/logo.css">]]>

@@ -13,10 +13,14 @@ JDBCでは使用できるクラスタイプは限られているため、``java.
 型変換処理は、 ``SqlTemplateValueType`` を実装します。
 
 - ``getBindVariableValue(...)`` にて、バインドパラメータの値を変換します。
-  - 下記の例では、``java.util.Date`` に変換する例ですが、SpringのJdbcTemplateを使用する場合は、[SqlParameterValue](https://spring.pleiades.io/spring/docs/5.1.x/javadoc-api/org/springframework/jdbc/core/SqlParameter.html) に変換してもかまいません。
-  - その場合、``SqlParameterValue(Types.BLOB, new SqlLobValue(value, lobHandler));`` のようにラージオブジェクトも処理ができます。
+
+    - 下記の例では、``java.util.Date`` に変換する例ですが、SpringのJdbcTemplateを使用する場合は、[SqlParameterValue](https://spring.pleiades.io/spring/docs/5.1.x/javadoc-api/org/springframework/jdbc/core/SqlParameter.html) に変換してもかまいません。
+
+    - その場合、``SqlParameterValue(Types.BLOB, new SqlLobValue(value, lobHandler));`` のようにラージオブジェクトも処理ができます。
+
 - ``getEmbeddedValue(...)`` にて、文字列置換のパラメータを変換します。
-  - デフォルト実装では、``#toString()`` メソッドが呼ばれるので必要であれば実装します。
+
+    - デフォルト実装では、``#toString()`` メソッドが呼ばれるので必要であれば実装します。
 
 
 ```java
@@ -75,6 +79,7 @@ sqlContext.registerValueType("birthday", LocalDate.class, new LocalDateType());
 ```
 
 ネストしたパラメータの場合は、パスを指定します。
+
   - ネストした要素がリスト/配列/マップの場合は、パラメータ名は ``data[1].value`` のようにインデックスやキー名を指定していても、変換処理の登録は ``data.value`` のインデックスやキー名を省略した形式で登録してください。
 
 

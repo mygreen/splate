@@ -5,6 +5,8 @@
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.9</version>
 	</skin>
+	<publishDate position="right" />
+	<version position="right" />
 	<bannerLeft>
 		<src>./images/logo.png</src>
 	</bannerLeft>
@@ -12,11 +14,18 @@
 		<head>
 			<![CDATA[<link rel="stylesheet" href="./css/logo.css">]]>
 		</head>
+		<breadcrumbs>
+			<item name="Top" href="index.html" />
+		</breadcrumbs>
 		<menu name="使い方について">
 			<item name="基本的な使い方" href="howtouse.html" />
-			<item name="2Way-Sqlとは" href="2waysql.html" />
+			<item name="2Way-SQLとは" href="2waysql.html" />
 			<item name="型変換処理" href="typeconversion.html" />
 			<item name="設定" href="configuration.html" />
+		</menu>
+		<menu name="関連リンク">
+			<item name="GitHub" href="https://github.com/mygreen/splate/" />
+			<item name="JavaDoc" href="apidocs/index.html" />
 		</menu>
 		<menu ref="reports" />
 	</body>

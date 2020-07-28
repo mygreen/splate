@@ -5,6 +5,8 @@
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.9</version>
 	</skin>
+	<publishDate position="right" />
+	<version position="right" />
 	<bannerLeft>
 		<src>./images/logo.png</src>
 	</bannerLeft>
@@ -12,6 +14,9 @@
 		<head>
 			<![CDATA[<link rel="stylesheet" href="./css/logo.css">]]>
 		</head>
+		<breadcrumbs>
+			<item name="Top" href="index.html" />
+		</breadcrumbs>
 		<menu name="使い方について">
 			<item name="基本的な使い方" href="howtouse.html" />
 			<item name="2Way-SQLとは" href="2waysql.html" />

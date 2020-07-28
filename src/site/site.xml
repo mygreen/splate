@@ -18,6 +18,10 @@
 			<item name="型変換処理" href="typeconversion.html" />
 			<item name="設定" href="configuration.html" />
 		</menu>
+		<menu name="関連リンク">
+			<item name="GitHub" href="https://github.com/mygreen/splate/" />
+			<item name="JavaDoc" href="apidocs/index.html" />
+		</menu>
 		<menu ref="reports" />
 	</body>
 </project>

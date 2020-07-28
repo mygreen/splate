@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate</a> &gt; <span class="el_source">SqlUtils.java</span></div><h1>SqlUtils.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+/**
+ * 2Way-SQL機能の中で提供されるユーティリティクラス。
+ * &lt;p&gt;MirageSQL/Seaser2からの持ち込みなので、既存のユーティリティクラスとは分けて定義する。&lt;/p&gt;
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
+<span class="nc" id="L17">public class SqlUtils {</span>
+
+    /**
+     * 空の文字列の配列です。
+     */
+<span class="fc" id="L22">    public static final String[] EMPTY_STRINGS = new String[0];</span>
+
+    /**
+     * 文字列を置き換えます。
+     * 置換対象の文字列がnullの場合は、結果として {@literal null} を返します。
+     *
+     * @param text テキスト
+     * @param fromText 置き換え対象のテキスト
+     * @param toText 置き換えるテキスト
+     * @return 結果
+     */
+    public static final String replace(final String text, final String fromText, final String toText) {
+
+<span class="pc bpc" id="L35" title="3 of 6 branches missed.">        if (text == null || fromText == null || toText == null) {</span>
+<span class="nc" id="L36">            return null;</span>
+        }
+<span class="fc" id="L38">        StringBuffer buf = new StringBuffer(100);</span>
+<span class="fc" id="L39">        int pos2 = 0;</span>
+        while (true) {
+<span class="fc" id="L41">            int pos = text.indexOf(fromText, pos2);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            if (pos == 0) {</span>
+<span class="nc" id="L43">                buf.append(toText);</span>
+<span class="nc" id="L44">                pos2 = fromText.length();</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">            } else if (pos &gt; 0) {</span>
+<span class="nc" id="L46">                buf.append(text, pos2, pos);</span>
+<span class="nc" id="L47">                buf.append(toText);</span>
+<span class="nc" id="L48">                pos2 = pos + fromText.length();</span>
+            } else {
+<span class="fc" id="L50">                buf.append(text.substring(pos2));</span>
+<span class="fc" id="L51">                break;</span>
+            }
+<span class="nc" id="L53">        }</span>
+<span class="fc" id="L54">        return buf.toString();</span>
+    }
+
+    /**
+     * 文字列が空かどうか判定します。
+     *
+     * @param text 文字列
+     * @return 文字列が {@literal null} または空文字列なら {@literal true} を返します。
+     */
+    public static final boolean isEmpty(final String text) {
+<span class="pc bpc" id="L64" title="2 of 4 branches missed.">        return text == null || text.length() == 0;</span>
+    }
+
+    /**
+     * 文字列が空でないかどうか判定します。
+     *
+     * @param text 文字列
+     * @return 文字列が {@literal null} または空文字列なら {@literal false} を返します。
+     */
+    public static final boolean isNotEmpty(final String text) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        return !isEmpty(text);</span>
+    }
+
+    /**
+     * リソースをテキストとして読み込む。
+     * &lt;p&gt;引数で指定したストリームは自動的にクローズします。&lt;/p&gt;
+     *
+     * @param in リソース
+     * @param encoding エンコーディング
+     * @return 読み込んだテキスト
+     * @throws IOException リソースの読み込みに失敗した場合にスローされます。
+     */
+    public static String readStream(final InputStream in, final String encoding) throws IOException {
+
+<span class="fc" id="L88">        ByteArrayOutputStream out = new ByteArrayOutputStream();</span>
+<span class="fc" id="L89">        try(in; out) {</span>
+<span class="fc" id="L90">            byte[] buf = new byte[1024 * 8];</span>
+<span class="fc" id="L91">            int length = 0;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            while((length = in.read(buf)) != -1){</span>
+<span class="fc" id="L93">                out.write(buf, 0, length);</span>
+            }
+
+<span class="fc" id="L96">            return new String(out.toByteArray(), encoding);</span>
+
+        }
+    }
+
+    /**
+     * 文字列のメッセージダイジェストを作成します。
+     * @param text 計算対象の文字列
+     * @param algorithm メッセージダイジェストのアルゴリズム名
+     * @return メッセージダイジェスト
+     */
+    public static String getMessageDigest(final String text, final String algorithm) {
+
+        try {
+<span class="fc" id="L110">            MessageDigest md = MessageDigest.getInstance(&quot;SHA-1&quot;);</span>
+<span class="fc" id="L111">            md.update(text.getBytes());</span>
+
+<span class="fc" id="L113">            byte[] hash = md.digest();</span>
+<span class="fc" id="L114">            StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            for (byte b : hash) {</span>
+<span class="fc" id="L116">                sb.append(String.format(&quot;%02x&quot;, b));</span>
+            }
+
+<span class="fc" id="L119">            return sb.toString();</span>
+
+<span class="nc" id="L121">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L122">            throw new IllegalArgumentException(&quot;not such algorithm name &quot; + algorithm, e);</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

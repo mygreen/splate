@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapSqlContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate</a> &gt; <span class="el_source">MapSqlContext.java</span></div><h1>MapSqlContext.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.context.expression.MapAccessor;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
+
+import lombok.NonNull;
+
+/**
+ * SQLテンプレートのパラメータを{@link Map} として渡すときのSQLコンテキスト。
+ * SQLテンプレート中では、マップのキー名で参照できます。
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
+public class MapSqlContext extends SqlContext {
+
+<span class="pc" id="L24">    private Map&lt;String, Object&gt; values = new HashMap&lt;String, Object&gt;();</span>
+
+    /**
+     * コンストラクタ。
+     */
+    public MapSqlContext() {
+<span class="fc" id="L30">        super();</span>
+<span class="fc" id="L31">    }</span>
+
+    /**
+     * マップを指定するコンストラクタ。
+     * @param variables SQLテンプレート中のパラメータとして渡すマップ。
+     */
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">    public MapSqlContext(@NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="fc" id="L38">        super();</span>
+<span class="fc" id="L39">        this.values.putAll(variables);</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     *
+     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     */
+    public MapSqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
+<span class="nc" id="L47">        super(valueTypeRestRegistry);</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     *
+     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * @param variables SQLテンプレート中で使用可能な変数
+     */
+<span class="nc bnc" id="L55" title="All 2 branches missed.">    public MapSqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="nc" id="L56">        super(valueTypeRestRegistry);</span>
+<span class="nc" id="L57">        this.values.putAll(variables);</span>
+<span class="nc" id="L58">    }</span>
+
+    @Override
+    public EvaluationContext createEvaluationContext() {
+<span class="fc" id="L62">        StandardEvaluationContext evaluationContext = new StandardEvaluationContext();</span>
+<span class="fc" id="L63">        evaluationContext.addPropertyAccessor(new MapAccessor());</span>
+<span class="fc" id="L64">        evaluationContext.setRootObject(values);</span>
+<span class="fc" id="L65">        return evaluationContext;</span>
+    }
+
+    /**
+     * SQLテンプレート中で使用可能な変数を追加します。
+     *
+     * @param name 変数名
+     * @param value 値
+     */
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">    public void setVariable(@NonNull String name, Object value) {</span>
+<span class="fc" id="L75">        this.values.put(name, value);</span>
+<span class="fc" id="L76">    }</span>
+
+    /**
+     * SQLテンプレート中で使用可能な変数を追加します。
+     *
+     * @param variables 変数のマップ
+     */
+<span class="nc bnc" id="L83" title="All 2 branches missed.">    public void setVariables(@NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="nc" id="L84">        this.values.putAll(variables);</span>
+<span class="nc" id="L85">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

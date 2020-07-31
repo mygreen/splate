@@ -1,3 +1,8 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mygreen/slplate/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.mygreen/slplate/)
+[![Javadocs](http://javadoc.io/badge/com.github.mygreen/slplate.svg?color=blue)](http://javadoc.io/doc/com.github.mygreen/slplate)
+[![Build Status](https://travis-ci.org/mygreen/slplate.svg?branch=master)](https://travis-ci.org/mygreen/slplate)
+[![SonarQube](https://sonarcloud.io/api/project_badges/measure?project=com.github.mygreen%3Aslplate&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.mygreen%3Aslplate)
+
 # splate
 
 ![logo](logo.png)

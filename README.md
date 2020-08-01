@@ -21,7 +21,7 @@ Apache2 License
 ## Dependency
 
 - Java 11+
-- SpringFramework 5.1+
+- SpringFramework 5.0+
 - Slf4j 1.7+
 
 

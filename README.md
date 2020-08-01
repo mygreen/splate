@@ -57,7 +57,7 @@ Add dependency. ex) pom.xml
   SqlTemplateEngine templateEngine = new SqlTemplateEngine();
   SqlTemplate template = templateEngine.getTemplate("classpath:/sql/employee_select.sql");
   ```
-3. Create template parameter with ``SqlContext``.
+3. Create template parameter with ``SqlTemplateContext``.
   ```java
   public class SelectParam {
       public BigDecimal salaryMin;
@@ -71,12 +71,12 @@ Add dependency. ex) pom.xml
   param.salaryMin = new BigDecimal(1200);
   param.salaryMax = new BigDecimal(1800);
   
-  // create instance of SqlContext.
-  SqlContext context = new BeanPropertySqlContext(param);
+  // create instance of SqlTemplateContext.
+  SqlTemplateContext templateContext = new BeanPropertySqlTemplateContext(param);
   ```
 4. Evaluating SQL template.
   ```java
-  ProcessResult result = template.process(context);
+  ProcessResult result = template.process(templateContext);
 
   // sql : select * from employee salary >= ? and salary <= ?
   String sql = result.getSql();

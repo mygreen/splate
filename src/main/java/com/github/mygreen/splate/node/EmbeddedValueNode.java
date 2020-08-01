@@ -55,7 +55,7 @@ public class EmbeddedValueNode extends AbstractNode {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
 
         EvaluationContext evaluationContext = ctx.getEvaluationContext();
         Object value = parsedExpression.getValue(evaluationContext);

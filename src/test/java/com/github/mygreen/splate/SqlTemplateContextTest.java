@@ -14,13 +14,13 @@ import org.springframework.core.io.ResourceLoader;
 
 
 /**
- * {@link SqlContext} のテスタ。
+ * {@link SqlTemplateContext} のテスタ。
  *
  *
  * @author T.TSUCHIE
  *
  */
-public class SqlContextTest {
+public class SqlTemplateContextTest {
 
     private SqlTemplateEngine templateEndine;
 
@@ -32,7 +32,7 @@ public class SqlContextTest {
          this.resourceLoader = new DefaultResourceLoader();
     }
 
-    @DisplayName("BeanPropertySqlContextによるテスト")
+    @DisplayName("BeanPropertySqlTemplateContextによるテスト")
     @Test
     public void testBeanProperty() throws Exception {
 
@@ -45,7 +45,7 @@ public class SqlContextTest {
                 .salaryMax(new BigDecimal(1800))
                 .build();
 
-        ProcessResult result = template.process(new BeanPropertySqlContext(param));
+        ProcessResult result = template.process(new BeanPropertySqlTemplateContext(param));
 
         String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
         assertThat(result.getSql()).isEqualTo(expectedSql);
@@ -54,7 +54,7 @@ public class SqlContextTest {
 
     }
 
-    @DisplayName("MapSqlContextによるテスト")
+    @DisplayName("MapSqlTemplateContextによるテスト")
     @Test
     public void testMap() throws Exception {
 
@@ -64,7 +64,7 @@ public class SqlContextTest {
 
         Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200), "salaryMax", new BigDecimal(1800));
 
-        ProcessResult result = template.process(new MapSqlContext(param));
+        ProcessResult result = template.process(new MapSqlTemplateContext(param));
 
         String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
         assertThat(result.getSql()).isEqualTo(expectedSql);
@@ -80,10 +80,10 @@ public class SqlContextTest {
 //        String sql = "select * from where name like /*#contains(name)*/'S%'";
 //
 //        SqlTemplate template = templateEndine.getTemplateByText(sql);
-//        SqlContext sqlContext = new MapSqlContext(Map.of("name", "abc"));
+//        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "abc"));
 //
 //        // EL式中のカスタム関数の登録
-//        sqlContext.setEvaluationContextCallback(c -> {
+//        templateContext.setEvaluationContextCallback(c -> {
 //            try {
 //                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
 //            } catch (NoSuchMethodException | SecurityException e) {
@@ -91,7 +91,7 @@ public class SqlContextTest {
 //            }
 //        });
 //
-//        ProcessResult result = template.process(sqlContext);
+//        ProcessResult result = template.process(templateContext);
 //
 //        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
 //        assertThat(result.getParameters()).containsExactly("%abc%");

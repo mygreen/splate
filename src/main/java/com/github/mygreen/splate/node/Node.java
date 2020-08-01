@@ -50,5 +50,5 @@ public interface Node {
      *
      * @param ctx SQLテンプレートを実行するときのコンテキスト。
      */
-    void accept(ProcessContext ctx);
+    void accept(NodeProcessContext ctx);
 }

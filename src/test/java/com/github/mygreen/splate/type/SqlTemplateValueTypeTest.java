@@ -8,9 +8,9 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mygreen.splate.MapSqlContext;
+import com.github.mygreen.splate.MapSqlTemplateContext;
 import com.github.mygreen.splate.ProcessResult;
-import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateEngine;
 
@@ -53,7 +53,7 @@ public class SqlTemplateValueTypeTest {
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("job", JobType.COOKS));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", JobType.COOKS));
         context.registerValueType(JobType.class, new JobValueType());
 
         ProcessResult result = template.process(context);
@@ -67,7 +67,7 @@ public class SqlTemplateValueTypeTest {
         String sql = "SELECT * FROM emp WHERE job in /*job*/('CLERK', 'COOKS')";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("job", List.of(JobType.COOKS, JobType.OWNER)));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", List.of(JobType.COOKS, JobType.OWNER)));
         context.registerValueType(JobType.class, new JobValueType());
 
         ProcessResult result = template.process(context);
@@ -81,7 +81,7 @@ public class SqlTemplateValueTypeTest {
         String sql = "SELECT * FROM emp WHERE job = /*$job*/'CLERK'";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("job", JobType.COOKS));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", JobType.COOKS));
         context.registerValueType(JobType.class, new JobValueType());
 
         ProcessResult result = template.process(context);

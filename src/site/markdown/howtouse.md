@@ -70,9 +70,9 @@ bean.salaryMin = new BigDecimal(1200);
 bean.salaryMax = new BigDecimal(1800);
 ```
 
-SQLテンプレートを評価する際の引数 ``SqlContext`` の実装の１つである ``BeanPropertySqlContext`` を使用します。
+SQLテンプレートを評価する際の引数 ``SqlTemplateContext`` の実装の１つである ``BeanPropertySqlTemplateContext`` を使用します。
 ```java
-SqlContext context = new BeanPropertySqlContext(bean);
+SqlTemplateContext templateContext = new BeanPropertySqlTemplateContext(bean);
 ```
 
 ### 3.2. Mapによるパラメータの指定
@@ -83,25 +83,25 @@ Mapで指定するときには、キー名をSQLテンプレート中で定義�
 Map<String, Object> map = Map.of("salaryMin", 1200, "salaryMax", 1800);
 ```
 
-SQLテンプレートを評価する際の引数 ``SqlContext`` の実装の１つである ``MapSqlContext`` を使用します。
+SQLテンプレートを評価する際の引数 ``SqlTemplateContext`` の実装の１つである ``MapSqlTemplateContext`` を使用します。
 ```java
-SqlContext context = new MapSqlContext(map);
+SqlTemplateContext templateContext = new MapSqlTemplateContext(map);
 ```
 
-また、``MapSqlContext`` はインスタンス作成後でもバインドパラメータを設定可能です。
+また、``MapSqlTemplateContext`` はインスタンス作成後でもバインドパラメータを設定可能です。
 
 ```java
-MapSqlContext context = new MapSqlContext();
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
 context.setVariable("salaryMin", 1200);
 context.setVariable("salaryMax", 1800);
 ```
 
 ### 3.3. パラメータがない場合
 
-SQLテンプレートに渡すパラメータがない場合は、 ``EmptyValueSqlContext`` を使用します。
+SQLテンプレートに渡すパラメータがない場合は、 ``EmptyValueSqlTemplateContext`` を使用します。
 
 ```java
-SqlContext context = new EmptyValueSqlContext();
+SqlTemplateContext templateContext = new EmptyValueSqlTemplateContext();
 ```
 
 ## 4. SQLテンプレートの評価

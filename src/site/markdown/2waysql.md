@@ -66,8 +66,8 @@ ORDER BY EMP_ID
 ワイルドカードを使いたい場合は、パラメータの値に埋め込んでください。
 
 ```java
-MapSqlContext context = new MapSqlContext();
-context.setVariable("fullName", "%Yamada");
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
+templateContext.setVariable("fullName", "%Yamada");
 ```
 
 SQLテンプレートを評価した場合は、次のようになります。

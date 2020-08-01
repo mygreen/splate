@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.springframework.expression.EvaluationContext;
 
-import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.type.SqlTemplateValueType;
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
@@ -28,22 +28,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * {@code SQLテンプレート}を実行し評価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
+ * {@code SQLテンプレート}を価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
  * {@code getSql()}, {@code getBindVariables()},
  * {@code getBindVariableTypes()}で、 情報を取り出して{@code SQL}を実行します。
  * {@code SQL}で{@code BEGIN}コメントと{@code END}コメントで囲まれている部分が、
  * 子供のコンテキストになります。 通常は、 {@code WHERE}句を{@code BEGIN}コメントと{@code END}コメントで囲み、
  * {@code WHERE}句の中の{@code IF}コメントが1つでも成立した場合、{@code enabled}になります。
  *
+ * @version 0.2
  * @author higa
  *
  */
-public class ProcessContext {
+public class NodeProcessContext {
 
     /**
-     * SQLテンプレートを評価する際の変数などの情報
+     * SQLテンプレートのコンテキスト
      */
-    private final SqlContext sqlContext;
+    private final SqlTemplateContext templateContext;
 
     /**
      * 組み立てたSQL
@@ -67,14 +68,14 @@ public class ProcessContext {
      * 親のノードの情報。
      */
     @Getter
-    private ProcessContext parent;
+    private NodeProcessContext parent;
 
     /**
      * テンプレートパラメータなどのSQLコンテキストを指定するコンストラクタ。
-     * @param sqlContext SQLコンテキスト
+     * @param templateContext SQLテンプレートのコンテキスト
      */
-    public ProcessContext(final SqlContext sqlContext) {
-        this.sqlContext = sqlContext;
+    public NodeProcessContext(final SqlTemplateContext templateContext) {
+        this.templateContext = templateContext;
     }
 
     /**
@@ -82,12 +83,12 @@ public class ProcessContext {
      *
      * @param parent 親のコンテキスト.
      */
-    public ProcessContext(final ProcessContext parent) {
+    public NodeProcessContext(final NodeProcessContext parent) {
         this.parent = parent;
         this.enabled = false;
 
         // 各種情報の引継ぎ
-        this.sqlContext = parent.sqlContext;
+        this.templateContext = parent.templateContext;
 
     }
 
@@ -142,7 +143,7 @@ public class ProcessContext {
      * @return EL式で指定された時の式を評価するためのコンテキスト
      */
     public EvaluationContext getEvaluationContext() {
-        return sqlContext.createEvaluationContext();
+        return templateContext.createEvaluationContext();
     }
 
     /**
@@ -150,6 +151,6 @@ public class ProcessContext {
      * @return SQLテンプレート中の変数を変換するための管理クラス
      */
     public SqlTemplateValueTypeRegistry getValueTypeRegistry() {
-        return sqlContext.getValueTypeRestRegistry();
+        return templateContext.getValueTypeRestRegistry();
     }
 }

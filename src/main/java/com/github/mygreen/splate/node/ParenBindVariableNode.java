@@ -61,7 +61,7 @@ public class ParenBindVariableNode extends AbstractNode {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
         final Object var = parsedExpression.getValue(evaluationContext);
@@ -99,11 +99,11 @@ public class ParenBindVariableNode extends AbstractNode {
 
     /**
      * 配列に変換してバインドする。
-     * @param ctx the SqlContext
+     * @param ctx the NodeProcessContext
      * @param array the variable array
      */
     @SuppressWarnings("rawtypes")
-    private void bindArray(final ProcessContext ctx, final Object array) {
+    private void bindArray(final NodeProcessContext ctx, final Object array) {
         int length = Array.getLength(array);
         if (length == 0) {
             return;

@@ -35,6 +35,7 @@ import lombok.Setter;
  * 子供のコンテキストになります。 通常は、 {@code WHERE}句を{@code BEGIN}コメントと{@code END}コメントで囲み、
  * {@code WHERE}句の中の{@code IF}コメントが1つでも成立した場合、{@code enabled}になります。
  *
+ * @version 0.2
  * @author higa
  *
  */

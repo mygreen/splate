@@ -11,6 +11,7 @@ import lombok.NonNull;
 /**
  * SQLテンプレートを実行し評価する際に渡すパラメータなどを保持するコンテキスト。
  *
+ * @version 0.2
  * @author T.TSUCHIE
  *
  */

@@ -12,7 +12,7 @@ import lombok.NonNull;
  * SQLテンプレートのパラメータをJavaBean として渡すときのSQLテンプレートのコンテキスト。
  * SQLテンプレート中では、JavaBeanのプロパティ名で参照できます。
  *
- *
+ * @version 0.2
  * @author T.TSUCHIE
  *
  */

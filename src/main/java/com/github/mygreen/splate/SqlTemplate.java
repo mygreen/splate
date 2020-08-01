@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
  * パースしたSQLテンプレート情報を保持します。
  *
  *
+ * @version 0.2
  * @author T.TSUCHIE
  *
  */

@@ -16,6 +16,7 @@ import lombok.NonNull;
  * SQLテンプレート中では、マップのキー名で参照できます。
  *
  *
+ * @version 0.2
  * @author T.TSUCHIE
  *
  */

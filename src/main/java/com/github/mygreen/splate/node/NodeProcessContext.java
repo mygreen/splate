@@ -28,7 +28,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * {@code SQLテンプレート}を実行し評価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
+ * {@code SQLテンプレート}を価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
  * {@code getSql()}, {@code getBindVariables()},
  * {@code getBindVariableTypes()}で、 情報を取り出して{@code SQL}を実行します。
  * {@code SQL}で{@code BEGIN}コメントと{@code END}コメントで囲まれている部分が、
@@ -41,9 +41,9 @@ import lombok.Setter;
 public class NodeProcessContext {
 
     /**
-     * SQLテンプレートを評価する際の変数などの情報
+     * SQLテンプレートのコンテキスト
      */
-    private final SqlTemplateContext sqlContext;
+    private final SqlTemplateContext templateContext;
 
     /**
      * 組み立てたSQL
@@ -71,10 +71,10 @@ public class NodeProcessContext {
 
     /**
      * テンプレートパラメータなどのSQLコンテキストを指定するコンストラクタ。
-     * @param sqlContext SQLコンテキスト
+     * @param templateContext SQLテンプレートのコンテキスト
      */
-    public NodeProcessContext(final SqlTemplateContext sqlContext) {
-        this.sqlContext = sqlContext;
+    public NodeProcessContext(final SqlTemplateContext templateContext) {
+        this.templateContext = templateContext;
     }
 
     /**
@@ -87,7 +87,7 @@ public class NodeProcessContext {
         this.enabled = false;
 
         // 各種情報の引継ぎ
-        this.sqlContext = parent.sqlContext;
+        this.templateContext = parent.templateContext;
 
     }
 
@@ -142,7 +142,7 @@ public class NodeProcessContext {
      * @return EL式で指定された時の式を評価するためのコンテキスト
      */
     public EvaluationContext getEvaluationContext() {
-        return sqlContext.createEvaluationContext();
+        return templateContext.createEvaluationContext();
     }
 
     /**
@@ -150,6 +150,6 @@ public class NodeProcessContext {
      * @return SQLテンプレート中の変数を変換するための管理クラス
      */
     public SqlTemplateValueTypeRegistry getValueTypeRegistry() {
-        return sqlContext.getValueTypeRestRegistry();
+        return templateContext.getValueTypeRestRegistry();
     }
 }

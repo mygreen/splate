@@ -12,7 +12,7 @@ import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 import lombok.NonNull;
 
 /**
- * SQLテンプレートのパラメータを{@link Map} として渡すときのSQLコンテキスト。
+ * SQLテンプレートのパラメータを{@link Map} として渡すときのSQLテンプレートのコンテキスト。
  * SQLテンプレート中では、マップのキー名で参照できます。
  *
  *

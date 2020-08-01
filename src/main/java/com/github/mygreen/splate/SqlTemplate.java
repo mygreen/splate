@@ -25,12 +25,12 @@ public class SqlTemplate {
     /**
      * SQLテンプレートを評価します。
      *
-     * @param sqlContext SQLテンプレートに渡すコンテキスト。
+     * @param templateContext SQLテンプレートに渡すコンテキスト。
      * @return SQLテンプレートを評価した結果。
      */
-    public ProcessResult process(final SqlTemplateContext sqlContext) {
+    public ProcessResult process(final SqlTemplateContext templateContext) {
 
-        final NodeProcessContext processContext = new NodeProcessContext(sqlContext);
+        final NodeProcessContext processContext = new NodeProcessContext(templateContext);
 
         // SQLテンプレートを評価します。
         node.accept(processContext);

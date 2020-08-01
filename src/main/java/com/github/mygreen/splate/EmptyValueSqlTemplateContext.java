@@ -4,7 +4,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
- * SQLテンプレートに渡すパラメータがないときのコンテキスト。
+ * SQLテンプレートに渡すパラメータがないときのSQLテンプレートのコンテキスト。
  *
  *
  * @author T.TSUCHIE

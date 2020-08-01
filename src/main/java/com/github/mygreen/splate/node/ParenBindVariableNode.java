@@ -99,7 +99,7 @@ public class ParenBindVariableNode extends AbstractNode {
 
     /**
      * 配列に変換してバインドする。
-     * @param ctx the SqlContext
+     * @param ctx the NodeProcessContext
      * @param array the variable array
      */
     @SuppressWarnings("rawtypes")

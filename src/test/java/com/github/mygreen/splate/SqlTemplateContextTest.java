@@ -32,7 +32,7 @@ public class SqlTemplateContextTest {
          this.resourceLoader = new DefaultResourceLoader();
     }
 
-    @DisplayName("BeanPropertySqlContextによるテスト")
+    @DisplayName("BeanPropertySqlTemplateContextによるテスト")
     @Test
     public void testBeanProperty() throws Exception {
 
@@ -54,7 +54,7 @@ public class SqlTemplateContextTest {
 
     }
 
-    @DisplayName("MapSqlContextによるテスト")
+    @DisplayName("MapSqlTemplateContextによるテスト")
     @Test
     public void testMap() throws Exception {
 
@@ -80,10 +80,10 @@ public class SqlTemplateContextTest {
 //        String sql = "select * from where name like /*#contains(name)*/'S%'";
 //
 //        SqlTemplate template = templateEndine.getTemplateByText(sql);
-//        SqlContext sqlContext = new MapSqlContext(Map.of("name", "abc"));
+//        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "abc"));
 //
 //        // EL式中のカスタム関数の登録
-//        sqlContext.setEvaluationContextCallback(c -> {
+//        templateContext.setEvaluationContextCallback(c -> {
 //            try {
 //                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
 //            } catch (NoSuchMethodException | SecurityException e) {
@@ -91,7 +91,7 @@ public class SqlTemplateContextTest {
 //            }
 //        });
 //
-//        ProcessResult result = template.process(sqlContext);
+//        ProcessResult result = template.process(templateContext);
 //
 //        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
 //        assertThat(result.getParameters()).containsExactly("%abc%");

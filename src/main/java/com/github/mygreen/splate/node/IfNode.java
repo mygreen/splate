@@ -62,7 +62,7 @@ public class IfNode extends ContainerNode {
     }
 
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
         boolean result = parsedExpression.getValue(evaluationContext, boolean.class);

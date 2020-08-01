@@ -14,13 +14,13 @@ import org.springframework.core.io.ResourceLoader;
 
 
 /**
- * {@link SqlContext} のテスタ。
+ * {@link SqlTemplateContext} のテスタ。
  *
  *
  * @author T.TSUCHIE
  *
  */
-public class SqlContextTest {
+public class SqlTemplateContextTest {
 
     private SqlTemplateEngine templateEndine;
 
@@ -45,7 +45,7 @@ public class SqlContextTest {
                 .salaryMax(new BigDecimal(1800))
                 .build();
 
-        ProcessResult result = template.process(new BeanPropertySqlContext(param));
+        ProcessResult result = template.process(new BeanPropertySqlTemplateContext(param));
 
         String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
         assertThat(result.getSql()).isEqualTo(expectedSql);
@@ -64,7 +64,7 @@ public class SqlContextTest {
 
         Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200), "salaryMax", new BigDecimal(1800));
 
-        ProcessResult result = template.process(new MapSqlContext(param));
+        ProcessResult result = template.process(new MapSqlTemplateContext(param));
 
         String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
         assertThat(result.getSql()).isEqualTo(expectedSql);

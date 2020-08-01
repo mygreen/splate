@@ -34,9 +34,9 @@ public class AddWhereIfNode extends ContainerNode {
     }
 
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
 
-        ProcessContext childCtx = new ProcessContext(ctx);
+        NodeProcessContext childCtx = new NodeProcessContext(ctx);
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
             String sql = childCtx.getSql();

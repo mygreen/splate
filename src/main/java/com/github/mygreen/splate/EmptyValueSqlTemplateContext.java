@@ -10,7 +10,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  * @author T.TSUCHIE
  *
  */
-public class EmptyValueSqlContext extends SqlContext {
+public class EmptyValueSqlTemplateContext extends SqlTemplateContext {
 
     @Override
     public EvaluationContext createEvaluationContext() {

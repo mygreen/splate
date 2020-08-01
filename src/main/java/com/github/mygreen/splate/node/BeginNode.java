@@ -29,8 +29,8 @@ public class BeginNode extends ContainerNode {
     }
 
     @Override
-    public void accept(final ProcessContext ctx) {
-        ProcessContext childCtx = new ProcessContext(ctx);
+    public void accept(final NodeProcessContext ctx) {
+        NodeProcessContext childCtx = new NodeProcessContext(ctx);
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
             ctx.addSql(childCtx.getSql(), childCtx.getBindParams());

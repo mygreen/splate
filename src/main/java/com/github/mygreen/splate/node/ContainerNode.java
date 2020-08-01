@@ -28,7 +28,7 @@ public class ContainerNode extends AbstractNode {
     }
 
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
         for (int i = 0; i < getChildSize(); ++i) {
             getChild(i).accept(ctx);
         }

@@ -8,10 +8,10 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.mygreen.splate.EmptyValueSqlContext;
-import com.github.mygreen.splate.MapSqlContext;
+import com.github.mygreen.splate.EmptyValueSqlTemplateContext;
+import com.github.mygreen.splate.MapSqlTemplateContext;
 import com.github.mygreen.splate.ProcessResult;
-import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateEngine;
 import com.github.mygreen.splate.TwoWaySqlException;
@@ -38,7 +38,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new EmptyValueSqlContext();
+        SqlTemplateContext context = new EmptyValueSqlTemplateContext();
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp");
@@ -63,7 +63,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("job", "Normal", "deptno", 10));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", "Normal", "deptno", 10));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ? AND deptno = ?");
@@ -76,7 +76,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("id", List.of(1, 2)));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("id", List.of(1, 2)));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE id in (?, ?)");
@@ -89,7 +89,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("id", new int[] {1, 2}));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("id", new int[] {1, 2}));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE id in (?, ?)");
@@ -102,7 +102,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("id", 1));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("id", 1));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE id in ?");
@@ -116,7 +116,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("limit", 100, "offset", 10));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("limit", 100, "offset", 10));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp limit 100 offset 10");
@@ -130,7 +130,7 @@ public class SqlParserTest {
         String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlContext context = new MapSqlContext(Map.of("job", "Normal"));
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", "Normal"));
         ProcessResult result = template.process(context);
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");
@@ -146,7 +146,7 @@ public class SqlParserTest {
         SqlTemplate template = templateEngine.getTemplateByText(sql);
 
         {
-            SqlContext context = new MapSqlContext(Map.of("age", 1));
+            SqlTemplateContext context = new MapSqlTemplateContext(Map.of("age", 1));
             ProcessResult result = template.process(context);
 
             assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE age = ?");
@@ -155,7 +155,7 @@ public class SqlParserTest {
         }
 
         {
-            SqlContext context = new MapSqlContext(Map.of("age", -1));
+            SqlTemplateContext context = new MapSqlTemplateContext(Map.of("age", -1));
             ProcessResult result = template.process(context);
 
             assertThat(result.getSql()).isEqualTo("SELECT * FROM emp");
@@ -174,7 +174,7 @@ public class SqlParserTest {
 
         {
             // ifの評価
-            SqlContext context = new MapSqlContext(Map.of("job", "Normal"));
+            SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", "Normal"));
             ProcessResult result = template.process(context);
 
             assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");
@@ -184,7 +184,7 @@ public class SqlParserTest {
 
         {
             // elseの評価
-            MapSqlContext context = new MapSqlContext();
+            MapSqlTemplateContext context = new MapSqlTemplateContext();
             context.setVariable("job", null);
             ProcessResult result = template.process(context);
 
@@ -204,7 +204,7 @@ public class SqlParserTest {
 
         {
             // 全てのプロパティがnull
-            MapSqlContext context = new MapSqlContext();
+            MapSqlTemplateContext context = new MapSqlTemplateContext();
             context.setVariable("job", null);
             context.setVariable("deptno", null);
 
@@ -217,7 +217,7 @@ public class SqlParserTest {
 
         {
             // １つのプロパティがnull
-            MapSqlContext context = new MapSqlContext();
+            MapSqlTemplateContext context = new MapSqlTemplateContext();
             context.setVariable("job", "Normal");
             context.setVariable("deptno", null);
             ProcessResult result = template.process(context);

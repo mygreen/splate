@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.springframework.expression.EvaluationContext;
 
-import com.github.mygreen.splate.SqlContext;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.type.SqlTemplateValueType;
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
@@ -38,12 +38,12 @@ import lombok.Setter;
  * @author higa
  *
  */
-public class ProcessContext {
+public class NodeProcessContext {
 
     /**
      * SQLテンプレートを評価する際の変数などの情報
      */
-    private final SqlContext sqlContext;
+    private final SqlTemplateContext sqlContext;
 
     /**
      * 組み立てたSQL
@@ -67,13 +67,13 @@ public class ProcessContext {
      * 親のノードの情報。
      */
     @Getter
-    private ProcessContext parent;
+    private NodeProcessContext parent;
 
     /**
      * テンプレートパラメータなどのSQLコンテキストを指定するコンストラクタ。
      * @param sqlContext SQLコンテキスト
      */
-    public ProcessContext(final SqlContext sqlContext) {
+    public NodeProcessContext(final SqlTemplateContext sqlContext) {
         this.sqlContext = sqlContext;
     }
 
@@ -82,7 +82,7 @@ public class ProcessContext {
      *
      * @param parent 親のコンテキスト.
      */
-    public ProcessContext(final ProcessContext parent) {
+    public NodeProcessContext(final NodeProcessContext parent) {
         this.parent = parent;
         this.enabled = false;
 

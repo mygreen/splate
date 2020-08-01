@@ -1,7 +1,7 @@
 package com.github.mygreen.splate;
 
 import com.github.mygreen.splate.node.Node;
-import com.github.mygreen.splate.node.ProcessContext;
+import com.github.mygreen.splate.node.NodeProcessContext;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ public class SqlTemplate {
      * @param sqlContext SQLテンプレートに渡すコンテキスト。
      * @return SQLテンプレートを評価した結果。
      */
-    public ProcessResult process(final SqlContext sqlContext) {
+    public ProcessResult process(final SqlTemplateContext sqlContext) {
 
-        final ProcessContext processContext = new ProcessContext(sqlContext);
+        final NodeProcessContext processContext = new NodeProcessContext(sqlContext);
 
         // SQLテンプレートを評価します。
         node.accept(processContext);

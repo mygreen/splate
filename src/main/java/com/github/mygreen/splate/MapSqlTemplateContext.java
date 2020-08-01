@@ -19,14 +19,14 @@ import lombok.NonNull;
  * @author T.TSUCHIE
  *
  */
-public class MapSqlContext extends SqlContext {
+public class MapSqlTemplateContext extends SqlTemplateContext {
 
     private Map<String, Object> values = new HashMap<String, Object>();
 
     /**
      * コンストラクタ。
      */
-    public MapSqlContext() {
+    public MapSqlTemplateContext() {
         super();
     }
 
@@ -34,7 +34,7 @@ public class MapSqlContext extends SqlContext {
      * マップを指定するコンストラクタ。
      * @param variables SQLテンプレート中のパラメータとして渡すマップ。
      */
-    public MapSqlContext(@NonNull Map<String, Object> variables) {
+    public MapSqlTemplateContext(@NonNull Map<String, Object> variables) {
         super();
         this.values.putAll(variables);
     }
@@ -43,7 +43,7 @@ public class MapSqlContext extends SqlContext {
      *
      * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-    public MapSqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
         super(valueTypeRestRegistry);
     }
 
@@ -52,7 +52,7 @@ public class MapSqlContext extends SqlContext {
      * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param variables SQLテンプレート中で使用可能な変数
      */
-    public MapSqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map<String, Object> variables) {
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map<String, Object> variables) {
         super(valueTypeRestRegistry);
         this.values.putAll(variables);
     }

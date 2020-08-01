@@ -57,7 +57,7 @@ public class BindVariableNode extends AbstractNode {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void accept(final ProcessContext ctx) {
+    public void accept(final NodeProcessContext ctx) {
 
         EvaluationContext evaluationContext = ctx.getEvaluationContext();
         Object value = parsedExpression.getValue(evaluationContext);

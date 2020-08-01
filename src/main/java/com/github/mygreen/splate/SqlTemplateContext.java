@@ -14,7 +14,7 @@ import lombok.NonNull;
  * @author T.TSUCHIE
  *
  */
-public abstract class SqlContext {
+public abstract class SqlTemplateContext {
 
     /**
      * SQLテンプレートのパラメータの変換処理を管理する処理。
@@ -22,7 +22,7 @@ public abstract class SqlContext {
     @Getter
     private final SqlTemplateValueTypeRegistry valueTypeRestRegistry;
 
-    public SqlContext() {
+    public SqlTemplateContext() {
         this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry();
     }
 
@@ -31,7 +31,7 @@ public abstract class SqlContext {
      *
      * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-    public SqlContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
+    public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
         this.valueTypeRestRegistry = valueTypeRestRegistry.clone();
     }
 

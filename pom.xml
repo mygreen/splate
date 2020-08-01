@@ -6,7 +6,7 @@
 	<artifactId>splate</artifactId>
 	<name>splate</name>
 	<packaging>jar</packaging>
-	<version>0.1</version>
+	<version>0.2</version>
 	<description><![CDATA[ splate is Java Library for 2Way-SQL template ]]></description>
 	<url>https://mygreen.github.io/splate/</url>
 

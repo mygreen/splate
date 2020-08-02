@@ -24,21 +24,21 @@ import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
  * @author T.TSUCHIE
  *
  */
-public class SqlTemplateContextTest {
+class SqlTemplateContextTest {
 
     private SqlTemplateEngine templateEngine;
 
     private ResourceLoader resourceLoader;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
          this.templateEngine = new SqlTemplateEngine();
          this.resourceLoader = new DefaultResourceLoader();
     }
 
     @DisplayName("BeanPropertySqlTemplateContextによるテスト")
     @Test
-    public void testBeanProperty() throws Exception {
+    void testBeanProperty() throws Exception {
 
         String path = "classpath:template/employee_select.sql";
 
@@ -60,7 +60,7 @@ public class SqlTemplateContextTest {
 
     @DisplayName("MapSqlTemplateContextによるテスト")
     @Test
-    public void testMap() throws Exception {
+    void testMap() throws Exception {
 
         String path = "classpath:template/employee_select.sql";
 
@@ -80,7 +80,7 @@ public class SqlTemplateContextTest {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @DisplayName("SqlTemplateValueTypeRegistry を書き換える")
     @Test
-    public void testValueTypeRegistry() {
+    void testValueTypeRegistry() {
 
         // 元となる変換規則の定義
         SqlTemplateValueTypeRegistry registry = new SqlTemplateValueTypeRegistry();
@@ -108,7 +108,7 @@ public class SqlTemplateContextTest {
 
 //    @Disabled
 //    @Test
-//    public void testCallback() {
+//    void testCallback() {
 //
 //        String sql = "select * from where name like /*#contains(name)*/'S%'";
 //

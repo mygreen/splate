@@ -22,7 +22,7 @@ import lombok.NonNull;
  */
 public class MapSqlTemplateContext extends SqlTemplateContext {
 
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> values = new HashMap<>();
 
     /**
      * コンストラクタ。

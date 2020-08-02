@@ -164,9 +164,7 @@ public class SqlTemplateEngine {
      * @return {@link SqlParser} のインスタンス
      */
     protected SqlParser createSqlParser(final String sql) {
-
-        final SqlParser sqlParser = new SqlParser(sql, expressionParser);
-        return sqlParser;
+        return new SqlParser(sql, expressionParser);
     }
 
     /**

@@ -20,21 +20,21 @@ import org.springframework.core.io.ResourceLoader;
  * @author T.TSUCHIE
  *
  */
-public class TemplateLoaderTest {
+class TemplateLoaderTest {
 
     private TemplateLoader templateLoader;
 
     private ResourceLoader resourceLoader;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
          this.templateLoader = new TemplateLoader();
          this.resourceLoader = new DefaultResourceLoader();
     }
 
     @DisplayName("接尾語指定しない")
     @Test
-    public void testLoadByLocation_noSuffix() {
+    void testLoadByLocation_noSuffix() {
 
         String location = "template/suffix.sql";
         Optional<String> suffixName = Optional.empty();
@@ -45,7 +45,7 @@ public class TemplateLoaderTest {
 
     @DisplayName("接尾語指定 - 接尾語付きのSQLファイルが存在する場合")
     @Test
-    public void testLoadByLocation_suffix() {
+    void testLoadByLocation_suffix() {
 
         String location = "template/suffix.sql";
         Optional<String> suffixName = Optional.of("oracle");
@@ -56,7 +56,7 @@ public class TemplateLoaderTest {
 
     @DisplayName("接尾語指定 - 接尾語付きのSQLファイルが存在しない場合")
     @Test
-    public void testLoadByLocation_noexist_suffix() {
+    void testLoadByLocation_noexist_suffix() {
 
         String location = "template/suffix2.sql";
         Optional<String> suffixName = Optional.of("oracle");
@@ -67,7 +67,7 @@ public class TemplateLoaderTest {
 
     @DisplayName("接尾語指定 - 拡張子がない場合")
     @Test
-    public void testLoadByLocation_nosuffix_noExtention() {
+    void testLoadByLocation_nosuffix_noExtention() {
 
         String location = "template/suffix";
         Optional<String> suffixName = Optional.empty();
@@ -78,7 +78,7 @@ public class TemplateLoaderTest {
 
     @DisplayName("接尾語指定 - 拡張子がない場合")
     @Test
-    public void testLoadByLocation_suffix_noExtention() {
+    void testLoadByLocation_suffix_noExtention() {
 
         String location = "template/suffix";
         Optional<String> suffixName = Optional.of("oracle");
@@ -88,7 +88,7 @@ public class TemplateLoaderTest {
     }
 
     @Test
-    public void testLoadByResource() throws Exception {
+    void testLoadByResource() throws Exception {
 
         Resource resource = new ByteArrayResource("select * from test limit /*$limit*/;".getBytes("UTF-8"));
 

@@ -9,14 +9,14 @@ import lombok.Getter;
 import lombok.NonNull;
 
 /**
- * SQLテンプレートのパラメータをJavaBean として渡すときのSQLコンテキスト。
+ * SQLテンプレートのパラメータをJavaBean として渡すときのSQLテンプレートのコンテキスト。
  * SQLテンプレート中では、JavaBeanのプロパティ名で参照できます。
  *
- *
+ * @version 0.2
  * @author T.TSUCHIE
  *
  */
-public class BeanPropertySqlContext extends SqlContext {
+public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
 
     /**
      * JavaBeanのインスタンス。
@@ -28,7 +28,7 @@ public class BeanPropertySqlContext extends SqlContext {
      * JavaBeanを指定するコンストラクタ。
      * @param object SQLテンプレート中のパラメータとして渡すJavaBeanのインスタンス
      */
-    public BeanPropertySqlContext(final @NonNull Object object) {
+    public BeanPropertySqlTemplateContext(final @NonNull Object object) {
         super();
         this.value = object;
     }
@@ -37,7 +37,7 @@ public class BeanPropertySqlContext extends SqlContext {
      * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param object JavaBeanのインスタンス
      */
-    public BeanPropertySqlContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, final @NonNull Object object) {
+    public BeanPropertySqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, final @NonNull Object object) {
         super(valueTypeRestRegistry);
         this.value = object;
     }

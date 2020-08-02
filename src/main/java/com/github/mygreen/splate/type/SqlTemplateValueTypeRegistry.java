@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  * @author T.TSUCHIE
  *
  */
-public class SqlTemplateValueTypeRegistry implements Cloneable {
+public class SqlTemplateValueTypeRegistry {
 
     /**
      * クラスタイプで関連付けられた{@link SqlTemplateValueType}のマップ
@@ -30,17 +30,18 @@ public class SqlTemplateValueTypeRegistry implements Cloneable {
      */
     private Map<String, ValueTypeHolder> pathMap = new ConcurrentHashMap<>();
 
-    /**
-     * 自身のインスタンスのクローンを作成します。
-     * <p>登録されている{@link SqlTemplateValueType}をシャロ―コピーします。</p>
-     */
-    @Override
-    public SqlTemplateValueTypeRegistry clone() {
-        SqlTemplateValueTypeRegistry copy = new SqlTemplateValueTypeRegistry();
-        copy.typeMap.putAll(this.typeMap);
-        copy.pathMap.putAll(this.pathMap);
+    public SqlTemplateValueTypeRegistry() {
 
-        return copy;
+    }
+
+    /**
+     * {@code SqlTemplateValueTypeRegistry}を元にコンストラクタを作成します。
+     *
+     * @param registry 作成元となる {@link SqlTemplateValueType}の管理情報。
+     */
+    public SqlTemplateValueTypeRegistry(final @NonNull SqlTemplateValueTypeRegistry registry) {
+        this.typeMap.putAll(registry.typeMap);
+        this.pathMap.putAll(registry.pathMap);
     }
 
     /**

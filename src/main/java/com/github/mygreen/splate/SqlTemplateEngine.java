@@ -139,7 +139,7 @@ public class SqlTemplateEngine {
     public SqlTemplate getTemplateByText(@NonNull final String sql) {
 
         if(cached) {
-            final String key = SqlUtils.getMessageDigest(sql, "SHA-1");
+            final String key = SqlUtils.getMessageDigest(sql);
             return templateCache.computeIfAbsent(key, k ->  parseTemplateByText(sql));
         } else {
             return parseTemplateByText(sql);
@@ -147,10 +147,15 @@ public class SqlTemplateEngine {
 
     }
 
+    /**
+     * 文字列で指定されたSQLテンプレートをパースします。
+     * @param sql SQL
+     * @return パース結果。
+     */
     private SqlTemplate parseTemplateByText(final String sql) {
         SqlParser parser = createSqlParser(sql);
         Node node = parser.parse();
-        return new SqlTemplate(node);
+        return new SqlTemplate(parser.getSql(), node);
     }
 
     /**
@@ -159,9 +164,7 @@ public class SqlTemplateEngine {
      * @return {@link SqlParser} のインスタンス
      */
     protected SqlParser createSqlParser(final String sql) {
-
-        final SqlParser sqlParser = new SqlParser(sql, expressionParser);
-        return sqlParser;
+        return new SqlParser(sql, expressionParser);
     }
 
     /**

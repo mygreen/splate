@@ -50,5 +50,12 @@ public interface Node {
      *
      * @param ctx SQLテンプレートを実行するときのコンテキスト。
      */
-    void accept(ProcessContext ctx);
+    void accept(NodeProcessContext ctx);
+
+    /**
+     * テンプレート内での開始位置を返します。
+     *
+     * @return テンプレート内での開始位置
+     */
+    int getPosition();
 }

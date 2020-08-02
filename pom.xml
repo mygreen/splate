@@ -6,7 +6,7 @@
 	<artifactId>splate</artifactId>
 	<name>splate</name>
 	<packaging>jar</packaging>
-	<version>0.1</version>
+	<version>0.2</version>
 	<description><![CDATA[ splate is Java Library for 2Way-SQL template ]]></description>
 	<url>https://mygreen.github.io/splate/</url>
 
@@ -58,7 +58,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<source.encode>UTF-8</source.encode>
-		<spring.version>5.1.6.RELEASE</spring.version>
+		<spring.version>5.0.18.RELEASE</spring.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.version>1.2.3</logback.version>
 		<jacoco.include.package>com.github.mygreen.splate.*</jacoco.include.package>
@@ -72,7 +72,7 @@
 		<sonar.projectName>${groupId}/${project.artifactId}</sonar.projectName>
 		<sonar.host.url>https://sonarcloud.io/</sonar.host.url>
 		<sonar.organization>mygreen-github</sonar.organization>
-
+		<sonar.coverage.jacoco.xmlReportPaths>${project.directory}/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<build>
@@ -249,6 +249,13 @@
 								<include>${jacoco.include.package}</include>
 							</includes>
 						</configuration>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

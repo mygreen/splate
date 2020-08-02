@@ -22,10 +22,12 @@
 			<item name="2Way-SQLとは" href="2waysql.html" />
 			<item name="型変換処理" href="typeconversion.html" />
 			<item name="設定" href="configuration.html" />
+			<item name="リリースノート" href="release.html" />
 		</menu>
 		<menu name="関連リンク">
 			<item name="GitHub" href="https://github.com/mygreen/splate/" />
 			<item name="JavaDoc" href="apidocs/index.html" />
+			<item name="SonarQube" href="https://sonarcloud.io/dashboard?id=com.github.mygreen%3Asplate" />
 		</menu>
 		<menu ref="reports" />
 	</body>

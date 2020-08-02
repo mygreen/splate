@@ -50,18 +50,18 @@ public class LocalDateType implements SqlTemplateValueType<LocalDate> {
 
 ## 2. SqlTemplateValueType の登録
 
-``SqlTemplateValueType`` は、``SqlContext#registerValueType(...)`` にて登録します。
+``SqlTemplateValueType`` は、``SqlTemplateContext#registerValueType(...)`` にて登録します。
 
 クラスタイプを指定することで、すべての ``LocalDate`` に対して変換が適用されます。
 
 ```java
-MapSqlContext sqlContext = new MapSqlContext();
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
 
 // パラメータ変数の設定
-sqlContext.setVariable("birthday", LocalDate.of(2020, 10, 1));
+templateContext.setVariable("birthday", LocalDate.of(2020, 10, 1));
 
 // 変換処理の登録
-sqlContext.registerValueType(LocalDate.class, new LocalDateType());
+templateContext.registerValueType(LocalDate.class, new LocalDateType());
 ```
 
 パラメータ名によって変換処理を変更したい場合は、パラメータ名を指定して登録します。
@@ -69,13 +69,13 @@ sqlContext.registerValueType(LocalDate.class, new LocalDateType());
 - クラスタイプの指定とパラメータ名の指定の両方が登録されている場合、パラメータ名の方が優先されます。
 
 ```java
-MapSqlContext sqlContext = new MapSqlContext();
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
 
 // パラメータ変数の設定
-sqlContext.setVariable("birthday", LocalDate.of(2020, 10, 1));
+templateContext.setVariable("birthday", LocalDate.of(2020, 10, 1));
 
 // 変換処理の登録(birthdayのみに適用されます)
-sqlContext.registerValueType("birthday", LocalDate.class, new LocalDateType());
+templateContext.registerValueType("birthday", LocalDate.class, new LocalDateType());
 ```
 
 ネストしたパラメータの場合は、パスを指定します。
@@ -84,16 +84,16 @@ sqlContext.registerValueType("birthday", LocalDate.class, new LocalDateType());
 
 
 ```java
-MapSqlContext sqlContext = new MapSqlContext();
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
 
 // ネストしたパラメータ変数の設定
 Person pserson = new Person();
 pserson.setBirthday(LocalDate.of(2020, 10, 1));
 
-sqlContext.setVariable("person", pserson);
+templateContext.setVariable("person", pserson);
 
 // 変換処理の登録(person.birthdayのみに適用されます)
-sqlContext.registerValueType("person.birthday", LocalDate.class, new LocalDateType());
+templateContext.registerValueType("person.birthday", LocalDate.class, new LocalDateType());
 ```
 
 ## 3. 列挙型の変換処理
@@ -120,11 +120,9 @@ public class EnumOrdinalType<T extends Enum<T>> implements SqlTemplateValueType<
 enum Color {RED, BLUE, YELLOW};
 
 // パラメータ変数の設定
-MapSqlContext sqlContext = new MapSqlContext();
-sqlContext.setVariable("color", Color.RED);
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
+templateContext.setVariable("color", Color.RED);
 
 // 変換処理の登録(全ての列挙型に適用されます)
-sqlContext.registerValueType(Enum.class, new EnumOrdinalType());
-
-
+templateContext.registerValueType(Enum.class, new EnumOrdinalType());
 ```

@@ -78,6 +78,27 @@ WHERE FULL_NAME LIKE ?
 ORDER BY EMP_ID
 ```
 
+### 1.4. プレースホルダーの利用方法
+
+プレースホルダー（``?``）を指定した場合は、インデックス付きのバインドパラメータ（例. ``$1``） に自動的に置き換えられます。
+
+- インデックスは1から始まります。
+
+```sql
+SELECT * FROM EMPLOYEE
+WHERE BETWEEN AGE ? AND ?
+ORDER BY EMP_ID
+```
+
+パラメータの指定は、マップによるパラメータを設定する ``MapSqlTemplateContext`` を使用してください。
+
+```java
+MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
+templateContext.setVariable("$1", 20);
+templateContext.setVariable("$2", 50);
+```
+
+
 ## 2. 文字列置換
 
 LIMIT句やORDER BY句など、``PreparedStatement`` にてプレースホルダ―が利用できない部分は、``/*$パラメータ名*/`` のSQLコメントの形式で指定し、単純な文字列置換を行います。

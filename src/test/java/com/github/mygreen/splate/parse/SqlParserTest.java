@@ -13,6 +13,7 @@ import org.springframework.expression.ParseException;
 
 import com.github.mygreen.splate.EmptyValueSqlTemplateContext;
 import com.github.mygreen.splate.MapSqlTemplateContext;
+import com.github.mygreen.splate.Position;
 import com.github.mygreen.splate.ProcessResult;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateContext;
@@ -50,6 +51,20 @@ public class SqlParserTest {
 
     }
 
+    @Test
+    public void testParse_HintComment() {
+
+        String sql = "SELECT /*+ aabbb */* FROM emp";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new EmptyValueSqlTemplateContext();
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("SELECT /*+ aabbb */* FROM emp");
+        assertThat(result.getParameters()).isEmpty();
+
+    }
+
     @DisplayName("コメントの閉じ忘れ")
     @Test
     public void testParse_commentEndNotFound() {
@@ -58,7 +73,8 @@ public class SqlParserTest {
 
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
             .isInstanceOf(SqlParseException.class)
-            .hasMessageContaining("Not closed comment '*/' for hoge.");
+            .hasMessageContaining("Not closed comment '*/' for hoge.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 19, sql));
 
     }
 
@@ -70,7 +86,8 @@ public class SqlParserTest {
 
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
             .isInstanceOf(SqlParseException.class)
-            .hasMessageContaining("Not found IF condition.");
+            .hasMessageContaining("Not found IF condition.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
 
     }
 
@@ -82,7 +99,8 @@ public class SqlParserTest {
 
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
             .isInstanceOf(SqlParseException.class)
-            .hasMessageContaining("Not found END comment.");
+            .hasMessageContaining("Not found END comment.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 132, sql));
 
 
     }
@@ -96,7 +114,8 @@ public class SqlParserTest {
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
             .isInstanceOf(SqlParseException.class)
             .hasCauseInstanceOf(ParseException.class)
-            .hasMessageContaining("Fail parsing expression 'abc/*b'.");
+            .hasMessageContaining("Fail parsing expression 'abc/*b'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
 
     }
 
@@ -115,6 +134,18 @@ public class SqlParserTest {
     }
 
     @Test
+    public void testBindVariable_placeholder() {
+        String sql = "BETWEEN sal ? AND ?";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("$1", 1, "$2", 10));
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("BETWEEN sal ? AND ?");
+        assertThat(result.getParameters()).containsExactly(1, 10);
+    }
+
+    @Test
     public void testBindVariable_evalELError() {
 
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
@@ -125,7 +156,8 @@ public class SqlParserTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(ExpressionException.class)
-            .hasMessageContaining("Fail evaluating expression 'deptno'.");
+            .hasMessageContaining("Fail evaluating expression 'deptno'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 60, sql));
 
     }
 
@@ -178,7 +210,8 @@ public class SqlParserTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(ExpressionException.class)
-            .hasMessageContaining("Fail evaluating expression 'id'.");
+            .hasMessageContaining("Fail evaluating expression 'id'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 32, sql));
 
     }
 
@@ -207,7 +240,8 @@ public class SqlParserTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(ExpressionException.class)
-            .hasMessageContaining("Fail evaluating expression 'offset'.");
+            .hasMessageContaining("Fail evaluating expression 'offset'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 47, sql));
 
     }
 
@@ -236,7 +270,8 @@ public class SqlParserTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(ExpressionException.class)
-            .hasMessageContaining("Fail evaluating expression 'job != null'.");
+            .hasMessageContaining("Fail evaluating expression 'job != null'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
 
     }
 

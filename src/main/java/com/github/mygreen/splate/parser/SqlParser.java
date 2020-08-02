@@ -180,7 +180,7 @@ public class SqlParser {
      */
     protected void parseIf() {
         final String condition = tokenizer.getToken().substring(2).trim();
-        final int position = Math.max(tokenizer.getPosition() - 2, 0);
+        final int position = Math.max(tokenizer.getPosition() - 2 - condition.length(), 0);
         if (SqlUtils.isEmpty(condition)) {
             throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),
                     "Not found IF condition.");
@@ -239,11 +239,12 @@ public class SqlParser {
     protected void parseCommentBindVariable() {
         String expr = tokenizer.getToken();
         String s = tokenizer.skipToken();
-        int position = tokenizer.getPosition();
+        int position = tokenizer.getPosition() - s.length() - expr.length() -2;
         if (s.startsWith("(") && s.endsWith(")")) {
             peek().addChild(new ParenBindVariableNode(position, expr, parseExpression(expr, position)));
         } else if (expr.startsWith("$")) {
             expr = expr.substring(1);
+            position += 1;
             peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));
         } else if (expr.equalsIgnoreCase("orderBy")) {
             peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));

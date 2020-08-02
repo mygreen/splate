@@ -1,6 +1,8 @@
 package com.github.mygreen.splate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * テンプレートの位置情報を表す
@@ -9,6 +11,8 @@ import lombok.Data;
  * @author T.TSUCHIE
  *
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Position {
 

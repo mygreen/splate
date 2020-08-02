@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.mygreen.splate.MapSqlTemplateContext;
+import com.github.mygreen.splate.Position;
 import com.github.mygreen.splate.ProcessResult;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateContext;
@@ -93,7 +94,8 @@ public class SqlTemplateValueTypeTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(SqlTypeConversionException.class)
-            .hasMessageContaining("Fail converting value of expression 'job'.");
+            .hasMessageContaining("Fail converting value of expression 'job'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 32, sql));
 
     }
 
@@ -122,7 +124,8 @@ public class SqlTemplateValueTypeTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(SqlTypeConversionException.class)
-            .hasMessageContaining("Fail converting value of expression 'job'.");
+            .hasMessageContaining("Fail converting value of expression 'job'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 33, sql));
 
     }
 
@@ -151,6 +154,7 @@ public class SqlTemplateValueTypeTest {
         assertThatThrownBy(() -> template.process(context))
             .isInstanceOf(NodeProcessException.class)
             .hasCauseInstanceOf(TextConversionException.class)
-            .hasMessageContaining("Fail converting value of expression 'job'.");
+            .hasMessageContaining("Fail converting value of expression 'job'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 33, sql));
     }
 }

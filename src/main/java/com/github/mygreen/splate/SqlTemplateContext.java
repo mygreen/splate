@@ -33,7 +33,7 @@ public abstract class SqlTemplateContext {
      * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
     public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
-        this.valueTypeRestRegistry = valueTypeRestRegistry.clone();
+        this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry(valueTypeRestRegistry);
     }
 
     /**

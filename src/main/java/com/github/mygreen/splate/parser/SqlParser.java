@@ -37,6 +37,7 @@ import com.github.mygreen.splate.parser.SqlTokenizer.TokenType;
 /**
  * SQLを解析して<code>Node</code>のツリーにするクラスです。
  *
+ * @version 0.2
  * @author higa
  */
 public class SqlParser {

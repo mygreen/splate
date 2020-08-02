@@ -26,6 +26,7 @@ import lombok.Getter;
 /**
  * （コメントによる定義の）バインド変数のための{@link Node}です。
  *
+ * @version 0.2
  * @author higa
  * @author T.TSUCHIE
  */

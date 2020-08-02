@@ -30,6 +30,7 @@ import com.github.mygreen.splate.type.TextConversionException;
 /**
  * {@link Node}の抽象クラスです。
  *
+ * @version 0.2
  * @author higa
  * @author T.TSUCHIE
  *

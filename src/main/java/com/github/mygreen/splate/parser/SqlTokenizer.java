@@ -20,6 +20,7 @@ import com.github.mygreen.splate.SqlUtils;
 /**
  * SQLをトークンに分解するクラスです。.
  *
+ * @version 0.2
  * @author higa
  */
 public class SqlTokenizer {

@@ -30,6 +30,7 @@ import lombok.Getter;
 /**
  * {@literal IN}のバインド変数用の{@link Node}です。
  *
+ * @version 0.2
  * @author higa
  * @author shuji.w6e
  * @author T.TSUCHIE

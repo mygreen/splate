@@ -28,6 +28,7 @@ import lombok.Getter;
 /**
  * 値を埋め込む用の{@link Node}です
  *
+ * @version 0.2
  * @author higa
  * @author T.TSUCHIE
  */

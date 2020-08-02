@@ -3,6 +3,7 @@ package com.github.mygreen.splate;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -92,14 +93,13 @@ public class SqlUtils {
     /**
      * 文字列のメッセージダイジェストを作成します。
      * @param text 計算対象の文字列
-     * @param algorithm メッセージダイジェストのアルゴリズム名
      * @return メッセージダイジェスト
      */
-    public static String getMessageDigest(final String text, final String algorithm) {
+    public static String getMessageDigest(final String text) {
 
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(text.getBytes());
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(text.getBytes(StandardCharsets.UTF_8));
 
             byte[] hash = md.digest();
             StringBuilder sb = new StringBuilder();
@@ -110,7 +110,7 @@ public class SqlUtils {
             return sb.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("not such algorithm name " + algorithm, e);
+            throw new IllegalArgumentException("not such algorithm name.", e);
         }
 
     }

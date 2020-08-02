@@ -25,7 +25,7 @@ import com.github.mygreen.splate.node.NodeProcessException;
  * @author T.TSUCHIE
  *
  */
-public class SqlTemplateValueTypeTest {
+class SqlTemplateValueTypeTest {
 
     private SqlTemplateEngine templateEngine;
 

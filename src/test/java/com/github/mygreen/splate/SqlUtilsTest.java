@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * @author T.TSUCHIE
  *
  */
-public class SqlUtilsTest extends SqlUtils {
+class SqlUtilsTest extends SqlUtils {
 
     @Test
     void testIndexOfAny() {

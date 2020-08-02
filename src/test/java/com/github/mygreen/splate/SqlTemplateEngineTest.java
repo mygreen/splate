@@ -15,7 +15,7 @@ import org.springframework.core.io.Resource;
  * @author T.TSUCHIE
  *
  */
-public class SqlTemplateEngineTest {
+class SqlTemplateEngineTest {
 
     private SqlTemplateEngine sqlTemplateEngine;
 

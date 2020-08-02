@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * @author T.TSUCHIE
  *
  */
-public class SqlTemplateValueTypeRegistryTest {
+class SqlTemplateValueTypeRegistryTest {
 
     private SqlTemplateValueTypeRegistry registry;
 

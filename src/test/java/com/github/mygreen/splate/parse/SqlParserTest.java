@@ -28,17 +28,17 @@ import com.github.mygreen.splate.parser.SqlParseException;
  * @author T.TSUCHIE
  *
  */
-public class SqlParserTest {
+class SqlParserTest {
 
     private SqlTemplateEngine templateEngine;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         this.templateEngine = new SqlTemplateEngine();
     }
 
     @Test
-    public void testParse_noParams() {
+    void testParse_noParams() {
 
         String sql = "SELECT * FROM emp";
 
@@ -52,7 +52,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testParse_HintComment() {
+    void testParse_HintComment() {
 
         String sql = "SELECT /*+ aabbb */* FROM emp";
 
@@ -67,7 +67,7 @@ public class SqlParserTest {
 
     @DisplayName("コメントの閉じ忘れ")
     @Test
-    public void testParse_commentEndNotFound() {
+    void testParse_commentEndNotFound() {
 
         String sql = "SELECT * FROM emp/*hoge";
 
@@ -80,7 +80,7 @@ public class SqlParserTest {
 
     @DisplayName("IFコメントで条件式がない場合")
     @Test
-    public void testParse_IfConditionNull() {
+    void testParse_IfConditionNull() {
 
         String sql = "SELECT * FROM emp/*IF */ WHERE age = /*age*/20/*END*/";
 
@@ -93,7 +93,7 @@ public class SqlParserTest {
 
     @DisplayName("ENDコメントがない場合")
     @Test
-    public void testParse_EndCommentNotFound() {
+    void testParse_EndCommentNotFound() {
 
         String sql = "SELECT * FROM emp/*BEGIN*/ WHERE /*IF job != null*/job = /*job*/'CLERK'/*END*//*IF deptno != null*/ AND deptno = /*deptno*/20/*END*/";
 
@@ -107,7 +107,7 @@ public class SqlParserTest {
 
     @DisplayName("EL式が不正な場合")
     @Test
-    public void testParse_IfCondition_wrongExp() {
+    void testParse_IfCondition_wrongExp() {
 
         String sql = "SELECT * FROM emp/*IF abc/*b*/ WHERE age = /*age*/20/*END*/";
 
@@ -120,7 +120,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testBindVariable() {
+    void testBindVariable() {
 
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
 
@@ -134,7 +134,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testBindVariable_placeholder() {
+    void testBindVariable_placeholder() {
         String sql = "BETWEEN sal ? AND ?";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
@@ -146,7 +146,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testBindVariable_evalELError() {
+    void testBindVariable_evalELError() {
 
         String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
 
@@ -162,7 +162,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testParenBindVariable_collection() {
+    void testParenBindVariable_collection() {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
@@ -175,7 +175,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testParenBindVariable_array() {
+    void testParenBindVariable_array() {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
@@ -188,7 +188,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testParenBindVariable_object() {
+    void testParenBindVariable_object() {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
@@ -201,7 +201,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testParenBindVariable_evalELError() {
+    void testParenBindVariable_evalELError() {
         String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
@@ -216,7 +216,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testEmbeddedValue() {
+    void testEmbeddedValue() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
 
@@ -230,7 +230,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testEmbeddedValue_semicolon() {
+    void testEmbeddedValue_semicolon() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
 
@@ -245,7 +245,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testEmbeddedValue_evalELError() {
+    void testEmbeddedValue_evalELError() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
 
@@ -261,7 +261,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testIf_null() {
+    void testIf_null() {
 
         String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
 
@@ -275,7 +275,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testIf_evalELError() {
+    void testIf_evalELError() {
 
         String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
 
@@ -293,7 +293,7 @@ public class SqlParserTest {
 
 
     @Test
-    public void testIf_compare() {
+    void testIf_compare() {
 
         String sql = "SELECT * FROM emp/*IF age >= 1*/ WHERE age = /*age*/20/*END*/";
 
@@ -320,7 +320,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testElse() {
+    void testElse() {
 
         String sql = "SELECT * FROM emp WHERE /*IF job != null*/job = /*job*/'CLERK'-- ELSE job is null/*END*/";
 
@@ -350,7 +350,7 @@ public class SqlParserTest {
     }
 
     @Test
-    public void testBegin() {
+    void testBegin() {
 
         String sql = "SELECT * FROM emp/*BEGIN*/ WHERE /*IF job != null*/job = /*job*/'CLERK'/*END*//*IF deptno != null*/ AND deptno = /*deptno*/20/*END*//*END*/";
 

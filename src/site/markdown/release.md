@@ -6,7 +6,7 @@
 
     - SpringFramework依存関係を v5.1 -> v5.0 に変更。
 
-- [#5](https://github.com/mygreen/splate/pull/5) 役割をより明確にするため一部のクラス名を変更。
+- [#5](https://github.com/mygreen/splate/pull/5) 役割をより明確にするために一部のクラス名を変更。
 
     - SqlContext -> SqlTemplateContext
 

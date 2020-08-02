@@ -79,6 +79,7 @@ public abstract class AbstractNode implements Node {
      * EL式を評価します。
      * <p>例外処理を含めて共通化のために切り出したメソッドです。</p>
      *
+     * @since 0.2
      * @param <T> 戻り値のタイプ
      * @param expression EL式
      * @param evaluationContext EL式のコンテキスト
@@ -86,6 +87,7 @@ public abstract class AbstractNode implements Node {
      * @param position テンプレートの位置情報
      * @param parsedSql パース済みのSQLテンプレート
      * @return EL式の評価結果
+     * @throws NodeProcessException EL式の評価に失敗した場合にスローされます。
      */
     protected <T> T evaluateExpression(final Expression expression, final EvaluationContext evaluationContext,
             final Class<T> requriedType, final int position, final String parsedSql) {
@@ -104,12 +106,14 @@ public abstract class AbstractNode implements Node {
      * <p>例外処理を含めて共通化のために切り出したメソッドです。</p>
      * <p>変換規則がnullの場合は、変換対象の値をそのまま返します。</p>
      *
+     * @since 0.2
      * @param value 変換対象の値。
      * @param valueType 変換規則
      * @param position テンプレートの位置情報
      * @param parsedSql パース済みのSQLテンプレート
      * @param expression 変換対象の値の元となったEL式
      * @return 変換した値。
+     * @throws NodeProcessException 変換時の処理に失敗した場合にスローされます。
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected Object getBindBariableValue(final Object value, SqlTemplateValueType valueType,
@@ -134,12 +138,14 @@ public abstract class AbstractNode implements Node {
      * <p>例外処理を含めて共通化のために切り出したメソッドです。</p>
      * <p>変換規則がnullの場合は、変換対象の値をそのまま返します。</p>
      *
+     * @since 0.2
      * @param value 変換対象の値。
      * @param valueType 変換規則
      * @param position テンプレートの位置情報
      * @param parsedSql パース済みのSQLテンプレート
      * @param expression 変換対象の値の元となったEL式
      * @return 変換した値。
+     * @throws NodeProcessException 変換時の処理に失敗した場合にスローされます。
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected String getEmbeddedValue(final Object value, SqlTemplateValueType valueType,

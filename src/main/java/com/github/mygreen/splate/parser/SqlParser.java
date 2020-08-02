@@ -263,9 +263,12 @@ public class SqlParser {
     /**
      * EL式をパースします。
      * <p>例外処理を含めて共通化のために切り出したメソッドです。</p>
+     *
+     * @since 0.2
      * @param expression 式
      * @param position テンプレート位置
      * @return パースした式
+     * @throws SqlParseException EL式のパースに失敗した場合にスローされます。
      */
     protected Expression parseExpression(final String expression, final int position) {
         try {

@@ -29,15 +29,6 @@ public class SqlTemplateValueTypeTest {
 
     private SqlTemplateEngine templateEngine;
 
-    enum JobType {
-        /**店員*/
-        CLERK,
-        /**調理師*/
-        COOKS,
-        /**オーナー*/
-        OWNER
-    }
-
     private static class JobValueType implements SqlTemplateValueType<JobType>{
 
         @Override
@@ -76,6 +67,20 @@ public class SqlTemplateValueTypeTest {
         SqlTemplate template = templateEngine.getTemplateByText(sql);
         SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", JobType.COOKS));
         context.registerValueType(JobType.class, new JobValueType());
+
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");
+        assertThat(result.getParameters()).containsExactly(1);
+    }
+
+    @Test
+    void testBindVariableNode_path() {
+        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", JobType.COOKS));
+        context.registerValueType("job", JobType.class, new JobValueType());
 
         ProcessResult result = template.process(context);
 

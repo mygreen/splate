@@ -12,6 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
+import com.github.mygreen.splate.type.EnumNameType;
+import com.github.mygreen.splate.type.EnumOrdinalType;
+import com.github.mygreen.splate.type.JobType;
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
+
 
 /**
  * {@link SqlTemplateContext} のテスタ。
@@ -21,13 +26,13 @@ import org.springframework.core.io.ResourceLoader;
  */
 public class SqlTemplateContextTest {
 
-    private SqlTemplateEngine templateEndine;
+    private SqlTemplateEngine templateEngine;
 
     private ResourceLoader resourceLoader;
 
     @BeforeEach
     public void setUp() {
-         this.templateEndine = new SqlTemplateEngine();
+         this.templateEngine = new SqlTemplateEngine();
          this.resourceLoader = new DefaultResourceLoader();
     }
 
@@ -37,7 +42,7 @@ public class SqlTemplateContextTest {
 
         String path = "classpath:template/employee_select.sql";
 
-        SqlTemplate template = templateEndine.getTemplate(path);
+        SqlTemplate template = templateEngine.getTemplate(path);
 
         SelectParam param = SelectParam.builder()
                 .salaryMin(new BigDecimal(1200))
@@ -59,7 +64,7 @@ public class SqlTemplateContextTest {
 
         String path = "classpath:template/employee_select.sql";
 
-        SqlTemplate template = templateEndine.getTemplate(path);
+        SqlTemplate template = templateEngine.getTemplate(path);
 
         Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200), "salaryMax", new BigDecimal(1800));
 
@@ -69,6 +74,35 @@ public class SqlTemplateContextTest {
         assertThat(result.getSql()).isEqualTo(expectedSql);
 
         assertThat(result.getParameters()).containsExactly(param.get("salaryMin"), param.get("salaryMax"));
+
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @DisplayName("SqlTemplateValueTypeRegistry を書き換える")
+    @Test
+    public void testValueTypeRegistry() {
+
+        // 元となる変換規則の定義
+        SqlTemplateValueTypeRegistry registry = new SqlTemplateValueTypeRegistry();
+        registry.register(Enum.class, new EnumOrdinalType());
+
+
+        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+
+        MapSqlTemplateContext context = new MapSqlTemplateContext(registry, Map.of("job", JobType.COOKS));
+
+        // 列挙型の変換規則を上書きする
+        context.registerValueType(Enum.class, new EnumNameType());
+
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");
+        assertThat(result.getParameters()).containsExactly("COOKS");
+
+        // 元の変換規則のチェック - 変わっていないことをチェック
+        assertThat(registry.findValueType(JobType.class, null)).isInstanceOf(EnumOrdinalType.class);
 
     }
 

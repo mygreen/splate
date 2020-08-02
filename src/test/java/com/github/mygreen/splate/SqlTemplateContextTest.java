@@ -16,7 +16,6 @@ import org.springframework.core.io.ResourceLoader;
 /**
  * {@link SqlTemplateContext} のテスタ。
  *
- *
  * @author T.TSUCHIE
  *
  */
@@ -97,16 +96,16 @@ public class SqlTemplateContextTest {
 //        assertThat(result.getParameters()).containsExactly("%abc%");
 //
 //    }
-
-    /**
-     * SQLテンプレート中で利用可能なカスタム関数
-     *
-     */
-    static class SqlFunctions {
-
-        public static String contains(String value) {
-            return "%" + value + "%";
-        }
-
-    }
+//
+//    /**
+//     * SQLテンプレート中で利用可能なカスタム関数
+//     *
+//     */
+//    static class SqlFunctions {
+//
+//        public static String contains(String value) {
+//            return "%" + value + "%";
+//        }
+//
+//    }
 }

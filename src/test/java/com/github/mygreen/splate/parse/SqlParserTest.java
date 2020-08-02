@@ -8,6 +8,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.expression.ExpressionException;
+import org.springframework.expression.ParseException;
 
 import com.github.mygreen.splate.EmptyValueSqlTemplateContext;
 import com.github.mygreen.splate.MapSqlTemplateContext;
@@ -15,6 +17,7 @@ import com.github.mygreen.splate.ProcessResult;
 import com.github.mygreen.splate.SqlTemplate;
 import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplateEngine;
+import com.github.mygreen.splate.node.NodeProcessException;
 import com.github.mygreen.splate.parser.SqlParseException;
 
 /**
@@ -84,6 +87,19 @@ public class SqlParserTest {
 
     }
 
+    @DisplayName("EL式が不正な場合")
+    @Test
+    public void testParse_IfCondition_wrongExp() {
+
+        String sql = "SELECT * FROM emp/*IF abc/*b*/ WHERE age = /*age*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasCauseInstanceOf(ParseException.class)
+            .hasMessageContaining("Fail parsing expression 'abc/*b'.");
+
+    }
+
     @Test
     public void testBindVariable() {
 
@@ -95,6 +111,21 @@ public class SqlParserTest {
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ? AND deptno = ?");
         assertThat(result.getParameters()).containsExactly("Normal", 10);
+
+    }
+
+    @Test
+    public void testBindVariable_evalELError() {
+
+        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", "Normal"/*, "deptno", 10*/));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'deptno'.");
 
     }
 
@@ -138,6 +169,20 @@ public class SqlParserTest {
     }
 
     @Test
+    public void testParenBindVariable_evalELError() {
+        String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(/*Map.of("id", 1)*/);
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'id'.");
+
+    }
+
+    @Test
     public void testEmbeddedValue() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
@@ -148,6 +193,21 @@ public class SqlParserTest {
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp limit 100 offset 10");
         assertThat(result.getParameters()).isEmpty();
+
+    }
+
+    @Test
+    public void testEmbeddedValue_evalELError() {
+
+        String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("limit", 100/*, "offset", 10*/));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'offset'.");
 
     }
 
@@ -164,6 +224,23 @@ public class SqlParserTest {
         assertThat(result.getParameters()).containsExactly("Normal");
 
     }
+
+    @Test
+    public void testIf_evalELError() {
+
+        String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(/*Map.of("job", "Normal")*/);
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'job != null'.");
+
+    }
+
+
 
     @Test
     public void testIf_compare() {

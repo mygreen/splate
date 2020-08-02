@@ -70,7 +70,7 @@ public class EmbeddedValueNode extends AbstractNode {
             if (sql.indexOf(';') >= 0) {
                 // SQLインジェクションの原因となるセミコロンが含まれる場合は例外をスローする。
                 throw new NodeProcessException(SqlUtils.resolveSqlPosition(ctx.getParsedSql(), getPosition()),
-                        String.format("Not allowed semicolon at embedded value '%s'.", sql));
+                        String.format("Not allowed semicolon at embedded value '%s' to '%s'.", expression, sql));
             }
             ctx.addSql(sql);
         }

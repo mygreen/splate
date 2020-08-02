@@ -230,6 +230,21 @@ public class SqlParserTest {
     }
 
     @Test
+    public void testEmbeddedValue_semicolon() {
+
+        String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("limit", 100, "offset", ";update"));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasMessageContaining("Not allowed semicolon at embedded value 'offset' to ';update'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 47, sql));
+
+    }
+
+    @Test
     public void testEmbeddedValue_evalELError() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";

@@ -139,7 +139,7 @@ public class SqlTemplateEngine {
     public SqlTemplate getTemplateByText(@NonNull final String sql) {
 
         if(cached) {
-            final String key = SqlUtils.getMessageDigest(sql, "SHA-1");
+            final String key = SqlUtils.getMessageDigest(sql);
             return templateCache.computeIfAbsent(key, k ->  parseTemplateByText(sql));
         } else {
             return parseTemplateByText(sql);

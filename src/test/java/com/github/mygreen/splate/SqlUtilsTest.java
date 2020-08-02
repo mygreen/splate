@@ -46,8 +46,8 @@ class SqlUtilsTest {
         {
             AtomicReference<CharSequence> foundStr = new AtomicReference<>();
             int index = SqlUtils.indexOfAny("zzabyycdxx", 0, foundStr, "", "abc");
-            assertThat(index).isEqualTo(0);
-            assertThat(foundStr.get()).isEqualTo("");
+            assertThat(index).isZero();
+            assertThat(foundStr.get()).isEmpty();
         }
 
     }

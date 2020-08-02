@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import lombok.NonNull;
+
 /**
  * 2Way-SQL機能の中で提供されるユーティリティクラス。
  * <p>MirageSQL/Seaser2からの持ち込みなので、既存のユーティリティクラスとは分けて定義する。</p>
@@ -121,7 +123,7 @@ public class SqlUtils {
      * @param position 位置
      * @return テンプレートの位置情報
      */
-    public static Position resolveSqlPosition(final String sql, final int position) {
+    public static Position resolveSqlPosition(final @NonNull String sql, final int position) {
 
         // 現在の位置より前の情報を切り出し、改行を検索する。
         final String before = sql.substring(0, position);
@@ -152,7 +154,7 @@ public class SqlUtils {
         // 行の切り出し
         final String after = sql.substring(lastIndex);
         String line = after;
-        if((index = indexOfAny(after, 0, null, searchWords)) >= 0) {
+        if(after != null && (index = indexOfAny(after, 0, null, searchWords)) >= 0) {
             line = after.substring(0, index);
         }
 

@@ -66,16 +66,6 @@ public class SqlUtils {
     }
 
     /**
-     * 文字列が空でないかどうか判定します。
-     *
-     * @param text 文字列
-     * @return 文字列が {@literal null} または空文字列なら {@literal false} を返します。
-     */
-    public static final boolean isNotEmpty(final String text) {
-        return !isEmpty(text);
-    }
-
-    /**
      * リソースをテキストとして読み込む。
      * <p>引数で指定したストリームは自動的にクローズします。</p>
      *

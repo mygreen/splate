@@ -246,8 +246,6 @@ public class SqlParser {
             expr = expr.substring(1);
             position += 1;
             peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));
-        } else if (expr.equalsIgnoreCase("orderBy")) {
-            peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));
         } else {
             peek().addChild(new BindVariableNode(position, expr, parseExpression(expr, position)));
         }

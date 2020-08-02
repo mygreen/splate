@@ -376,18 +376,12 @@ public class SqlParser {
     }
 
     /**
-     * Checks if the comment is an Oracle optimizer hint.
-     *
-     * @param content the comment to check
-     * @return <code>true</code> if this comment is an Oracle optimizer hint.
-     */
-    /**
      * Oracle のヒントコメントかどうか判定します。
      *
      * @param comment コメント
      * @return Oracle のヒントコメントのとき {@literal true} を返します。
      */
     protected static boolean isHintComment(String comment) {
-        return comment.startsWith("+");
+        return comment != null && comment.startsWith("+");
     }
 }

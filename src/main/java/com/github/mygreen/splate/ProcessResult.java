@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * SQLテンプレートを実行した結果
+ * SQLテンプレートを評価した結果
  *
  * @author T.TSUCHIE
  *
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class ProcessResult {
 
     /**
-     * SQL
+     * 評価されたSQL
      */
     @Getter
     private final String sql;

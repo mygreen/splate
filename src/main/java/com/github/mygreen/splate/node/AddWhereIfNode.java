@@ -28,9 +28,10 @@ import org.springframework.core.style.ToStringCreator;
  */
 public class AddWhereIfNode extends ContainerNode {
 
-    private static Pattern pat = Pattern.compile("\\s*(order\\sby)|$)");
+    private static final Pattern PATTERN = Pattern.compile("\\s*(order\\sby)|$)", Pattern.CASE_INSENSITIVE);
 
-    public AddWhereIfNode() {
+    public AddWhereIfNode(final int position) {
+        super(position);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class AddWhereIfNode extends ContainerNode {
         NodeProcessContext childCtx = new NodeProcessContext(ctx);
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
-            String sql = childCtx.getSql();
-            Matcher m = pat.matcher(sql);
+            String sql = childCtx.getProcessedSql();
+            Matcher m = PATTERN.matcher(sql);
             if (!m.lookingAt()) {
                 sql = " WHERE " + sql;
             }
@@ -51,6 +52,7 @@ public class AddWhereIfNode extends ContainerNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("children", children)
                 .toString();
     }

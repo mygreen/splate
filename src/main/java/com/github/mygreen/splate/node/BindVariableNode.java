@@ -18,7 +18,6 @@ package com.github.mygreen.splate.node;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 
 import com.github.mygreen.splate.type.SqlTemplateValueType;
 
@@ -27,6 +26,7 @@ import lombok.Getter;
 /**
  * （コメントによる定義の）バインド変数のための{@link Node}です。
  *
+ * @version 0.2
  * @author higa
  * @author T.TSUCHIE
  */
@@ -43,33 +43,35 @@ public class BindVariableNode extends AbstractNode {
      */
     private final Expression parsedExpression;
 
-
     /**
      * {@link BindVariableNode} を作成します。
      *
+     * @param position テンプレートの位置情報
      * @param expression 式
-     * @param expressionParser 式のパーサ
+     * @param parsedExpression パース済みの式
      */
-    public BindVariableNode(final String expression, final ExpressionParser expressionParser) {
+    public BindVariableNode(final int position, final String expression, final Expression parsedExpression) {
+        super(position);
         this.expression = expression;
-        this.parsedExpression = expressionParser.parseExpression(expression);
+        this.parsedExpression = parsedExpression;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void accept(final NodeProcessContext ctx) {
 
-        EvaluationContext evaluationContext = ctx.getEvaluationContext();
-        Object value = parsedExpression.getValue(evaluationContext);
+        final EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        Object value = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
         Class<?> clazz = parsedExpression.getValueType(evaluationContext);
 
-        SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
-        ctx.addSql("?", value, valueType);
+        SqlTemplateValueType<?> valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
+        value = getBindVariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
+        ctx.addSql("?", value);
     }
 
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("expression", expression)
                 .append("parsedExpression", parsedExpression)
                 .append("children", children)

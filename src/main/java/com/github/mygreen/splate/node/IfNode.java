@@ -18,7 +18,6 @@ package com.github.mygreen.splate.node;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +26,7 @@ import lombok.Setter;
 /**
  * {@code IF} コメント用の{@link Node}です。
  *
+ * @version 0.2
  * @author higa
  * @author T.TSUCHIE
  */
@@ -51,21 +51,23 @@ public class IfNode extends ContainerNode {
     private ElseNode elseNode;
 
     /**
-     * Creates n <code>IfNode</code> from a string expression.
+     * 条件式を元に、Creates {@link IfNode}を作成します。
      *
+     * @param position 位置情報
      * @param expression 式
-     * @param expressionParser 式のパーサ
+     * @param parsedExpression パース済みの式
      */
-    public IfNode(final String expression, final ExpressionParser expressionParser) {
+    public IfNode(final int position, final String expression, final Expression parsedExpression) {
+        super(position);
         this.expression = expression;
-        this.parsedExpression = expressionParser.parseExpression(expression);
+        this.parsedExpression = parsedExpression;
     }
 
     @Override
     public void accept(final NodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
-        boolean result = parsedExpression.getValue(evaluationContext, boolean.class);
+        boolean result = evaluateExpression(parsedExpression, evaluationContext, boolean.class, getPosition(), ctx.getParsedSql());
 
         if (result) {
             super.accept(ctx);
@@ -79,6 +81,7 @@ public class IfNode extends ContainerNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("expression", expression)
                 .append("parsedExpression", parsedExpression)
                 .append("elseNode", elseNode)

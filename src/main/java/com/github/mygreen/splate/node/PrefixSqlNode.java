@@ -40,12 +40,14 @@ public class PrefixSqlNode extends AbstractNode {
     private final String sql;
 
     /**
-     * Creates a <code>PrefixSqlNode</code>
+     * {@link PrefixSqlNode} を作成します。
      *
+     * @param position テンプレートの位置情報
      * @param prefix プレフィックス
      * @param sql SQL
      */
-    public PrefixSqlNode(String prefix, String sql) {
+    public PrefixSqlNode(final int position, final String prefix, final String sql) {
+        super(position);
         this.prefix = prefix;
         this.sql = sql;
     }
@@ -62,9 +64,10 @@ public class PrefixSqlNode extends AbstractNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
+                .append("children", children)
                 .append("prefix", prefix)
                 .append("sql", sql)
-                .append("children", children)
                 .toString();
     }
 }

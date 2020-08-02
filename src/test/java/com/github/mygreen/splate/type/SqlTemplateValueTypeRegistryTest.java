@@ -27,26 +27,6 @@ public class SqlTemplateValueTypeRegistryTest {
         this.registry = new SqlTemplateValueTypeRegistry();
     }
 
-    private static class LocalDateType implements SqlTemplateValueType<LocalDate> {
-
-        @Override
-        public Object getBindVariableValue(LocalDate value) throws SqlTypeConversionException {
-            Date sqlValue = (value != null ? Date.valueOf(value) : null);
-            return sqlValue;
-        }
-
-    }
-
-    private static class EnumOrdinalType<T extends Enum<T>> implements SqlTemplateValueType<T> {
-
-        @Override
-        public Object getBindVariableValue(T value) throws SqlTypeConversionException {
-            Integer sqlValue = (value != null ? value.ordinal() : null);
-            return sqlValue;
-        }
-
-    }
-
     private enum Color {
         BLUE, RED, YELLOW;
     }

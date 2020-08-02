@@ -6,15 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.expression.ExpressionException;
+import org.springframework.expression.ParseException;
 
 import com.github.mygreen.splate.EmptyValueSqlTemplateContext;
 import com.github.mygreen.splate.MapSqlTemplateContext;
+import com.github.mygreen.splate.Position;
 import com.github.mygreen.splate.ProcessResult;
-import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplate;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplateEngine;
-import com.github.mygreen.splate.TwoWaySqlException;
+import com.github.mygreen.splate.node.NodeProcessException;
+import com.github.mygreen.splate.parser.SqlParseException;
 
 /**
  * {@link SqlParserTest}のテスタ。
@@ -47,13 +52,70 @@ public class SqlParserTest {
     }
 
     @Test
+    public void testParse_HintComment() {
+
+        String sql = "SELECT /*+ aabbb */* FROM emp";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new EmptyValueSqlTemplateContext();
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("SELECT /*+ aabbb */* FROM emp");
+        assertThat(result.getParameters()).isEmpty();
+
+    }
+
+    @DisplayName("コメントの閉じ忘れ")
+    @Test
     public void testParse_commentEndNotFound() {
 
         String sql = "SELECT * FROM emp/*hoge";
 
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
-            .isInstanceOf(TwoWaySqlException.class)
-            .hasMessageContaining("hoge is not closed with */");
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not closed comment '*/' for hoge.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 19, sql));
+
+    }
+
+    @DisplayName("IFコメントで条件式がない場合")
+    @Test
+    public void testParse_IfConditionNull() {
+
+        String sql = "SELECT * FROM emp/*IF */ WHERE age = /*age*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not found IF condition.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
+
+    }
+
+    @DisplayName("ENDコメントがない場合")
+    @Test
+    public void testParse_EndCommentNotFound() {
+
+        String sql = "SELECT * FROM emp/*BEGIN*/ WHERE /*IF job != null*/job = /*job*/'CLERK'/*END*//*IF deptno != null*/ AND deptno = /*deptno*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not found END comment.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 132, sql));
+
+
+    }
+
+    @DisplayName("EL式が不正な場合")
+    @Test
+    public void testParse_IfCondition_wrongExp() {
+
+        String sql = "SELECT * FROM emp/*IF abc/*b*/ WHERE age = /*age*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasCauseInstanceOf(ParseException.class)
+            .hasMessageContaining("Fail parsing expression 'abc/*b'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
 
     }
 
@@ -68,6 +130,34 @@ public class SqlParserTest {
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ? AND deptno = ?");
         assertThat(result.getParameters()).containsExactly("Normal", 10);
+
+    }
+
+    @Test
+    public void testBindVariable_placeholder() {
+        String sql = "BETWEEN sal ? AND ?";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("$1", 1, "$2", 10));
+        ProcessResult result = template.process(context);
+
+        assertThat(result.getSql()).isEqualTo("BETWEEN sal ? AND ?");
+        assertThat(result.getParameters()).containsExactly(1, 10);
+    }
+
+    @Test
+    public void testBindVariable_evalELError() {
+
+        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK' AND deptno = /*deptno*/20";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", "Normal"/*, "deptno", 10*/));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'deptno'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 60, sql));
 
     }
 
@@ -111,6 +201,21 @@ public class SqlParserTest {
     }
 
     @Test
+    public void testParenBindVariable_evalELError() {
+        String sql = "SELECT * FROM emp WHERE id in /*id*/(10, 20)";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(/*Map.of("id", 1)*/);
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'id'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 32, sql));
+
+    }
+
+    @Test
     public void testEmbeddedValue() {
 
         String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
@@ -121,6 +226,37 @@ public class SqlParserTest {
 
         assertThat(result.getSql()).isEqualTo("SELECT * FROM emp limit 100 offset 10");
         assertThat(result.getParameters()).isEmpty();
+
+    }
+
+    @Test
+    public void testEmbeddedValue_semicolon() {
+
+        String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("limit", 100, "offset", ";update"));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasMessageContaining("Not allowed semicolon at embedded value 'offset' to ';update'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 47, sql));
+
+    }
+
+    @Test
+    public void testEmbeddedValue_evalELError() {
+
+        String sql = "SELECT * FROM emp limit /*$limit*/10 offset /*$offset*/5";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(Map.of("limit", 100/*, "offset", 10*/));
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'offset'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 47, sql));
 
     }
 
@@ -137,6 +273,24 @@ public class SqlParserTest {
         assertThat(result.getParameters()).containsExactly("Normal");
 
     }
+
+    @Test
+    public void testIf_evalELError() {
+
+        String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext context = new MapSqlTemplateContext(/*Map.of("job", "Normal")*/);
+
+        assertThatThrownBy(() -> template.process(context))
+            .isInstanceOf(NodeProcessException.class)
+            .hasCauseInstanceOf(ExpressionException.class)
+            .hasMessageContaining("Fail evaluating expression 'job != null'.")
+            .hasFieldOrPropertyWithValue("position", new Position(1, 22, sql));
+
+    }
+
+
 
     @Test
     public void testIf_compare() {

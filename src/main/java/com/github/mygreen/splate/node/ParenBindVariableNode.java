@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 
 import com.github.mygreen.splate.type.SqlTemplateValueType;
 
@@ -51,12 +50,14 @@ public class ParenBindVariableNode extends AbstractNode {
     /**
      * {@link ParenBindVariableNode} を作成します。
      *
+     * @param position テンプレート位置情報
      * @param expression 式
-     * @param expressionParser 式のパーサ
+     * @param parsedExpression パース済みの式
      */
-    public ParenBindVariableNode(final String expression, final ExpressionParser expressionParser) {
+    public ParenBindVariableNode(final int position, final String expression, final Expression parsedExpression) {
+        super(position);
         this.expression = expression;
-        this.parsedExpression = expressionParser.parseExpression(expression);
+        this.parsedExpression = parsedExpression;
     }
 
     @SuppressWarnings("rawtypes")
@@ -64,7 +65,7 @@ public class ParenBindVariableNode extends AbstractNode {
     public void accept(final NodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
-        final Object var = parsedExpression.getValue(evaluationContext);
+        final Object var = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
         if(var == null) {
             return;
         }
@@ -79,7 +80,8 @@ public class ParenBindVariableNode extends AbstractNode {
             // ただのオブジェクトの場合
             Class<?> clazz = parsedExpression.getValueType(evaluationContext);
             SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
-            ctx.addSql("?", var, valueType);
+            Object value = getBindBariableValue(var, valueType, getPosition(), ctx.getParsedSql(), expression);
+            ctx.addSql("?", value);
         }
 
     }
@@ -119,12 +121,14 @@ public class ParenBindVariableNode extends AbstractNode {
         ctx.addSql("(");
         Object value = Array.get(array, 0);
         SqlTemplateValueType valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
+        value = getBindBariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
 
-        ctx.addSql("?", value, valueType);
+        ctx.addSql("?", value);
         for (int i = 1; i < length; ++i) {
             ctx.addSql(", ");
             value = Array.get(array, i);
-            ctx.addSql("?", value, valueType);
+            value = getBindBariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
+            ctx.addSql("?", value);
         }
         ctx.addSql(")");
     }
@@ -132,6 +136,7 @@ public class ParenBindVariableNode extends AbstractNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("expression", expression)
                 .append("parsedExpression", parsedExpression)
                 .append("children", children)

@@ -21,10 +21,12 @@ import org.springframework.core.style.ToStringCreator;
  * {@code ELSE} コメント用の{@link Node}です。
  *
  * @author higa
+ * @author T.TSUCHIE
  */
 public class ElseNode extends ContainerNode {
 
-    public ElseNode() {
+    public ElseNode(final int position) {
+        super(position);
     }
 
     @Override
@@ -36,6 +38,7 @@ public class ElseNode extends ContainerNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("children", children)
                 .toString();
     }

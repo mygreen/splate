@@ -24,7 +24,8 @@ import org.springframework.core.style.ToStringCreator;
  */
 public class ContainerNode extends AbstractNode {
 
-    public ContainerNode() {
+    public ContainerNode(final int position) {
+        super(position);
     }
 
     @Override
@@ -37,6 +38,7 @@ public class ContainerNode extends AbstractNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("children", children)
                 .toString();
     }

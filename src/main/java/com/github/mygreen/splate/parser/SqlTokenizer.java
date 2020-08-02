@@ -15,7 +15,7 @@
  */
 package com.github.mygreen.splate.parser;
 
-import com.github.mygreen.splate.TwoWaySqlException;
+import com.github.mygreen.splate.SqlUtils;
 
 /**
  * SQLをトークンに分解するクラスです。.
@@ -36,14 +36,29 @@ public class SqlTokenizer {
         EOF
     }
 
+    /**
+     * 解析対象のSQL
+     */
     private String sql;
 
+    /**
+     * 現在解析しているポジション
+     */
     private int position = 0;
 
+    /**
+     * トークン
+     */
     private String token;
 
+    /**
+     * 現在のトークン種別
+     */
     private TokenType tokenType = TokenType.SQL;
 
+    /**
+     * 次のトークン種別
+     */
     private TokenType nextTokenType = TokenType.SQL;
 
     private int bindVariableNum = 0;
@@ -215,8 +230,8 @@ public class SqlTokenizer {
             commentEndPos = commentEndPos2;
         }
         if (commentEndPos < 0) {
-            throw new TwoWaySqlException(String.format(
-                    "%s is not closed with %s.", sql.substring(position), "*/"));
+            throw new SqlParseException(SqlUtils.resolveSqlPosition(sql, position),
+                    String.format("Not closed comment '*/' for %s.", sql.substring(position)));
         }
         token = sql.substring(position, commentEndPos);
         nextTokenType = TokenType.SQL;

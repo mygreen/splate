@@ -25,7 +25,8 @@ import org.springframework.core.style.ToStringCreator;
  */
 public class BeginNode extends ContainerNode {
 
-    public BeginNode() {
+    public BeginNode(final int position) {
+        super(position);
     }
 
     @Override
@@ -33,13 +34,14 @@ public class BeginNode extends ContainerNode {
         NodeProcessContext childCtx = new NodeProcessContext(ctx);
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
-            ctx.addSql(childCtx.getSql(), childCtx.getBindParams());
+            ctx.addSql(childCtx.getProcessedSql(), childCtx.getBindParams());
         }
     }
 
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("children", children)
                 .toString();
     }

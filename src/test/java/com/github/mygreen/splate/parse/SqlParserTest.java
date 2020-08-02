@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.github.mygreen.splate.EmptyValueSqlTemplateContext;
 import com.github.mygreen.splate.MapSqlTemplateContext;
 import com.github.mygreen.splate.ProcessResult;
-import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplate;
+import com.github.mygreen.splate.SqlTemplateContext;
 import com.github.mygreen.splate.SqlTemplateEngine;
-import com.github.mygreen.splate.TwoWaySqlException;
+import com.github.mygreen.splate.parser.SqlParseException;
 
 /**
  * {@link SqlParserTest}のテスタ。
@@ -46,14 +47,40 @@ public class SqlParserTest {
 
     }
 
+    @DisplayName("コメントの閉じ忘れ")
     @Test
     public void testParse_commentEndNotFound() {
 
         String sql = "SELECT * FROM emp/*hoge";
 
         assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
-            .isInstanceOf(TwoWaySqlException.class)
-            .hasMessageContaining("hoge is not closed with */");
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not closed comment '*/' for hoge.");
+
+    }
+
+    @DisplayName("IFコメントで条件式がない場合")
+    @Test
+    public void testParse_IfConditionNull() {
+
+        String sql = "SELECT * FROM emp/*IF */ WHERE age = /*age*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not found IF condition.");
+
+    }
+
+    @DisplayName("ENDコメントがない場合")
+    @Test
+    public void testParse_EndCommentNotFound() {
+
+        String sql = "SELECT * FROM emp/*BEGIN*/ WHERE /*IF job != null*/job = /*job*/'CLERK'/*END*//*IF deptno != null*/ AND deptno = /*deptno*/20/*END*/";
+
+        assertThatThrownBy(() -> templateEngine.getTemplateByText(sql))
+            .isInstanceOf(SqlParseException.class)
+            .hasMessageContaining("Not found END comment.");
+
 
     }
 

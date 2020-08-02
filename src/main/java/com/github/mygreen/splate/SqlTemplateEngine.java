@@ -147,10 +147,15 @@ public class SqlTemplateEngine {
 
     }
 
+    /**
+     * 文字列で指定されたSQLテンプレートをパースします。
+     * @param sql SQL
+     * @return パース結果。
+     */
     private SqlTemplate parseTemplateByText(final String sql) {
         SqlParser parser = createSqlParser(sql);
         Node node = parser.parse();
-        return new SqlTemplate(node);
+        return new SqlTemplate(parser.getSql(), node);
     }
 
     /**

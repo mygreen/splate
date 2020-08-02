@@ -51,12 +51,14 @@ public class IfNode extends ContainerNode {
     private ElseNode elseNode;
 
     /**
-     * Creates n <code>IfNode</code> from a string expression.
+     * 条件式を元に、Creates {@link IfNode}を作成します。
      *
+     * @param position 位置情報
      * @param expression 式
      * @param expressionParser 式のパーサ
      */
-    public IfNode(final String expression, final ExpressionParser expressionParser) {
+    public IfNode(final int position, final String expression, final ExpressionParser expressionParser) {
+        super(position);
         this.expression = expression;
         this.parsedExpression = expressionParser.parseExpression(expression);
     }
@@ -65,7 +67,7 @@ public class IfNode extends ContainerNode {
     public void accept(final NodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
-        boolean result = parsedExpression.getValue(evaluationContext, boolean.class);
+        boolean result = evaluateExpression(parsedExpression, evaluationContext, boolean.class, getPosition(), ctx.getParsedSql());
 
         if (result) {
             super.accept(ctx);
@@ -79,6 +81,7 @@ public class IfNode extends ContainerNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
+                .append("position", getPosition())
                 .append("expression", expression)
                 .append("parsedExpression", parsedExpression)
                 .append("elseNode", elseNode)

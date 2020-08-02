@@ -17,10 +17,11 @@ package com.github.mygreen.splate.parser;
 
 import java.util.Stack;
 
+import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
 
 import com.github.mygreen.splate.SqlUtils;
-import com.github.mygreen.splate.TwoWaySqlException;
 import com.github.mygreen.splate.node.BeginNode;
 import com.github.mygreen.splate.node.BindVariableNode;
 import com.github.mygreen.splate.node.ContainerNode;
@@ -79,11 +80,19 @@ public class SqlParser {
     }
 
     /**
+     * 解析対象のSQLを取得します。
+     * @return 正規化（トリム、最後のセミコロン(;)削除）を返します。
+     */
+    public String getSql() {
+        return tokenizer.getSql();
+    }
+
+    /**
      *
      * @return SQLを解析して<code>Node</code>のツリーを返します。
      */
     public Node parse() {
-        push(new ContainerNode());
+        push(new ContainerNode(0));
         while (TokenType.EOF != tokenizer.next()) {
             parseToken();
         }
@@ -130,18 +139,18 @@ public class SqlParser {
             st.skipWhitespace();
             if (sql.startsWith(",")) {
                 if (sql.startsWith(", ")) {
-                    node.addChild(new PrefixSqlNode(", ", sql.substring(2)));
+                    node.addChild(new PrefixSqlNode(tokenizer.getPosition(), ", ", sql.substring(2)));
                 } else {
-                    node.addChild(new PrefixSqlNode(",", sql.substring(1)));
+                    node.addChild(new PrefixSqlNode(tokenizer.getPosition(), ",", sql.substring(1)));
                 }
             } else if ("AND".equalsIgnoreCase(token)
                     || "OR".equalsIgnoreCase(token)) {
-                node.addChild(new PrefixSqlNode(st.getBefore(), st.getAfter()));
+                node.addChild(new PrefixSqlNode(tokenizer.getPosition(), st.getBefore(), st.getAfter()));
             } else {
-                node.addChild(new SqlNode(sql));
+                node.addChild(new SqlNode(tokenizer.getPosition(), sql));
             }
         } else {
-            node.addChild(new SqlNode(sql));
+            node.addChild(new SqlNode(tokenizer.getPosition(), sql));
         }
     }
 
@@ -161,7 +170,7 @@ public class SqlParser {
                 parseCommentBindVariable();
             }
         } else if(isHintComment(comment)){
-            peek().addChild(new SqlNode("/*" + comment + "*/"));
+            peek().addChild(new SqlNode(tokenizer.getPosition(), "/*" + comment + "*/"));
         }
     }
 
@@ -169,11 +178,13 @@ public class SqlParser {
      * {@code IF} 句を解析します。
      */
     protected void parseIf() {
-        String condition = tokenizer.getToken().substring(2).trim();
+        final String condition = tokenizer.getToken().substring(2).trim();
+        final int position = Math.max(tokenizer.getPosition() - 2, 0);
         if (SqlUtils.isEmpty(condition)) {
-            throw new TwoWaySqlException("If condition not found.");
+            throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),
+                    "Not found IF condition.");
         }
-        IfNode ifNode = new IfNode(condition, expressionParser);
+        IfNode ifNode = new IfNode(position, condition, expressionParser);
         peek().addChild(ifNode);
         push(ifNode);
         parseEnd();
@@ -183,7 +194,7 @@ public class SqlParser {
      * {@code BEGIN} 句を解析します。
      */
     protected void parseBegin() {
-        BeginNode beginNode = new BeginNode();
+        BeginNode beginNode = new BeginNode(tokenizer.getPosition());
         peek().addChild(beginNode);
         push(beginNode);
         parseEnd();
@@ -202,8 +213,8 @@ public class SqlParser {
             }
             parseToken();
         }
-        throw new TwoWaySqlException(String.format(
-                "END comment of %s not found.", tokenizer.getSql()));
+        throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), tokenizer.getPosition()),
+                "Not found END comment.");
     }
 
     /**
@@ -215,7 +226,7 @@ public class SqlParser {
             return;
         }
         IfNode ifNode = (IfNode) pop();
-        ElseNode elseNode = new ElseNode();
+        ElseNode elseNode = new ElseNode(tokenizer.getPosition());
         ifNode.setElseNode(elseNode);
         push(elseNode);
         tokenizer.skipWhitespace();
@@ -227,14 +238,16 @@ public class SqlParser {
     protected void parseCommentBindVariable() {
         String expr = tokenizer.getToken();
         String s = tokenizer.skipToken();
+        int position = tokenizer.getPosition();
         if (s.startsWith("(") && s.endsWith(")")) {
-            peek().addChild(new ParenBindVariableNode(expr, expressionParser));
+            peek().addChild(new ParenBindVariableNode(position, expr, parseExpression(expr, position)));
         } else if (expr.startsWith("$")) {
-            peek().addChild(new EmbeddedValueNode(expr.substring(1), expressionParser));
+            expr = expr.substring(1);
+            peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));
         } else if (expr.equalsIgnoreCase("orderBy")) {
-            peek().addChild(new EmbeddedValueNode(expr, expressionParser));
+            peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));
         } else {
-            peek().addChild(new BindVariableNode(expr, expressionParser));
+            peek().addChild(new BindVariableNode(position, expr, parseExpression(expr, position)));
         }
     }
 
@@ -243,7 +256,25 @@ public class SqlParser {
      */
     protected void parseBindVariable() {
         String expr = tokenizer.getToken();
-        peek().addChild(new BindVariableNode(expr, expressionParser));
+        int position = tokenizer.getPosition();
+        peek().addChild(new BindVariableNode(position, expr, parseExpression(expr, position)));
+    }
+
+    /**
+     * EL式をパースします。
+     * <p>例外処理を含めて共通化のために切り出したメソッドです。</p>
+     * @param expression 式
+     * @param position テンプレート位置
+     * @return パースした式
+     */
+    protected Expression parseExpression(final String expression, final int position) {
+        try {
+            return expressionParser.parseExpression(expression);
+        } catch(ParseException e) {
+            throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),
+                    String.format("Fail parsing expression '%s'.", expression),
+                    e);
+        }
     }
 
     /**

@@ -21,14 +21,13 @@ import java.util.List;
 import org.springframework.expression.EvaluationContext;
 
 import com.github.mygreen.splate.SqlTemplateContext;
-import com.github.mygreen.splate.type.SqlTemplateValueType;
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * {@code SQLテンプレート}を価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
+ * {@code SQLテンプレート}を評価するときのコンテキストです。 コンテキストで{@code SQL}を実行するのに必要な情報を組み立てた後、
  * {@code getSql()}, {@code getBindVariables()},
  * {@code getBindVariableTypes()}で、 情報を取り出して{@code SQL}を実行します。
  * {@code SQL}で{@code BEGIN}コメントと{@code END}コメントで囲まれている部分が、
@@ -71,6 +70,14 @@ public class NodeProcessContext {
     private NodeProcessContext parent;
 
     /**
+     * パースされた状態のSQLテンプレート。
+     * エラー時のメッセージを出力するために使用します。
+     */
+    @Getter
+    @Setter
+    private String parsedSql;
+
+    /**
      * テンプレートパラメータなどのSQLコンテキストを指定するコンストラクタ。
      * @param templateContext SQLテンプレートのコンテキスト
      */
@@ -89,15 +96,16 @@ public class NodeProcessContext {
 
         // 各種情報の引継ぎ
         this.templateContext = parent.templateContext;
+        this.parsedSql = parent.parsedSql;
 
     }
 
     /**
-     * {@code SQL} を取得します。
+     * 処理済みの{@code SQL} を取得します。
      *
      * @return SQL
      */
-    public String getSql() {
+    public String getProcessedSql() {
         return sqlBuf.toString();
     }
 
@@ -114,17 +122,10 @@ public class NodeProcessContext {
      * {@code SQL} とバインド変数を追加します。
      * @param sql SQL
      * @param bindValue バインドする変数の値
-     * @param valueType バインドする変数のタイプに対応する {@link SqlTemplateValueType}
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void addSql(String sql, Object bindValue, SqlTemplateValueType valueType) {
+    public void addSql(String sql, Object bindValue) {
         sqlBuf.append(sql);
-
-        if(valueType != null) {
-            bindParams.add(valueType.getBindVariableValue(bindValue));
-        } else {
-            bindParams.add(bindValue);
-        }
+        bindParams.add(bindValue);
     }
 
     /**

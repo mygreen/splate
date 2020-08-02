@@ -34,9 +34,11 @@ public class SqlNode extends AbstractNode {
 
     /**
      * SQLを指定して {@link SqlNode} を作成します。
+     * @param position テンプレートの位置情報
      * @param sql SQL
      */
-    public SqlNode(final String sql) {
+    public SqlNode(final int position, final String sql) {
+        super(position);
         this.sql = sql;
     }
 
@@ -48,8 +50,9 @@ public class SqlNode extends AbstractNode {
     @Override
     public String toString() {
         return new ToStringCreator(this)
-                .append("sql", sql)
+                .append("position", getPosition())
                 .append("children", children)
+                .append("sql", sql)
                 .toString();
     }
 }

@@ -18,6 +18,13 @@ import lombok.RequiredArgsConstructor;
 public class SqlTemplate {
 
     /**
+     * パースされたSQL。
+     * <p>正規化によりトリムや最後のセミコロン({@literal ;})が削除されたものです。</p>
+     */
+    @Getter
+    private final String sql;
+
+    /**
      * SQLノード
      */
     @Getter
@@ -32,10 +39,11 @@ public class SqlTemplate {
     public ProcessResult process(final SqlTemplateContext templateContext) {
 
         final NodeProcessContext processContext = new NodeProcessContext(templateContext);
+        processContext.setParsedSql(sql);
 
         // SQLテンプレートを評価します。
         node.accept(processContext);
 
-        return new ProcessResult(processContext.getSql(), processContext.getBindParams());
+        return new ProcessResult(processContext.getProcessedSql(), processContext.getBindParams());
     }
 }

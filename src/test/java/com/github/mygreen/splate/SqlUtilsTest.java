@@ -14,38 +14,38 @@ import org.junit.jupiter.api.Test;
  * @author T.TSUCHIE
  *
  */
-class SqlUtilsTest extends SqlUtils {
+class SqlUtilsTest {
 
     @Test
     void testIndexOfAny() {
 
-        assertThat(indexOfAny(null, 0, null, "a")).isEqualTo(-1);
-        assertThat(indexOfAny("abc", 0, new AtomicReference<CharSequence>(), new String[0])).isEqualTo(-1);
+        assertThat(SqlUtils.indexOfAny(null, 0, null, "a")).isEqualTo(-1);
+        assertThat(SqlUtils.indexOfAny("abc", 0, new AtomicReference<CharSequence>(), new String[0])).isEqualTo(-1);
 
         {
             AtomicReference<CharSequence> foundStr = new AtomicReference<>();
-            int index = indexOfAny("zzabyycdxx", 0, foundStr, "ab", "cd");
+            int index = SqlUtils.indexOfAny("zzabyycdxx", 0, foundStr, "ab", "cd");
             assertThat(index).isEqualTo(2);
             assertThat(foundStr.get()).isEqualTo("ab");
         }
 
         {
             AtomicReference<CharSequence> foundStr = new AtomicReference<>();
-            int index = indexOfAny("zzabyycdxx", 0, foundStr, "cd", "ab");
+            int index = SqlUtils.indexOfAny("zzabyycdxx", 0, foundStr, "cd", "ab");
             assertThat(index).isEqualTo(2);
             assertThat(foundStr.get()).isEqualTo("ab");
         }
 
         {
             AtomicReference<CharSequence> foundStr = new AtomicReference<>();
-            int index = indexOfAny("zzabyycdxx", 0, foundStr, "zab", "aby");
+            int index = SqlUtils.indexOfAny("zzabyycdxx", 0, foundStr, "zab", "aby");
             assertThat(index).isEqualTo(1);
             assertThat(foundStr.get()).isEqualTo("zab");
         }
 
         {
             AtomicReference<CharSequence> foundStr = new AtomicReference<>();
-            int index = indexOfAny("zzabyycdxx", 0, foundStr, "", "abc");
+            int index = SqlUtils.indexOfAny("zzabyycdxx", 0, foundStr, "", "abc");
             assertThat(index).isEqualTo(0);
             assertThat(foundStr.get()).isEqualTo("");
         }
@@ -66,7 +66,7 @@ class SqlUtilsTest extends SqlUtils {
 
         {
             // 先頭行
-            Position result = resolveSqlPosition(sql, 7);
+            Position result = SqlUtils.resolveSqlPosition(sql, 7);
             assertThat(result.getRow()).isEqualTo(1);
             assertThat(result.getCol()).isEqualTo(7);
             assertThat(result.getLine()).isEqualTo("SELECT * ");
@@ -74,7 +74,7 @@ class SqlUtilsTest extends SqlUtils {
 
         {
             // 行の途中
-            Position result = resolveSqlPosition(sql, 46);
+            Position result = SqlUtils.resolveSqlPosition(sql, 46);
             assertThat(result.getRow()).isEqualTo(5);
             assertThat(result.getCol()).isEqualTo(8);
             assertThat(result.getLine()).isEqualTo("  /*IF id != null*/");

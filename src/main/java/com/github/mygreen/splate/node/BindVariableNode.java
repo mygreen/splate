@@ -63,7 +63,7 @@ public class BindVariableNode extends AbstractNode {
         Class<?> clazz = parsedExpression.getValueType(evaluationContext);
 
         SqlTemplateValueType<?> valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
-        value = getBindBariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
+        value = getBindVariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
         ctx.addSql("?", value);
     }
 

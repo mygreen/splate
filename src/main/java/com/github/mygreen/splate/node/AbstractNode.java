@@ -116,7 +116,7 @@ public abstract class AbstractNode implements Node {
      * @throws NodeProcessException 変換時の処理に失敗した場合にスローされます。
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Object getBindBariableValue(final Object value, SqlTemplateValueType valueType,
+    protected Object getBindVariableValue(final Object value, SqlTemplateValueType valueType,
             final int position, final String parsedSql, final String expression) {
 
         if(valueType == null) {

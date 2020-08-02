@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate.parser</a> &gt; <span class="el_source">SqlParser.java</span></div><h1>SqlParser.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+package com.github.mygreen.splate.parser;
+
+import java.util.Stack;
+
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
+
+import com.github.mygreen.splate.SqlUtils;
+import com.github.mygreen.splate.node.BeginNode;
+import com.github.mygreen.splate.node.BindVariableNode;
+import com.github.mygreen.splate.node.ContainerNode;
+import com.github.mygreen.splate.node.ElseNode;
+import com.github.mygreen.splate.node.EmbeddedValueNode;
+import com.github.mygreen.splate.node.IfNode;
+import com.github.mygreen.splate.node.Node;
+import com.github.mygreen.splate.node.ParenBindVariableNode;
+import com.github.mygreen.splate.node.PrefixSqlNode;
+import com.github.mygreen.splate.node.SqlNode;
+import com.github.mygreen.splate.parser.SqlTokenizer.TokenType;
+
+/**
+ * SQLを解析して&lt;code&gt;Node&lt;/code&gt;のツリーにするクラスです。
+ *
+ * @version 0.2
+ * @author higa
+ */
+public class SqlParser {
+
+    /**
+     * SQLテンプレートの字句解析処理。
+     */
+    private final SqlTokenizer tokenizer;
+
+    /**
+     * EL式のパーサ
+     */
+    private final ExpressionParser expressionParser;
+
+<span class="fc" id="L55">    private final Stack&lt;Node&gt; nodeStack = new Stack&lt;&gt;();</span>
+
+    /**
+     * {@link SqlParser}を作成します。
+     *
+     * @param sql SQL
+     * @param expressionParser {@literal IF}コメント名の式を処理するためのEL式のパーサです。
+     */
+<span class="fc" id="L63">    public SqlParser(final String sql,final ExpressionParser expressionParser) {</span>
+<span class="fc" id="L64">        this.tokenizer = new SqlTokenizer(normalizeSql(sql));</span>
+<span class="fc" id="L65">        this.expressionParser = expressionParser;</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * パース対象のSQLをトリムなど行い正規化します。
+     * @param sql パース対象のSQL
+     * @return 正規化したSQL
+     */
+    protected String normalizeSql(final String sql) {
+<span class="fc" id="L74">        String result = sql;</span>
+<span class="fc" id="L75">        result = result.strip();</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (result.endsWith(&quot;;&quot;)) {</span>
+<span class="nc" id="L77">            result = result.substring(0, result.length() - 1);</span>
+        }
+
+<span class="fc" id="L80">        return result;</span>
+    }
+
+    /**
+     * 解析対象のSQLを取得します。
+     * @return 正規化（トリム、最後のセミコロン(;)削除）を返します。
+     */
+    public String getSql() {
+<span class="fc" id="L88">        return tokenizer.getSql();</span>
+    }
+
+    /**
+     *
+     * @return SQLを解析して&lt;code&gt;Node&lt;/code&gt;のツリーを返します。
+     */
+    public Node parse() {
+<span class="fc" id="L96">        push(new ContainerNode(0));</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        while (TokenType.EOF != tokenizer.next()) {</span>
+<span class="fc" id="L98">            parseToken();</span>
+        }
+<span class="fc" id="L100">        return pop();</span>
+    }
+
+	/**
+     * トークンを解析します。
+     */
+    protected void parseToken() {
+<span class="pc bpc" id="L107" title="1 of 5 branches missed.">        switch (tokenizer.getTokenType()) {</span>
+        case SQL:
+<span class="fc" id="L109">            parseSql();</span>
+<span class="fc" id="L110">            break;</span>
+        case COMMENT:
+<span class="fc" id="L112">            parseComment();</span>
+<span class="fc" id="L113">            break;</span>
+        case ELSE:
+<span class="fc" id="L115">            parseElse();</span>
+<span class="fc" id="L116">            break;</span>
+        case BIND_VARIABLE:
+<span class="fc" id="L118">            parseBindVariable();</span>
+<span class="fc" id="L119">            break;</span>
+        default:
+            break;
+        }
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * SQLを解析します。
+     */
+    protected void parseSql() {
+<span class="fc" id="L129">        String sql = tokenizer.getToken();</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (isElseMode()) {</span>
+<span class="fc" id="L131">            sql = SqlUtils.replace(sql, &quot;--&quot;, &quot;&quot;);</span>
+        }
+<span class="fc" id="L133">        Node node = peek();</span>
+<span class="fc bfc" id="L134" title="All 4 branches covered.">        if ((node instanceof IfNode || node instanceof ElseNode)</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                &amp;&amp; node.getChildSize() == 0) {</span>
+
+<span class="fc" id="L137">            SqlTokenizer st = new SqlTokenizer(sql);</span>
+<span class="fc" id="L138">            st.skipWhitespace();</span>
+<span class="fc" id="L139">            String token = st.skipToken();</span>
+<span class="fc" id="L140">            st.skipWhitespace();</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (sql.startsWith(&quot;,&quot;)) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (sql.startsWith(&quot;, &quot;)) {</span>
+<span class="nc" id="L143">                    node.addChild(new PrefixSqlNode(tokenizer.getPosition(), &quot;, &quot;, sql.substring(2)));</span>
+                } else {
+<span class="nc" id="L145">                    node.addChild(new PrefixSqlNode(tokenizer.getPosition(), &quot;,&quot;, sql.substring(1)));</span>
+                }
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            } else if (&quot;AND&quot;.equalsIgnoreCase(token)</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">                    || &quot;OR&quot;.equalsIgnoreCase(token)) {</span>
+<span class="fc" id="L149">                node.addChild(new PrefixSqlNode(tokenizer.getPosition(), st.getBefore(), st.getAfter()));</span>
+            } else {
+<span class="fc" id="L151">                node.addChild(new SqlNode(tokenizer.getPosition(), sql));</span>
+            }
+<span class="fc" id="L153">        } else {</span>
+<span class="fc" id="L154">            node.addChild(new SqlNode(tokenizer.getPosition(), sql));</span>
+        }
+<span class="fc" id="L156">    }</span>
+
+    /**
+     * コメントを解析します。
+     */
+    protected void parseComment() {
+<span class="fc" id="L162">        String comment = tokenizer.getToken();</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (isTargetComment(comment)) {</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">            if (isIfComment(comment)) {</span>
+<span class="fc" id="L165">                parseIf();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">            } else if (isBeginComment(comment)) {</span>
+<span class="fc" id="L167">                parseBegin();</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">            } else if (isEndComment(comment)) {</span>
+<span class="nc" id="L169">                return;</span>
+            } else {
+<span class="fc" id="L171">                parseCommentBindVariable();</span>
+            }
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        } else if(isHintComment(comment)){</span>
+<span class="fc" id="L174">            peek().addChild(new SqlNode(tokenizer.getPosition(), &quot;/*&quot; + comment + &quot;*/&quot;));</span>
+        }
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * {@code IF} 句を解析します。
+     */
+    protected void parseIf() {
+<span class="fc" id="L182">        final String condition = tokenizer.getToken().substring(2).trim();</span>
+<span class="fc" id="L183">        final int position = Math.max(tokenizer.getPosition() - 2 - condition.length(), 0);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (SqlUtils.isEmpty(condition)) {</span>
+<span class="fc" id="L185">            throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),</span>
+                    &quot;Not found IF condition.&quot;);
+        }
+<span class="fc" id="L188">        IfNode ifNode = new IfNode(position, condition, parseExpression(condition, position));</span>
+<span class="fc" id="L189">        peek().addChild(ifNode);</span>
+<span class="fc" id="L190">        push(ifNode);</span>
+<span class="fc" id="L191">        parseEnd();</span>
+<span class="fc" id="L192">    }</span>
+
+    /**
+     * {@code BEGIN} 句を解析します。
+     */
+    protected void parseBegin() {
+<span class="fc" id="L198">        BeginNode beginNode = new BeginNode(tokenizer.getPosition());</span>
+<span class="fc" id="L199">        peek().addChild(beginNode);</span>
+<span class="fc" id="L200">        push(beginNode);</span>
+<span class="fc" id="L201">        parseEnd();</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * {@code END} 句を解析します。
+     */
+    protected void parseEnd() {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        while (TokenType.EOF != tokenizer.next()) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (tokenizer.getTokenType() == TokenType.COMMENT</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">                    &amp;&amp; isEndComment(tokenizer.getToken())) {</span>
+
+<span class="fc" id="L212">                pop();</span>
+<span class="fc" id="L213">                return;</span>
+            }
+<span class="fc" id="L215">            parseToken();</span>
+        }
+<span class="fc" id="L217">        throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), tokenizer.getPosition()),</span>
+                &quot;Not found END comment.&quot;);
+    }
+
+    /**
+     * {@code ELSE} 句を解析します。
+     */
+    protected void parseElse() {
+<span class="fc" id="L225">        Node parent = peek();</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (!(parent instanceof IfNode)) {</span>
+<span class="nc" id="L227">            return;</span>
+        }
+<span class="fc" id="L229">        IfNode ifNode = (IfNode) pop();</span>
+<span class="fc" id="L230">        ElseNode elseNode = new ElseNode(tokenizer.getPosition());</span>
+<span class="fc" id="L231">        ifNode.setElseNode(elseNode);</span>
+<span class="fc" id="L232">        push(elseNode);</span>
+<span class="fc" id="L233">        tokenizer.skipWhitespace();</span>
+<span class="fc" id="L234">    }</span>
+
+    /**
+     * バインド変数コメントを解析します。
+     */
+    protected void parseCommentBindVariable() {
+<span class="fc" id="L240">        String expr = tokenizer.getToken();</span>
+<span class="fc" id="L241">        String s = tokenizer.skipToken();</span>
+<span class="fc" id="L242">        int position = tokenizer.getPosition() - s.length() - expr.length() -2;</span>
+<span class="pc bpc" id="L243" title="1 of 4 branches missed.">        if (s.startsWith(&quot;(&quot;) &amp;&amp; s.endsWith(&quot;)&quot;)) {</span>
+<span class="fc" id="L244">            peek().addChild(new ParenBindVariableNode(position, expr, parseExpression(expr, position)));</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        } else if (expr.startsWith(&quot;$&quot;)) {</span>
+<span class="fc" id="L246">            expr = expr.substring(1);</span>
+<span class="fc" id="L247">            position += 1;</span>
+<span class="fc" id="L248">            peek().addChild(new EmbeddedValueNode(position, expr, parseExpression(expr, position)));</span>
+        } else {
+<span class="fc" id="L250">            peek().addChild(new BindVariableNode(position, expr, parseExpression(expr, position)));</span>
+        }
+<span class="fc" id="L252">    }</span>
+
+    /**
+     * バインド変数を解析します。
+     */
+    protected void parseBindVariable() {
+<span class="fc" id="L258">        String expr = tokenizer.getToken();</span>
+<span class="fc" id="L259">        int position = tokenizer.getPosition();</span>
+<span class="fc" id="L260">        peek().addChild(new BindVariableNode(position, expr, parseExpression(expr, position)));</span>
+<span class="fc" id="L261">    }</span>
+
+    /**
+     * EL式をパースします。
+     * &lt;p&gt;例外処理を含めて共通化のために切り出したメソッドです。&lt;/p&gt;
+     *
+     * @since 0.2
+     * @param expression 式
+     * @param position テンプレート位置
+     * @return パースした式
+     * @throws SqlParseException EL式のパースに失敗した場合にスローされます。
+     */
+    protected Expression parseExpression(final String expression, final int position) {
+        try {
+<span class="fc" id="L275">            return expressionParser.parseExpression(expression);</span>
+<span class="fc" id="L276">        } catch(ParseException e) {</span>
+<span class="fc" id="L277">            throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),</span>
+<span class="fc" id="L278">                    String.format(&quot;Fail parsing expression '%s'.&quot;, expression),</span>
+                    e);
+        }
+    }
+
+    /**
+     * Pop (remove from the stack) the top node.
+     *
+     * @return the top node.
+     */
+    /**
+     * 一番上のノードをポップ（スタックからも取り出す）します。
+     *
+     * @return 一番上のノード
+     */
+    protected Node pop() {
+<span class="fc" id="L294">        return nodeStack.pop();</span>
+    }
+
+    /**
+     * 一番上のノードを返します。
+     *
+     * @return 一番上のノード
+     */
+    protected Node peek() {
+<span class="fc" id="L303">        return nodeStack.peek();</span>
+    }
+
+    /**
+     * ノードを一番上に追加します。
+     *
+     * @param node ノード
+     */
+    protected void push(Node node) {
+<span class="fc" id="L312">        nodeStack.push(node);</span>
+<span class="fc" id="L313">    }</span>
+
+    /**
+     * {@code ELSE} モード（ELSE句の中の）かどうかを返します。
+     *
+     * @return {@code ELSE} モードのとき {@literal true} を返します。
+     */
+    protected boolean isElseMode() {
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        for (Node node : nodeStack) {</span>
+<span class="fc bfc" id="L322" title="All 2 branches covered.">            if (node instanceof ElseNode) {</span>
+<span class="fc" id="L323">                return true;</span>
+            }
+<span class="fc" id="L325">        }</span>
+<span class="fc" id="L326">        return false;</span>
+    }
+
+    /**
+     * 対象とするコメントかどうかを返します。
+     * バインド変数のコメントかどうかの判定に使用します。
+     *
+     * @param comment コメント
+     * @return 対象とするコメントのとき {@literal true} を返します。
+     */
+    protected static boolean isTargetComment(String comment) {
+<span class="pc bpc" id="L337" title="2 of 4 branches missed.">        return comment != null &amp;&amp; comment.length() &gt; 0</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">                &amp;&amp; Character.isJavaIdentifierStart(comment.charAt(0));</span>
+    }
+
+    /**
+     * Checks if this comment is a &quot;Mirage-SQL&quot; &lt;code&gt;IF&lt;/code&gt; keyword.
+     *
+     * @param comment the comment to check
+     * @return &lt;code&gt;true&lt;/code&gt; if this comment is an &lt;code&gt;IF&lt;/code&gt; keyword.
+     */
+
+    /**
+     * {@literal IF} コメントかどうか判定します。
+     *
+     * @param comment コメント
+     * @return {@literal IF} コメントのとき {@literal true} を返します。
+     */
+    protected static boolean isIfComment(String comment) {
+<span class="fc" id="L355">        return comment.startsWith(&quot;IF&quot;);</span>
+    }
+
+    /**
+     * {@literal BEGIN} コメントかどうか判定します。
+     *
+     * @param comment コメント
+     * @return {@literal BEGIN} コメントのとき {@literal true} を返します。
+     */
+    protected static boolean isBeginComment(String comment) {
+<span class="pc bpc" id="L365" title="1 of 4 branches missed.">        return comment != null &amp;&amp; &quot;BEGIN&quot;.equals(comment);</span>
+    }
+
+    /**
+     * {@literal END} コメントかどうか判定します。
+     *
+     * @param comment コメント
+     * @return {@literal END} コメントのとき {@literal true} を返します。
+     */
+    protected static boolean isEndComment(String comment) {
+<span class="pc bpc" id="L375" title="1 of 4 branches missed.">        return comment != null &amp;&amp; &quot;END&quot;.equals(comment);</span>
+    }
+
+    /**
+     * Oracle のヒントコメントかどうか判定します。
+     *
+     * @param comment コメント
+     * @return Oracle のヒントコメントのとき {@literal true} を返します。
+     */
+    protected static boolean isHintComment(String comment) {
+<span class="pc bpc" id="L385" title="2 of 4 branches missed.">        return comment != null &amp;&amp; comment.startsWith(&quot;+&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

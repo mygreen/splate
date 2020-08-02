@@ -1,6 +1,6 @@
 # リリースノート
 
-## ver 0.2 - 2020-08-xx
+## ver 0.2 - 2020-08-02
 
 - [#4](https://github.com/mygreen/splate/pull/4) ライブラリの依存関係のバージョンの見直し
 
@@ -22,6 +22,6 @@
 
 - [#8](https://github.com/mygreen/splate/pull/8) 使用していないクラス、メソッドを削除
 
-- [#9](https://github.com/mygreen/splate/pull/9) 静的解析の指摘に対する修正
+- [#9](https://github.com/mygreen/splate/pull/9) / [#11](https://github.com/mygreen/splate/pull/11) 静的解析の指摘に対する修正
 
 

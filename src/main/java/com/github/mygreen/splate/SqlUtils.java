@@ -8,6 +8,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
@@ -18,6 +20,7 @@ import lombok.NonNull;
  * @author T.TSUCHIE
  *
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SqlUtils {
 
     /**
@@ -39,7 +42,7 @@ public class SqlUtils {
         if (text == null || fromText == null || toText == null) {
             return null;
         }
-        StringBuffer buf = new StringBuffer(100);
+        StringBuilder buf = new StringBuilder(100);
         int pos2 = 0;
         while (true) {
             int pos = text.indexOf(fromText, pos2);

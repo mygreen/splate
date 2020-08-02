@@ -185,7 +185,7 @@ public class SqlParser {
             throw new SqlParseException(SqlUtils.resolveSqlPosition(tokenizer.getSql(), position),
                     "Not found IF condition.");
         }
-        IfNode ifNode = new IfNode(position, condition, expressionParser);
+        IfNode ifNode = new IfNode(position, condition, parseExpression(condition, position));
         peek().addChild(ifNode);
         push(ifNode);
         parseEnd();

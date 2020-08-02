@@ -18,7 +18,6 @@ package com.github.mygreen.splate.node;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -56,12 +55,12 @@ public class IfNode extends ContainerNode {
      *
      * @param position 位置情報
      * @param expression 式
-     * @param expressionParser 式のパーサ
+     * @param parsedExpression パース済みの式
      */
-    public IfNode(final int position, final String expression, final ExpressionParser expressionParser) {
+    public IfNode(final int position, final String expression, final Expression parsedExpression) {
         super(position);
         this.expression = expression;
-        this.parsedExpression = expressionParser.parseExpression(expression);
+        this.parsedExpression = parsedExpression;
     }
 
     @Override

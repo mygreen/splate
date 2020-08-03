@@ -7,3 +7,4 @@ call env.bat
 
 mvn clean deploy
 
+pause

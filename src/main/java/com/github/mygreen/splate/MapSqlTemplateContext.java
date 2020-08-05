@@ -49,7 +49,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
     }
 
     /**
-     * テンプレート中の変数と{@link SqlTemplateValueTypeRegistry}を指定してインスタンスを作成します。
+     * {@link SqlTemplateValueTypeRegistry}とテンプレート中の変数を指定してインスタンスを作成します。
      * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param variables SQLテンプレート中で使用可能な変数
      */

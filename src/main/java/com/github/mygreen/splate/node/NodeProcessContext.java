@@ -152,6 +152,6 @@ public class NodeProcessContext {
      * @return SQLテンプレート中の変数を変換するための管理クラス
      */
     public SqlTemplateValueTypeRegistry getValueTypeRegistry() {
-        return templateContext.getValueTypeRestRegistry();
+        return templateContext.getValueTypeRegistry();
     }
 }

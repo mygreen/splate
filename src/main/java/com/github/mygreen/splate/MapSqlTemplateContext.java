@@ -32,7 +32,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
     }
 
     /**
-     * マップを指定するコンストラクタ。
+     * テンプレート中の変数を指定してインスタンスを作成します。
      * @param variables SQLテンプレート中のパラメータとして渡すマップ。
      */
     public MapSqlTemplateContext(@NonNull Map<String, Object> variables) {
@@ -41,20 +41,20 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
     }
 
     /**
-     *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * {@link SqlTemplateValueTypeRegistry}を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
-        super(valueTypeRestRegistry);
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry) {
+        super(valueTypeRegistry);
     }
 
     /**
-     *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * テンプレート中の変数と{@link SqlTemplateValueTypeRegistry}を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param variables SQLテンプレート中で使用可能な変数
      */
-    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map<String, Object> variables) {
-        super(valueTypeRestRegistry);
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry, @NonNull Map<String, Object> variables) {
+        super(valueTypeRegistry);
         this.values.putAll(variables);
     }
 

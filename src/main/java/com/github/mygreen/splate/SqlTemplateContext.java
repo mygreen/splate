@@ -21,19 +21,19 @@ public abstract class SqlTemplateContext {
      * SQLテンプレートのパラメータの変換処理を管理する処理。
      */
     @Getter
-    private final SqlTemplateValueTypeRegistry valueTypeRestRegistry;
+    private final SqlTemplateValueTypeRegistry valueTypeRegistry;
 
     public SqlTemplateContext() {
-        this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry();
+        this.valueTypeRegistry = new SqlTemplateValueTypeRegistry();
     }
 
     /**
      * {@link SqlTemplateValueTypeRegistry} を指定してインスタンスを作成します。
      *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-    public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
-        this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry(valueTypeRestRegistry);
+    public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRegistry) {
+        this.valueTypeRegistry = new SqlTemplateValueTypeRegistry(valueTypeRegistry);
     }
 
     /**
@@ -43,7 +43,7 @@ public abstract class SqlTemplateContext {
      * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void registerValueType(@NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
-        valueTypeRestRegistry.register(type, valueType);
+        valueTypeRegistry.register(type, valueType);
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class SqlTemplateContext {
      * @param valueType {@link SqlTemplateValueType}の実装
      */
     public <T> void registerValueType(@NonNull String propertyPath, @NonNull Class<T> type, @NonNull SqlTemplateValueType<T> valueType) {
-        valueTypeRestRegistry.register(propertyPath, type, valueType);
+        valueTypeRegistry.register(propertyPath, type, valueType);
     }
 
     /**

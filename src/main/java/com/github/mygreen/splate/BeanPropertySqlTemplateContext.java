@@ -34,11 +34,13 @@ public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
     }
 
     /**
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     *  {@link SqlTemplateValueTypeRegistry}とJavaBeanを指定してインスタンスを作成します。
+     *
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param object JavaBeanのインスタンス
      */
-    public BeanPropertySqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, final @NonNull Object object) {
-        super(valueTypeRestRegistry);
+    public BeanPropertySqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry, final @NonNull Object object) {
+        super(valueTypeRegistry);
         this.value = object;
     }
 

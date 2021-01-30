@@ -1,5 +1,12 @@
 # リリースノート
 
+## ver 0.2.1 - 2021-01-30
+
+- [#13](https://github.com/mygreen/splate/pull/13) フィールド名や引数名の間違い
+
+  - ``valueTypeRestRegistry`` -> ``valueTypeRegistry``
+
+
 ## ver 0.2 - 2020-08-02
 
 - [#4](https://github.com/mygreen/splate/pull/4) ライブラリの依存関係のバージョンの見直し

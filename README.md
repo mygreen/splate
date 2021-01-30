@@ -33,7 +33,7 @@ Add dependency. ex) pom.xml
 <dependency>
 	<groupId>com.github.mygreen</groupId>
 	<artifactId>splate</artifactId>
-	<version>0.2</version>
+	<version>0.2.1</version>
 </dependency>
 ```
 

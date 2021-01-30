@@ -42,23 +42,25 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      }
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     * @param object JavaBeanのインスタンス</em>
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">public</strong> <a name="BeanPropertySqlTemplateContext" href="../../../../com/github/mygreen/splate/BeanPropertySqlTemplateContext.html#BeanPropertySqlTemplateContext">BeanPropertySqlTemplateContext</a>(<a name="SqlTemplateValueTypeRegistry" href="../../../../com/github/mygreen/splate/type/SqlTemplateValueTypeRegistry.html#SqlTemplateValueTypeRegistry">SqlTemplateValueTypeRegistry</a> valueTypeRestRegistry, <strong class="jxr_keyword">final</strong> @NonNull Object object) {
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>          <strong class="jxr_keyword">super</strong>(valueTypeRestRegistry);
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          <strong class="jxr_keyword">this</strong>.value = object;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      @Override
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> EvaluationContext createEvaluationContext() {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">final</strong> StandardEvaluationContext evaluationContext = <strong class="jxr_keyword">new</strong> StandardEvaluationContext();
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>          evaluationContext.setRootObject(value);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>          <strong class="jxr_keyword">return</strong> evaluationContext;
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      }
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  }
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     *  {@link SqlTemplateValueTypeRegistry}とJavaBeanを指定してインスタンスを作成します。</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">     * @param object JavaBeanのインスタンス</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">public</strong> <a name="BeanPropertySqlTemplateContext" href="../../../../com/github/mygreen/splate/BeanPropertySqlTemplateContext.html#BeanPropertySqlTemplateContext">BeanPropertySqlTemplateContext</a>(<a name="SqlTemplateValueTypeRegistry" href="../../../../com/github/mygreen/splate/type/SqlTemplateValueTypeRegistry.html#SqlTemplateValueTypeRegistry">SqlTemplateValueTypeRegistry</a> valueTypeRegistry, <strong class="jxr_keyword">final</strong> @NonNull Object object) {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          <strong class="jxr_keyword">super</strong>(valueTypeRegistry);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          <strong class="jxr_keyword">this</strong>.value = object;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      @Override
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">public</strong> EvaluationContext createEvaluationContext() {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          <strong class="jxr_keyword">final</strong> StandardEvaluationContext evaluationContext = <strong class="jxr_keyword">new</strong> StandardEvaluationContext();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          evaluationContext.setRootObject(value);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          <strong class="jxr_keyword">return</strong> evaluationContext;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      }
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020 <a href="https://mygreen.github.io/splate/">mygreen</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2021 <a href="https://mygreen.github.io/splate/">mygreen</a>. All rights reserved.</div>
 </body>
 </html>

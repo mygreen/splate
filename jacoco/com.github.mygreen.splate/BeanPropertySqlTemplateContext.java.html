@@ -34,19 +34,21 @@ public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
 <span class="fc" id="L34">    }</span>
 
     /**
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     *  {@link SqlTemplateValueTypeRegistry}とJavaBeanを指定してインスタンスを作成します。
+     *
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param object JavaBeanのインスタンス
      */
-<span class="nc bnc" id="L40" title="All 2 branches missed.">    public BeanPropertySqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, final @NonNull Object object) {</span>
-<span class="nc" id="L41">        super(valueTypeRestRegistry);</span>
-<span class="nc" id="L42">        this.value = object;</span>
-<span class="nc" id="L43">    }</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">    public BeanPropertySqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry, final @NonNull Object object) {</span>
+<span class="nc" id="L43">        super(valueTypeRegistry);</span>
+<span class="nc" id="L44">        this.value = object;</span>
+<span class="nc" id="L45">    }</span>
 
     @Override
     public EvaluationContext createEvaluationContext() {
-<span class="fc" id="L47">        final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();</span>
-<span class="fc" id="L48">        evaluationContext.setRootObject(value);</span>
-<span class="fc" id="L49">        return evaluationContext;</span>
+<span class="fc" id="L49">        final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();</span>
+<span class="fc" id="L50">        evaluationContext.setRootObject(value);</span>
+<span class="fc" id="L51">        return evaluationContext;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

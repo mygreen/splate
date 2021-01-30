@@ -21,19 +21,19 @@ public abstract class SqlTemplateContext {
      * SQLテンプレートのパラメータの変換処理を管理する処理。
      */
     @Getter
-    private final SqlTemplateValueTypeRegistry valueTypeRestRegistry;
+    private final SqlTemplateValueTypeRegistry valueTypeRegistry;
 
 <span class="fc" id="L26">    public SqlTemplateContext() {</span>
-<span class="fc" id="L27">        this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry();</span>
+<span class="fc" id="L27">        this.valueTypeRegistry = new SqlTemplateValueTypeRegistry();</span>
 <span class="fc" id="L28">    }</span>
 
     /**
      * {@link SqlTemplateValueTypeRegistry} を指定してインスタンスを作成します。
      *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-<span class="pc bpc" id="L35" title="1 of 2 branches missed.">    public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRestRegistry) {</span>
-<span class="fc" id="L36">        this.valueTypeRestRegistry = new SqlTemplateValueTypeRegistry(valueTypeRestRegistry);</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">    public SqlTemplateContext(@NonNull SqlTemplateValueTypeRegistry valueTypeRegistry) {</span>
+<span class="fc" id="L36">        this.valueTypeRegistry = new SqlTemplateValueTypeRegistry(valueTypeRegistry);</span>
 <span class="fc" id="L37">    }</span>
 
     /**
@@ -43,7 +43,7 @@ public abstract class SqlTemplateContext {
      * @param valueType {@link SqlTemplateValueType}の実装
      */
 <span class="pc bpc" id="L45" title="2 of 4 branches missed.">    public &lt;T&gt; void registerValueType(@NonNull Class&lt;T&gt; type, @NonNull SqlTemplateValueType&lt;T&gt; valueType) {</span>
-<span class="fc" id="L46">        valueTypeRestRegistry.register(type, valueType);</span>
+<span class="fc" id="L46">        valueTypeRegistry.register(type, valueType);</span>
 <span class="fc" id="L47">    }</span>
 
     /**
@@ -56,7 +56,7 @@ public abstract class SqlTemplateContext {
      * @param valueType {@link SqlTemplateValueType}の実装
      */
 <span class="pc bpc" id="L58" title="3 of 6 branches missed.">    public &lt;T&gt; void registerValueType(@NonNull String propertyPath, @NonNull Class&lt;T&gt; type, @NonNull SqlTemplateValueType&lt;T&gt; valueType) {</span>
-<span class="fc" id="L59">        valueTypeRestRegistry.register(propertyPath, type, valueType);</span>
+<span class="fc" id="L59">        valueTypeRegistry.register(propertyPath, type, valueType);</span>
 <span class="fc" id="L60">    }</span>
 
     /**

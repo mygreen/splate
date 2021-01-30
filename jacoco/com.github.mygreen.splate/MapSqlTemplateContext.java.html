@@ -32,7 +32,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
 <span class="fc" id="L32">    }</span>
 
     /**
-     * マップを指定するコンストラクタ。
+     * テンプレート中の変数を指定してインスタンスを作成します。
      * @param variables SQLテンプレート中のパラメータとして渡すマップ。
      */
 <span class="pc bpc" id="L38" title="1 of 2 branches missed.">    public MapSqlTemplateContext(@NonNull Map&lt;String, Object&gt; variables) {</span>
@@ -41,20 +41,20 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
 <span class="fc" id="L41">    }</span>
 
     /**
-     *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * {@link SqlTemplateValueTypeRegistry}を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      */
-    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry) {
-<span class="nc" id="L48">        super(valueTypeRestRegistry);</span>
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry) {
+<span class="nc" id="L48">        super(valueTypeRegistry);</span>
 <span class="nc" id="L49">    }</span>
 
     /**
-     *
-     * @param valueTypeRestRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * {@link SqlTemplateValueTypeRegistry}とテンプレート中の変数を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
      * @param variables SQLテンプレート中で使用可能な変数
      */
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRestRegistry, @NonNull Map&lt;String, Object&gt; variables) {</span>
-<span class="fc" id="L57">        super(valueTypeRestRegistry);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry, @NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="fc" id="L57">        super(valueTypeRegistry);</span>
 <span class="fc" id="L58">        this.values.putAll(variables);</span>
 <span class="fc" id="L59">    }</span>
 

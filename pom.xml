@@ -6,7 +6,7 @@
 	<artifactId>splate</artifactId>
 	<name>splate</name>
 	<packaging>jar</packaging>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<description><![CDATA[ splate is Java Library for 2Way-SQL template ]]></description>
 	<url>https://mygreen.github.io/splate/</url>
 
@@ -63,7 +63,7 @@
 		<logback.version>1.2.3</logback.version>
 		<jacoco.include.package>com.github.mygreen.splate.*</jacoco.include.package>
 
-				<!-- SonarQubeの解析から除外したいファイル -->
+		<!-- SonarQubeの解析から除外したいファイル -->
 		<sonar.exclusions>
 			**/sample/*,
 			**/*Test.*,

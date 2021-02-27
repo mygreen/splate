@@ -1,6 +1,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mygreen/splate/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.mygreen/splate/)
 [![Javadocs](https://javadoc.io/badge/com.github.mygreen/splate.svg?color=blue)](https://javadoc.io/doc/com.github.mygreen/splate)
-[![Build Status](https://travis-ci.org/mygreen/splate.svg?branch=master)](https://travis-ci.org/mygreen/splate)
+[![build](https://github.com/mygreen/splate/actions/workflows/maven.yml/badge.svg)](https://github.com/mygreen/splate/actions/workflows/maven.yml)
 [![SonarQube](https://sonarcloud.io/api/project_badges/measure?project=com.github.mygreen%3Asplate&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.mygreen%3Asplate)
 
 # splate

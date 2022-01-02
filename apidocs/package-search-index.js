@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"com.github.mygreen.splate","h":"","u":""},{"l":"com.github.mygreen.splate.node","h":"","u":""},{"l":"com.github.mygreen.splate.parser","h":"","u":""},{"l":"com.github.mygreen.splate.type","h":"","u":""},{"l":"すべてのパッケージ","h":"","u":"allpackages-index.html"}]

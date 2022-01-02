@@ -3,7 +3,17 @@
 
 name: build
 
-on: [push, pull_request]
+on: 
+  push:
+    branches-ignore:
+      - 'gh-pages'
+    branches:
+      - '*'
+  pull_request:
+    branches-ignore:
+      - 'gh-pages'
+    branches:
+      - '*'
 
 jobs:
   build:

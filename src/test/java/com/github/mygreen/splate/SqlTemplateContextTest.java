@@ -58,6 +58,29 @@ class SqlTemplateContextTest {
 
     }
 
+    @DisplayName("BeanPropertySqlTemplateContextによるテスト")
+    @Test
+    void testBeanProperty_notFoundProperty() throws Exception {
+
+        String path = "classpath:template/employee_select.sql";
+
+        SqlTemplate template = templateEngine.getTemplate(path);
+
+        SelectParam2 param = SelectParam2.builder()
+                .salaryMin(new BigDecimal(1200))
+                .build();
+
+        BeanPropertySqlTemplateContext context = new BeanPropertySqlTemplateContext(param);
+        context.setIgnoreNotFoundProperty(true);
+        ProcessResult result = template.process(context);
+
+        String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select_salaryMaxNull.sql").getInputStream(), "UTF-8");
+        assertThat(result.getSql()).isEqualTo(expectedSql);
+
+        assertThat(result.getParameters()).containsExactly(param.getSalaryMin());
+
+    }
+
     @DisplayName("MapSqlTemplateContextによるテスト")
     @Test
     void testMap() throws Exception {
@@ -74,6 +97,27 @@ class SqlTemplateContextTest {
         assertThat(result.getSql()).isEqualTo(expectedSql);
 
         assertThat(result.getParameters()).containsExactly(param.get("salaryMin"), param.get("salaryMax"));
+
+    }
+
+    @DisplayName("MapSqlTemplateContextによるテスト - 変数が存在しない場合")
+    @Test
+    void testMap_notFoundVariable() throws Exception {
+
+        String path = "classpath:template/employee_select.sql";
+
+        SqlTemplate template = templateEngine.getTemplate(path);
+
+        Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200)/*, "salaryMax", new BigDecimal(1800)*/);
+
+        MapSqlTemplateContext context = new MapSqlTemplateContext(param);
+        context.setIgnoreNotFoundProperty(true);
+        ProcessResult result = template.process(context);
+
+        String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select_salaryMaxNull.sql").getInputStream(), "UTF-8");
+        assertThat(result.getSql()).isEqualTo(expectedSql);
+
+        assertThat(result.getParameters()).containsExactly(param.get("salaryMin"));
 
     }
 

@@ -1,28 +1,41 @@
 package com.github.mygreen.splate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * SQLテンプレートのパラメータを{@link Map} として渡すときのSQLテンプレートのコンテキスト。
  * SQLテンプレート中では、マップのキー名で参照できます。
  *
  *
- * @version 0.2
+ * @version 0.3
  * @author T.TSUCHIE
  *
  */
 public class MapSqlTemplateContext extends SqlTemplateContext {
 
     private Map<String, Object> values = new HashMap<>();
+
+    /**
+     * SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか。
+     *
+     * @since 0.3
+     * @param ignoreNotFoundProperty SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか設定します。
+     * @return SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか返します。
+     */
+    @Setter
+    @Getter
+    private boolean ignoreNotFoundProperty;
 
     /**
      * コンストラクタ。
@@ -61,7 +74,9 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
     @Override
     public EvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
-        evaluationContext.addPropertyAccessor(new MapAccessor());
+        evaluationContext.setPropertyAccessors(List.of(
+                new CustomMapAccessor(ignoreNotFoundProperty)
+                ,new CustomReflectivePropertyAccessor(ignoreNotFoundProperty)));
         evaluationContext.setRootObject(values);
         return evaluationContext;
     }
@@ -71,18 +86,22 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
      *
      * @param name 変数名
      * @param value 値
+     * @return 自身のインスタンス
      */
-    public void setVariable(@NonNull String name, Object value) {
+    public MapSqlTemplateContext setVariable(@NonNull String name, Object value) {
         this.values.put(name, value);
+        return this;
     }
 
     /**
      * SQLテンプレート中で使用可能な変数を追加します。
      *
      * @param variables 変数のマップ
+     * @return 自身のインスタンス
      */
-    public void setVariables(@NonNull Map<String, Object> variables) {
+    public MapSqlTemplateContext addVariables(@NonNull Map<String, Object> variables) {
         this.values.putAll(variables);
+        return this;
     }
 
 

@@ -1,13 +1,10 @@
 package com.github.mygreen.splate;
 
-import static com.github.mygreen.splate.SqlUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
@@ -36,49 +33,7 @@ class SqlTemplateContextTest {
          this.resourceLoader = new DefaultResourceLoader();
     }
 
-    @DisplayName("BeanPropertySqlTemplateContextによるテスト")
-    @Test
-    void testBeanProperty() throws Exception {
-
-        String path = "classpath:template/employee_select.sql";
-
-        SqlTemplate template = templateEngine.getTemplate(path);
-
-        SelectParam param = SelectParam.builder()
-                .salaryMin(new BigDecimal(1200))
-                .salaryMax(new BigDecimal(1800))
-                .build();
-
-        ProcessResult result = template.process(new BeanPropertySqlTemplateContext(param));
-
-        String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
-        assertThat(result.getSql()).isEqualTo(expectedSql);
-
-        assertThat(result.getParameters()).containsExactly(param.getSalaryMin(), param.getSalaryMax());
-
-    }
-
-    @DisplayName("MapSqlTemplateContextによるテスト")
-    @Test
-    void testMap() throws Exception {
-
-        String path = "classpath:template/employee_select.sql";
-
-        SqlTemplate template = templateEngine.getTemplate(path);
-
-        Map<String, Object> param = Map.of("salaryMin", new BigDecimal(1200), "salaryMax", new BigDecimal(1800));
-
-        ProcessResult result = template.process(new MapSqlTemplateContext(param));
-
-        String expectedSql = readStream(resourceLoader.getResource("classpath:result/employee_select.sql").getInputStream(), "UTF-8");
-        assertThat(result.getSql()).isEqualTo(expectedSql);
-
-        assertThat(result.getParameters()).containsExactly(param.get("salaryMin"), param.get("salaryMax"));
-
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
-    @DisplayName("SqlTemplateValueTypeRegistry を書き換える")
     @Test
     void testValueTypeRegistry() {
 
@@ -106,13 +61,12 @@ class SqlTemplateContextTest {
 
     }
 
-//    @Disabled
 //    @Test
 //    void testCallback() {
 //
 //        String sql = "select * from where name like /*#contains(name)*/'S%'";
 //
-//        SqlTemplate template = templateEndine.getTemplateByText(sql);
+//        SqlTemplate template = templateEngine.getTemplateByText(sql);
 //        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "abc"));
 //
 //        // EL式中のカスタム関数の登録

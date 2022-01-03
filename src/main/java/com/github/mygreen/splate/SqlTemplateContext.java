@@ -28,7 +28,7 @@ public abstract class SqlTemplateContext {
      * SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか。
      *
      * @since 0.3
-     * @param ignoreNotFoundKey SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか設定します。
+     * @param ignoreNotFoundProperty SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか設定します。
      * @retrun SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか返します。
      */
     @Setter

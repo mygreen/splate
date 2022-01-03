@@ -60,7 +60,7 @@
 		<source.encode>UTF-8</source.encode>
 		<spring.version>5.0.18.RELEASE</spring.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.2.10</logback.version>
 		<jacoco.include.package>com.github.mygreen.splate.*</jacoco.include.package>
 
 		<!-- SonarQubeの解析から除外したいファイル -->
@@ -116,12 +116,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<encoding>utf-8</encoding>
@@ -151,7 +145,7 @@
 			<plugin>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok-maven-plugin</artifactId>
-				<version>1.18.12.0</version>
+				<version>1.18.20.0</version>
 				<executions>
 					<execution>
 						<id>delombok</id>
@@ -301,7 +295,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.12</version>
+			<version>1.18.22</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -404,7 +398,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.1.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
 					<inputEncoding>UTF-8</inputEncoding>

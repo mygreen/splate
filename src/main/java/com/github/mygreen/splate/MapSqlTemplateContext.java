@@ -3,7 +3,6 @@ package com.github.mygreen.splate;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -16,7 +15,7 @@ import lombok.NonNull;
  * SQLテンプレート中では、マップのキー名で参照できます。
  *
  *
- * @version 0.2
+ * @version 0.3
  * @author T.TSUCHIE
  *
  */
@@ -61,7 +60,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
     @Override
     public EvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
-        evaluationContext.addPropertyAccessor(new MapAccessor());
+        evaluationContext.addPropertyAccessor(new CustomMapAccessor(isIgnoreNotFoundProperty()));
         evaluationContext.setRootObject(values);
         return evaluationContext;
     }

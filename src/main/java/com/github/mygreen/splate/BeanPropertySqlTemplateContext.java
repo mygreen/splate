@@ -12,7 +12,7 @@ import lombok.NonNull;
  * SQLテンプレートのパラメータをJavaBean として渡すときのSQLテンプレートのコンテキスト。
  * SQLテンプレート中では、JavaBeanのプロパティ名で参照できます。
  *
- * @version 0.2
+ * @version 0.3
  * @author T.TSUCHIE
  *
  */
@@ -47,6 +47,7 @@ public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
     @Override
     public EvaluationContext createEvaluationContext() {
         final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+        evaluationContext.addPropertyAccessor(new CustomReflectivePropertyAccessor(isIgnoreNotFoundProperty()));
         evaluationContext.setRootObject(value);
         return evaluationContext;
     }

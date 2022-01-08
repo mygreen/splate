@@ -1,5 +1,8 @@
 package com.github.mygreen.splate;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import org.springframework.expression.EvaluationContext;
 
 import com.github.mygreen.splate.type.SqlTemplateValueType;
@@ -11,7 +14,7 @@ import lombok.NonNull;
 /**
  * SQLテンプレートを実行し評価する際に渡すパラメータなどを保持するコンテキスト。
  *
- * @version 0.2
+ * @version 0.3
  * @author T.TSUCHIE
  *
  */
@@ -19,9 +22,17 @@ public abstract class SqlTemplateContext {
 
     /**
      * SQLテンプレートのパラメータの変換処理を管理する処理。
+     * @return SQLテンプレートのパラメータの変換処理を管理する処理を返します。
      */
     @Getter
     private final SqlTemplateValueTypeRegistry valueTypeRegistry;
+
+    /**
+     * {@link EvaluationContext}を編集する処理。
+     * @return {@link EvaluationContext}を編集する処理を返します。
+     */
+    @Getter
+    private Optional<Consumer<EvaluationContext>> evaluationContextEditor = Optional.empty();
 
     public SqlTemplateContext() {
         this.valueTypeRegistry = new SqlTemplateValueTypeRegistry();
@@ -65,6 +76,14 @@ public abstract class SqlTemplateContext {
      */
     public abstract EvaluationContext createEvaluationContext();
 
-
-
+    /**
+     * {@link EvaluationContext} を編集するコールバック処理を設定します。
+     * <p>SQLテンプレートを評価する際に、{@link #createEvaluationContext} で作成した{@link EvaluationContext} が引数として渡されます。
+     *
+     * @since 0.3
+     * @param editor 編集処理。
+     */
+    public void setEvaluationContextEditor(@NonNull Consumer<EvaluationContext> editor) {
+        this.evaluationContextEditor = Optional.of(editor);
+    }
 }

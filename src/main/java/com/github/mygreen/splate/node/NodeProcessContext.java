@@ -144,7 +144,9 @@ public class NodeProcessContext {
      * @return EL式で指定された時の式を評価するためのコンテキスト
      */
     public EvaluationContext getEvaluationContext() {
-        return templateContext.createEvaluationContext();
+        EvaluationContext context = templateContext.createEvaluationContext();
+        templateContext.getEvaluationContextEditor().ifPresent(editor -> editor.accept(context));
+        return context;
     }
 
     /**

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.splate.type.EnumNameType;
 import com.github.mygreen.splate.type.EnumOrdinalType;
@@ -61,39 +62,39 @@ class SqlTemplateContextTest {
 
     }
 
-//    @Test
-//    void testCallback() {
-//
-//        String sql = "select * from where name like /*#contains(name)*/'S%'";
-//
-//        SqlTemplate template = templateEngine.getTemplateByText(sql);
-//        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "abc"));
-//
-//        // EL式中のカスタム関数の登録
-//        templateContext.setEvaluationContextCallback(c -> {
-//            try {
-//                c.registerFunction("contains", SqlFunctions.class.getMethod("contains", String.class));
-//            } catch (NoSuchMethodException | SecurityException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//
-//        ProcessResult result = template.process(templateContext);
-//
-//        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
-//        assertThat(result.getParameters()).containsExactly("%abc%");
-//
-//    }
-//
-//    /**
-//     * SQLテンプレート中で利用可能なカスタム関数
-//     *
-//     */
-//    static class SqlFunctions {
-//
-//        public static String contains(String value) {
-//            return "%" + value + "%";
-//        }
-//
-//    }
+    @Test
+    void testEvaluationContextEditor() {
+
+        String sql = "select * from where /*IF #notEmpty(name)*/name like /*name*/'S%'/*END*/";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "%abc%"));
+
+        // EL式中のカスタム関数の登録
+        templateContext.setEvaluationContextEditor(c -> {
+            try {
+                ((StandardEvaluationContext)c).registerFunction("notEmpty", SqlFunctions.class.getMethod("notEmpty", Object.class));
+            } catch (NoSuchMethodException | SecurityException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        ProcessResult result = template.process(templateContext);
+
+        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
+        assertThat(result.getParameters()).containsExactly("%abc%");
+
+    }
+
+    /**
+     * SQLテンプレート中で利用可能なカスタム関数
+     *
+     */
+    static class SqlFunctions {
+
+        public static boolean notEmpty(Object value) {
+            return value != null && !value.toString().isEmpty();
+        }
+
+    }
 }

@@ -7,7 +7,6 @@ import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 /**
  * SQLテンプレートを実行し評価する際に渡すパラメータなどを保持するコンテキスト。
@@ -23,17 +22,6 @@ public abstract class SqlTemplateContext {
      */
     @Getter
     private final SqlTemplateValueTypeRegistry valueTypeRegistry;
-
-    /**
-     * SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか。
-     *
-     * @since 0.3
-     * @param ignoreNotFoundProperty SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか設定します。
-     * @return SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか返します。
-     */
-    @Setter
-    @Getter
-    private boolean ignoreNotFoundProperty;
 
     public SqlTemplateContext() {
         this.valueTypeRegistry = new SqlTemplateValueTypeRegistry();

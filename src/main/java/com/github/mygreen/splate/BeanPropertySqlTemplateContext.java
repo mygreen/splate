@@ -2,7 +2,6 @@ package com.github.mygreen.splate;
 
 import java.util.List;
 
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
@@ -19,7 +18,7 @@ import lombok.Setter;
  * @author T.TSUCHIE
  *
  */
-public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
+public class BeanPropertySqlTemplateContext extends SqlTemplateContext<StandardEvaluationContext> {
 
     /**
      * JavaBeanのインスタンス。
@@ -63,7 +62,7 @@ public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
      * @return {@link StandardEvaluationContext} のインスタンスを返します。
      */
     @Override
-    public EvaluationContext createEvaluationContext() {
+    public StandardEvaluationContext createEvaluationContext() {
         final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.setPropertyAccessors(List.of(new CustomReflectivePropertyAccessor(ignoreNotFoundProperty)));
         evaluationContext.setRootObject(value);

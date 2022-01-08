@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
@@ -22,7 +21,7 @@ import lombok.Setter;
  * @author T.TSUCHIE
  *
  */
-public class MapSqlTemplateContext extends SqlTemplateContext {
+public class MapSqlTemplateContext extends SqlTemplateContext<StandardEvaluationContext> {
 
     private Map<String, Object> values = new HashMap<>();
 
@@ -76,7 +75,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
      * @return {@link StandardEvaluationContext} のインスタンスを返します。
      */
     @Override
-    public EvaluationContext createEvaluationContext() {
+    public StandardEvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.setPropertyAccessors(List.of(
                 new CustomMapAccessor(ignoreNotFoundProperty)

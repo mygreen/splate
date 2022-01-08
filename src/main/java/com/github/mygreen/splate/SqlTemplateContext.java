@@ -17,8 +17,10 @@ import lombok.NonNull;
  * @version 0.3
  * @author T.TSUCHIE
  *
+ * @param <C> EL式を評価するときのコンテキストのタイプ。
+ *
  */
-public abstract class SqlTemplateContext {
+public abstract class SqlTemplateContext<C extends EvaluationContext> {
 
     /**
      * SQLテンプレートのパラメータの変換処理を管理する処理。
@@ -32,7 +34,7 @@ public abstract class SqlTemplateContext {
      * @return {@link EvaluationContext}を編集する処理を返します。
      */
     @Getter
-    private Optional<Consumer<EvaluationContext>> evaluationContextEditor = Optional.empty();
+    private Optional<Consumer<C>> evaluationContextEditor = Optional.empty();
 
     public SqlTemplateContext() {
         this.valueTypeRegistry = new SqlTemplateValueTypeRegistry();
@@ -74,7 +76,7 @@ public abstract class SqlTemplateContext {
      * EL式を評価するときのコンテキストを作成します。
      * @return EL式を評価するときのコンテキスト。
      */
-    public abstract EvaluationContext createEvaluationContext();
+    public abstract C createEvaluationContext();
 
     /**
      * {@link EvaluationContext} を編集するコールバック処理を設定します。
@@ -83,7 +85,7 @@ public abstract class SqlTemplateContext {
      * @since 0.3
      * @param editor 編集処理。
      */
-    public void setEvaluationContextEditor(@NonNull Consumer<EvaluationContext> editor) {
+    public void setEvaluationContextEditor(@NonNull Consumer<C> editor) {
         this.evaluationContextEditor = Optional.of(editor);
     }
 }

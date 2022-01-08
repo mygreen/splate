@@ -17,6 +17,7 @@ package com.github.mygreen.splate.node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.springframework.expression.EvaluationContext;
 
@@ -43,7 +44,7 @@ public class NodeProcessContext {
     /**
      * SQLテンプレートのコンテキスト
      */
-    private final SqlTemplateContext templateContext;
+    private final SqlTemplateContext<?> templateContext;
 
     /**
      * 組み立てたSQL
@@ -81,7 +82,7 @@ public class NodeProcessContext {
      * テンプレートパラメータなどのSQLコンテキストを指定するコンストラクタ。
      * @param templateContext SQLテンプレートのコンテキスト
      */
-    public NodeProcessContext(final SqlTemplateContext templateContext) {
+    public NodeProcessContext(final SqlTemplateContext<?> templateContext) {
         this.templateContext = templateContext;
     }
 
@@ -143,9 +144,10 @@ public class NodeProcessContext {
      * EL式で指定された時の式を評価するためのコンテキストを取得します。
      * @return EL式で指定された時の式を評価するためのコンテキスト
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public EvaluationContext getEvaluationContext() {
         EvaluationContext context = templateContext.createEvaluationContext();
-        templateContext.getEvaluationContextEditor().ifPresent(editor -> editor.accept(context));
+        templateContext.getEvaluationContextEditor().ifPresent(editor -> ((Consumer)editor).accept(context));
         return context;
     }
 

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.github.mygreen.splate.type.EnumNameType;
 import com.github.mygreen.splate.type.EnumOrdinalType;
@@ -68,12 +67,12 @@ class SqlTemplateContextTest {
         String sql = "select * from where /*IF #notEmpty(name)*/name like /*name*/'S%'/*END*/";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
-        SqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "%abc%"));
+        MapSqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "%abc%"));
 
         // EL式中のカスタム関数の登録
         templateContext.setEvaluationContextEditor(c -> {
             try {
-                ((StandardEvaluationContext)c).registerFunction("notEmpty", SqlFunctions.class.getMethod("notEmpty", Object.class));
+                c.registerFunction("notEmpty", SqlFunctions.class.getMethod("notEmpty", Object.class));
             } catch (NoSuchMethodException | SecurityException e) {
                 throw new RuntimeException(e);
             }

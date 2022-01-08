@@ -88,7 +88,7 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
      * @param value 値
      * @return 自身のインスタンス
      */
-    public MapSqlTemplateContext setVariable(@NonNull String name, Object value) {
+    public MapSqlTemplateContext addVariable(@NonNull String name, Object value) {
         this.values.put(name, value);
         return this;
     }

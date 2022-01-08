@@ -58,6 +58,10 @@ public class BeanPropertySqlTemplateContext extends SqlTemplateContext {
         this.value = object;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return {@link StandardEvaluationContext} のインスタンスを返します。
+     */
     @Override
     public EvaluationContext createEvaluationContext() {
         final StandardEvaluationContext evaluationContext = new StandardEvaluationContext();

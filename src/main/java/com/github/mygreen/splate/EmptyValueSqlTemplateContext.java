@@ -29,6 +29,10 @@ public class EmptyValueSqlTemplateContext extends SqlTemplateContext {
     @Getter
     private boolean ignoreNotFoundProperty;
 
+    /**
+     * {@inheritDoc}
+     * @return {@link StandardEvaluationContext} のインスタンスを返します。
+     */
     @Override
     public EvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();

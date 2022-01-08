@@ -71,6 +71,10 @@ public class MapSqlTemplateContext extends SqlTemplateContext {
         this.values.putAll(variables);
     }
 
+    /**
+     * {@inheritDoc}
+     * @return {@link StandardEvaluationContext} のインスタンスを返します。
+     */
     @Override
     public EvaluationContext createEvaluationContext() {
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();

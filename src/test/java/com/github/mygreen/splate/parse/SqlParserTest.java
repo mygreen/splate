@@ -339,7 +339,7 @@ class SqlParserTest {
         {
             // elseの評価
             MapSqlTemplateContext context = new MapSqlTemplateContext();
-            context.setVariable("job", null);
+            context.addVariable("job", null);
             ProcessResult result = template.process(context);
 
             assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job is null");
@@ -359,8 +359,8 @@ class SqlParserTest {
         {
             // 全てのプロパティがnull
             MapSqlTemplateContext context = new MapSqlTemplateContext();
-            context.setVariable("job", null);
-            context.setVariable("deptno", null);
+            context.addVariable("job", null);
+            context.addVariable("deptno", null);
 
             ProcessResult result = template.process(context);
 
@@ -372,8 +372,8 @@ class SqlParserTest {
         {
             // １つのプロパティがnull
             MapSqlTemplateContext context = new MapSqlTemplateContext();
-            context.setVariable("job", "Normal");
-            context.setVariable("deptno", null);
+            context.addVariable("job", "Normal");
+            context.addVariable("deptno", null);
             ProcessResult result = template.process(context);
 
             assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");

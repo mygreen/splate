@@ -7,9 +7,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class SelectParam {
+public class SelectParam2 {
 
     private BigDecimal salaryMin;
 
-    private BigDecimal salaryMax;
+//    private BigDecimal salaryMax;
 }

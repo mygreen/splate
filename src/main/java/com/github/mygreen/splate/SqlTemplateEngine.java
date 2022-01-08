@@ -69,7 +69,7 @@ public class SqlTemplateEngine {
     private final Map<Object, SqlTemplate> templateCache = new ConcurrentHashMap<>();
 
     /**
-     * パースしたんプレートをキャッシュするかどうか。
+     * パースしたプレートをキャッシュするかどうか。
      * デフォルトでは {@literal false} でキャッシュしない設定です。
      */
     @Getter

@@ -30,4 +30,4 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B clean verify -Dgpg.skip=true
+      run: ./mvnw -B clean verify -Dgpg.skip=true

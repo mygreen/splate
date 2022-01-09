@@ -42,7 +42,7 @@ class SqlTemplateContextTest {
         registry.register(Enum.class, new EnumOrdinalType());
 
 
-        String sql = "SELECT * FROM emp WHERE job = /*job*/'CLERK'";
+        String sql = "SELECT * FROM Employee emp WHERE job = /*job*/'CLERK'";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
 
@@ -53,7 +53,7 @@ class SqlTemplateContextTest {
 
         ProcessResult result = template.process(context);
 
-        assertThat(result.getSql()).isEqualTo("SELECT * FROM emp WHERE job = ?");
+        assertThat(result.getSql()).isEqualTo("SELECT * FROM Employee emp WHERE job = ?");
         assertThat(result.getParameters()).containsExactly("COOKS");
 
         // 元の変換規則のチェック - 変わっていないことをチェック
@@ -64,7 +64,7 @@ class SqlTemplateContextTest {
     @Test
     void testEvaluationContextEditor() {
 
-        String sql = "select * from where /*IF #notEmpty(name)*/name like /*name*/'S%'/*END*/";
+        String sql = "select * from Employee emp where /*IF #notEmpty(name)*/name like /*name*/'S%'/*END*/";
 
         SqlTemplate template = templateEngine.getTemplateByText(sql);
         MapSqlTemplateContext templateContext = new MapSqlTemplateContext(Map.of("name", "%abc%"));
@@ -80,7 +80,7 @@ class SqlTemplateContextTest {
 
         ProcessResult result = template.process(templateContext);
 
-        assertThat(result.getSql()).isEqualTo("select * from where name like ?");
+        assertThat(result.getSql()).isEqualTo("select * from Employee emp where name like ?");
         assertThat(result.getParameters()).containsExactly("%abc%");
 
     }

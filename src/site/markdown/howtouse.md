@@ -92,8 +92,8 @@ SqlTemplateContext templateContext = new MapSqlTemplateContext(map);
 
 ```java
 MapSqlTemplateContext templateContext = new MapSqlTemplateContext();
-context.setVariable("salaryMin", 1200);
-context.setVariable("salaryMax", 1800);
+context.addVariable("salaryMin", 1200);
+context.addVariable("salaryMax", 1800);
 ```
 
 ### 3.3. パラメータがない場合

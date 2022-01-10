@@ -54,7 +54,15 @@ public class PrefixSqlNode extends AbstractNode {
 
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
+    public void accept(final ListParamNodeProcessContext ctx) {
+        if (ctx.isEnabled()) {
+            ctx.addSql(prefix);
+        }
+        ctx.addSql(sql);
+    }
+
+    @Override
+    public void accept(NamedParamNodeProcessContext ctx) {
         if (ctx.isEnabled()) {
             ctx.addSql(prefix);
         }
@@ -70,4 +78,5 @@ public class PrefixSqlNode extends AbstractNode {
                 .append("sql", sql)
                 .toString();
     }
+
 }

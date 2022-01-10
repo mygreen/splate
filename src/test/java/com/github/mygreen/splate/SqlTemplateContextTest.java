@@ -2,9 +2,11 @@ package com.github.mygreen.splate;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
@@ -96,4 +98,28 @@ class SqlTemplateContextTest {
         }
 
     }
+
+    @DisplayName("名前付きパラメータのテンプレートの評価")
+    @Test
+    void testProcessForNamedParam() {
+
+        String sql = "SELECT * FROM Employee emp /*BEGIN*/WHERE"
+                + " /*IF job != null*/job in /*job*/('CLERK')/*END*/"
+                + " /*IF minAge != null*/AND age >= /*minAge*/20/*END*/"
+                + "/*END*/";
+
+        SqlTemplate template = templateEngine.getTemplateByText(sql);
+
+        MapSqlTemplateContext context = new MapSqlTemplateContext(Map.of("job", List.of("DEVELOPER", "ADMIN"), "minAge", 30));
+
+        NamedParamProcessResult result = template.processForNamedParam(context);
+
+        assertThat(result.getSql()).isEqualTo("SELECT * FROM Employee emp WHERE job in (:job, :job_1) AND age >= :minAge");
+        assertThat(result.getParameters())
+                .containsEntry("job", "DEVELOPER")
+                .containsEntry("job_1", "ADMIN")
+                .containsEntry("minAge", 30);
+
+    }
+
 }

@@ -30,8 +30,17 @@ public class BeginNode extends ContainerNode {
     }
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
-        NodeProcessContext childCtx = new NodeProcessContext(ctx);
+    public void accept(final ListParamNodeProcessContext ctx) {
+        ListParamNodeProcessContext childCtx = new ListParamNodeProcessContext(ctx);
+        super.accept(childCtx);
+        if (childCtx.isEnabled()) {
+            ctx.addSql(childCtx.getProcessedSql(), childCtx.getBindParams());
+        }
+    }
+
+    @Override
+    public void accept(final NamedParamNodeProcessContext ctx) {
+        NamedParamNodeProcessContext childCtx = new NamedParamNodeProcessContext(ctx);
         super.accept(childCtx);
         if (childCtx.isEnabled()) {
             ctx.addSql(childCtx.getProcessedSql(), childCtx.getBindParams());

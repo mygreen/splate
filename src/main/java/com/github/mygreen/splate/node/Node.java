@@ -18,7 +18,9 @@ package com.github.mygreen.splate.node;
 /**
  * <code>SQL</code>を構成する個々の要素をあらわします。
  *
+ * @version 0.3
  * @author higa
+ * @author T.TSUCHIE
  *
  */
 public interface Node {
@@ -50,7 +52,15 @@ public interface Node {
      *
      * @param ctx SQLテンプレートを実行するときのコンテキスト。
      */
-    void accept(NodeProcessContext ctx);
+    void accept(ListParamNodeProcessContext ctx);
+
+    /**
+     * 名前付きパラメータのSQLテンプレートを実行し評価します。
+     *
+     * @since 0.3
+     * @param ctx SQLテンプレートを実行するときのコンテキスト。
+     */
+    void accept(NamedParamNodeProcessContext ctx);
 
     /**
      * テンプレート内での開始位置を返します。

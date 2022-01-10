@@ -81,4 +81,5 @@ class SqlTemplateEngineTest {
         SqlTemplate template3 = sqlTemplateEngine.getTemplateByText(sql);
         assertThat(template).isNotEqualTo(template3);
     }
+
 }

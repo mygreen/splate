@@ -29,7 +29,14 @@ public class ContainerNode extends AbstractNode {
     }
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
+    public void accept(final ListParamNodeProcessContext ctx) {
+        for (int i = 0; i < getChildSize(); ++i) {
+            getChild(i).accept(ctx);
+        }
+    }
+
+    @Override
+    public void accept(NamedParamNodeProcessContext ctx) {
         for (int i = 0; i < getChildSize(); ++i) {
             getChild(i).accept(ctx);
         }
@@ -42,4 +49,5 @@ public class ContainerNode extends AbstractNode {
                 .append("children", children)
                 .toString();
     }
+
 }

@@ -43,7 +43,12 @@ public class SqlNode extends AbstractNode {
     }
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
+    public void accept(final ListParamNodeProcessContext ctx) {
+        ctx.addSql(sql);
+    }
+
+    @Override
+    public void accept(final NamedParamNodeProcessContext ctx) {
         ctx.addSql(sql);
     }
 
@@ -55,4 +60,5 @@ public class SqlNode extends AbstractNode {
                 .append("sql", sql)
                 .toString();
     }
+
 }

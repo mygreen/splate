@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapSqlTemplateContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate</a> &gt; <span class="el_source">MapSqlTemplateContext.java</span></div><h1>MapSqlTemplateContext.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import com.github.mygreen.splate.type.SqlTemplateValueTypeRegistry;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+/**
+ * SQLテンプレートのパラメータを{@link Map} として渡すときのSQLテンプレートのコンテキスト。
+ * SQLテンプレート中では、マップのキー名で参照できます。
+ *
+ *
+ * @version 0.3
+ * @author T.TSUCHIE
+ *
+ */
+public class MapSqlTemplateContext extends SqlTemplateContext&lt;StandardEvaluationContext&gt; {
+
+<span class="pc" id="L26">    private Map&lt;String, Object&gt; values = new HashMap&lt;&gt;();</span>
+
+    /**
+     * SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか。
+     *
+     * @since 0.3
+     * @param ignoreNotFoundProperty SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか設定します。
+     * @return SQLテンプレート中に存在しないプロパティが定義されているとき、{@literal null} として無視するかどうか返します。
+     */
+    @Setter
+    @Getter
+    private boolean ignoreNotFoundProperty;
+
+    /**
+     * コンストラクタ。
+     */
+    public MapSqlTemplateContext() {
+<span class="fc" id="L43">        super();</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * テンプレート中の変数を指定してインスタンスを作成します。
+     * @param variables SQLテンプレート中のパラメータとして渡すマップ。
+     */
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">    public MapSqlTemplateContext(@NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="fc" id="L51">        super();</span>
+<span class="fc" id="L52">        this.values.putAll(variables);</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * {@link SqlTemplateValueTypeRegistry}を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     */
+    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry) {
+<span class="nc" id="L60">        super(valueTypeRegistry);</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * {@link SqlTemplateValueTypeRegistry}とテンプレート中の変数を指定してインスタンスを作成します。
+     * @param valueTypeRegistry SQLテンプレートのパラメータの変換処理を管理する処理。
+     * @param variables SQLテンプレート中で使用可能な変数
+     */
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">    public MapSqlTemplateContext(SqlTemplateValueTypeRegistry valueTypeRegistry, @NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="fc" id="L69">        super(valueTypeRegistry);</span>
+<span class="fc" id="L70">        this.values.putAll(variables);</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * {@inheritDoc}
+     * @return {@link StandardEvaluationContext} のインスタンスを返します。
+     */
+    @Override
+    public StandardEvaluationContext createEvaluationContext() {
+<span class="fc" id="L79">        StandardEvaluationContext evaluationContext = new StandardEvaluationContext();</span>
+<span class="fc" id="L80">        evaluationContext.setPropertyAccessors(List.of(</span>
+                new CustomMapAccessor(ignoreNotFoundProperty)
+                ,new CustomReflectivePropertyAccessor(ignoreNotFoundProperty)));
+<span class="fc" id="L83">        evaluationContext.setRootObject(values);</span>
+<span class="fc" id="L84">        return evaluationContext;</span>
+    }
+
+    /**
+     * SQLテンプレート中で使用可能な変数を追加します。
+     *
+     * @param name 変数名
+     * @param value 値
+     * @return 自身のインスタンス
+     */
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">    public MapSqlTemplateContext addVariable(@NonNull String name, Object value) {</span>
+<span class="fc" id="L95">        this.values.put(name, value);</span>
+<span class="fc" id="L96">        return this;</span>
+    }
+
+    /**
+     * SQLテンプレート中で使用可能な変数を追加します。
+     *
+     * @param variables 変数のマップ
+     * @return 自身のインスタンス
+     */
+<span class="nc bnc" id="L105" title="All 2 branches missed.">    public MapSqlTemplateContext addVariables(@NonNull Map&lt;String, Object&gt; variables) {</span>
+<span class="nc" id="L106">        this.values.putAll(variables);</span>
+<span class="nc" id="L107">        return this;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

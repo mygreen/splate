@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractNode.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate.node</a> &gt; <span class="el_source">AbstractNode.java</span></div><h1>AbstractNode.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+package com.github.mygreen.splate.node;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
+
+import com.github.mygreen.splate.SqlUtils;
+import com.github.mygreen.splate.type.SqlTemplateValueType;
+import com.github.mygreen.splate.type.SqlTypeConversionException;
+import com.github.mygreen.splate.type.TextConversionException;
+
+/**
+ * {@link Node}の抽象クラスです。
+ *
+ * @version 0.2
+ * @author higa
+ * @author T.TSUCHIE
+ *
+ */
+public abstract class AbstractNode implements Node {
+
+    /**
+     * 子ノードのリスト
+     */
+<span class="fc" id="L43">    protected List&lt;Node&gt; children = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * テンプレート内での位置情報
+     */
+    protected final int position;
+
+    /**
+     * コンストラクタ
+     *
+     * @param position テンプレート内での位置
+     */
+<span class="fc" id="L55">    public AbstractNode(final int position) {</span>
+<span class="fc" id="L56">        this.position = position;</span>
+<span class="fc" id="L57">    }</span>
+
+    @Override
+    public int getChildSize() {
+<span class="fc" id="L61">        return children.size();</span>
+    }
+
+    @Override
+    public Node getChild(int index) {
+<span class="fc" id="L66">        return children.get(index);</span>
+    }
+
+    @Override
+    public void addChild(Node node) {
+<span class="fc" id="L71">        children.add(node);</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public int getPosition() {
+<span class="fc" id="L76">        return position;</span>
+    }
+
+    /**
+     * EL式を評価します。
+     * &lt;p&gt;例外処理を含めて共通化のために切り出したメソッドです。&lt;/p&gt;
+     *
+     * @since 0.2
+     * @param &lt;T&gt; 戻り値のタイプ
+     * @param expression EL式
+     * @param evaluationContext EL式のコンテキスト
+     * @param requriedType EL式の戻り値のタイプ
+     * @param position テンプレートの位置情報
+     * @param parsedSql パース済みのSQLテンプレート
+     * @return EL式の評価結果
+     * @throws NodeProcessException EL式の評価に失敗した場合にスローされます。
+     */
+    protected &lt;T&gt; T evaluateExpression(final Expression expression, final EvaluationContext evaluationContext,
+            final Class&lt;T&gt; requriedType, final int position, final String parsedSql) {
+
+        try {
+<span class="fc" id="L97">            return expression.getValue(evaluationContext, requriedType);</span>
+<span class="fc" id="L98">        } catch(EvaluationException e) {</span>
+<span class="fc" id="L99">            throw new NodeProcessException(SqlUtils.resolveSqlPosition(parsedSql, position),</span>
+<span class="fc" id="L100">                    String.format(&quot;Fail evaluating expression '%s'.&quot;, expression.getExpressionString()),</span>
+                    e);
+        }
+    }
+
+    /**
+     * 変換規則を元にバインド変数を変換します。
+     * &lt;p&gt;例外処理を含めて共通化のために切り出したメソッドです。&lt;/p&gt;
+     * &lt;p&gt;変換規則がnullの場合は、変換対象の値をそのまま返します。&lt;/p&gt;
+     *
+     * @since 0.2
+     * @param value 変換対象の値。
+     * @param valueType 変換規則
+     * @param position テンプレートの位置情報
+     * @param parsedSql パース済みのSQLテンプレート
+     * @param expression 変換対象の値の元となったEL式
+     * @return 変換した値。
+     * @throws NodeProcessException 変換時の処理に失敗した場合にスローされます。
+     */
+    @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
+    protected Object getBindVariableValue(final Object value, SqlTemplateValueType valueType,
+            final int position, final String parsedSql, final String expression) {
+
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if(valueType == null) {</span>
+<span class="fc" id="L124">            return value;</span>
+        }
+
+        try {
+<span class="fc" id="L128">            return valueType.getBindVariableValue(value);</span>
+<span class="fc" id="L129">        } catch(SqlTypeConversionException e) {</span>
+<span class="fc" id="L130">            throw new NodeProcessException(SqlUtils.resolveSqlPosition(parsedSql, position),</span>
+<span class="fc" id="L131">                    String.format(&quot;Fail converting value of expression '%s'.&quot;, expression),</span>
+                    e);
+        }
+
+    }
+
+    /**
+     * 変換規則を元に埋め込み変数を変換します。
+     * &lt;p&gt;例外処理を含めて共通化のために切り出したメソッドです。&lt;/p&gt;
+     * &lt;p&gt;変換規則がnullの場合は、変換対象の値をそのまま返します。&lt;/p&gt;
+     *
+     * @since 0.2
+     * @param value 変換対象の値。
+     * @param valueType 変換規則
+     * @param position テンプレートの位置情報
+     * @param parsedSql パース済みのSQLテンプレート
+     * @param expression 変換対象の値の元となったEL式
+     * @return 変換した値。
+     * @throws NodeProcessException 変換時の処理に失敗した場合にスローされます。
+     */
+    @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
+    protected String getEmbeddedValue(final Object value, SqlTemplateValueType valueType,
+            final int position, final String parsedSql, final String expression) {
+
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if(valueType == null) {</span>
+<span class="fc" id="L156">            return value.toString();</span>
+        }
+
+        try {
+<span class="fc" id="L160">            return valueType.getEmbeddedValue(value);</span>
+<span class="fc" id="L161">        } catch(TextConversionException e) {</span>
+<span class="fc" id="L162">            throw new NodeProcessException(SqlUtils.resolveSqlPosition(parsedSql, position),</span>
+<span class="fc" id="L163">                    String.format(&quot;Fail converting value of expression '%s'.&quot;, expression),</span>
+                    e);
+        }
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

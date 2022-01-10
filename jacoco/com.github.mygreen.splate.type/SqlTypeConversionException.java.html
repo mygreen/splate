@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlTypeConversionException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate.type</a> &gt; <span class="el_source">SqlTypeConversionException.java</span></div><h1>SqlTypeConversionException.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate.type;
+
+import com.github.mygreen.splate.TwoWaySqlException;
+
+import lombok.Getter;
+
+/**
+ * 値をSQL型に変換する際に失敗したときにスローされる例外です。
+ *
+ *
+ * @author T.TSUCHIE
+ *
+ */
+public class SqlTypeConversionException extends TwoWaySqlException {
+
+    /**
+     * 変換対象の値
+     */
+    @Getter
+    private final Object targetValue;
+
+    /**
+     * メッセージを指定してインスタンスと作成します。
+     * @param targetValue 変換対象の値
+     * @param message メッセージ
+     */
+    public SqlTypeConversionException(Object targetValue, String message) {
+<span class="fc" id="L28">        super(message);</span>
+<span class="fc" id="L29">        this.targetValue = targetValue;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * メッセージと例外を指定してインスタンスを作成します。
+     * @param targetValue 変換対象の値
+     * @param message メッセージ
+     * @param cause 原因となる例外
+     */
+    public SqlTypeConversionException(Object targetValue, String message, Throwable cause) {
+<span class="nc" id="L39">        super(message, cause);</span>
+<span class="nc" id="L40">        this.targetValue = targetValue;</span>
+<span class="nc" id="L41">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlTemplateEngine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">splate</a> &gt; <a href="index.source.html" class="el_package">com.github.mygreen.splate</a> &gt; <span class="el_source">SqlTemplateEngine.java</span></div><h1>SqlTemplateEngine.java</h1><pre class="source lang-java linenums">package com.github.mygreen.splate;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+import com.github.mygreen.splate.node.Node;
+import com.github.mygreen.splate.parser.SqlParser;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+/**
+ * SQLテンプレートを管理します。
+ *
+ * @author T.TSUCHIE
+ *
+ */
+<span class="fc" id="L25">public class SqlTemplateEngine {</span>
+
+    /**
+     * SQLテンプレートファイルの文字コード名。
+     * デフォルト値は、{@literal UTF-8} です。
+     */
+<span class="fc" id="L31">    @Getter</span>
+    @Setter
+    private String encoding = &quot;UTF-8&quot;;
+
+    /**
+     * SQLテンプレートのファイル名の接尾語。
+     * DBの種類によって読み込み対象のファイルを切り替えたい場合に指定します。
+     * デフォルト値は、{@literal null} です。
+     */
+    @Getter
+    @Setter
+    private String suffixName;
+
+    /**
+     * テンプレートファイルなどのリソースをロードする処理。
+     * デフォルト値は、{@link DefaultResourceLoader} のインスタンスです。
+     */
+<span class="fc" id="L48">    @Getter</span>
+    @Setter
+    private ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    /**
+     * SQLテンプレートファイルの読み込む処理。
+     */
+<span class="fc" id="L55">    @Getter</span>
+    @Setter
+    private TemplateLoader templateLoader = new TemplateLoader();
+
+    /**
+     * EL式のパーサ
+     */
+<span class="fc" id="L62">    @Getter</span>
+    @Setter
+    private SpelExpressionParser expressionParser = new SpelExpressionParser();
+
+    /**
+     * パースしたSQLテンプレートのキャッシュ。
+     */
+<span class="fc" id="L69">    private final Map&lt;Object, SqlTemplate&gt; templateCache = new ConcurrentHashMap&lt;&gt;();</span>
+
+    /**
+     * パースしたプレートをキャッシュするかどうか。
+     * デフォルトでは {@literal false} でキャッシュしない設定です。
+     */
+    @Getter
+    @Setter
+    private boolean cached;
+
+    /**
+     * SQLファイルのリソースパスを指定して、SQLテンプレートを取得します。
+     * &lt;p&gt;SQLファイルのリソースは、Springの {@link ResourceLoader} 経由で取得するため、
+     *  接頭語を付けることで複数のリソースを参照できます。
+     * &lt;/p&gt;
+     * &lt;ul&gt;
+     *  &lt;li&gt;何もつけない場合 - クラスパスから取得します。ex){@literal /sql/hoge.sql} &lt;/li&gt;
+     *  &lt;li&gt;{@literal classpath:} - クラスパスから取得します。ex){@literal classpath:/sql/hoge.sql} &lt;/li&gt;
+     *  &lt;li&gt;{@literal file:} - システムファイルから取得します。ex){@literal file:c:/sql/hoge.sql} &lt;/li&gt;
+     *  &lt;li&gt;{@literal http:} - URLからファイルを取得します。ex){@literal http://hoge.com/sql/hoge.sql} &lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param location SQLファイルのリソースパス。
+     * @return パースしたSQLテンプレート
+     * @throws TwoWaySqlException SQLファイルの読み込みやパースに失敗した場合にスローされます。
+     */
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">    public SqlTemplate getTemplate(@NonNull final String location) {</span>
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if(cached) {</span>
+<span class="fc" id="L98">            return templateCache.computeIfAbsent(location, k -&gt; parseTemplateByLocation(location));</span>
+        } else {
+<span class="fc" id="L100">            return parseTemplateByLocation(location);</span>
+        }
+
+    }
+
+    private SqlTemplate parseTemplateByLocation(final String location) {
+<span class="fc" id="L106">        final String sqlText = templateLoader.loadByLocation(location, resourceLoader, encoding, Optional.ofNullable(suffixName));</span>
+<span class="fc" id="L107">        return parseTemplateByText(sqlText);</span>
+    }
+
+    /**
+     * SQLファイルのリソースを指定して、SQLテンプレートを取得します。
+     *
+     * @param resource SQLファイルのリソース。
+     * @return パースしたSQLテンプレート
+     * @throws TwoWaySqlException SQLファイルの読み込みやパースに失敗した場合にスローされます。
+     */
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    public SqlTemplate getTemplate(@NonNull final Resource resource) {</span>
+
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if(cached) {</span>
+<span class="fc" id="L120">            return templateCache.computeIfAbsent(resource.getDescription(), k -&gt; parseTemplateByResource(resource));</span>
+        } else {
+<span class="nc" id="L122">            return parseTemplateByResource(resource);</span>
+        }
+
+    }
+
+    private SqlTemplate parseTemplateByResource(final Resource resource) {
+<span class="fc" id="L128">        final String sqlText = templateLoader.loadByResource(resource, encoding);</span>
+<span class="fc" id="L129">        return parseTemplateByText(sqlText);</span>
+    }
+
+    /**
+     * SQLを文字列として直接指定し、SQLテンプレートを取得します。
+     *
+     * @param sql SQLの文字列
+     * @return パースしたSQLテンプレート
+     * @throws TwoWaySqlException SQLファイルの読み込みやパースに失敗した場合にスローされます。
+     */
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">    public SqlTemplate getTemplateByText(@NonNull final String sql) {</span>
+
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if(cached) {</span>
+<span class="fc" id="L142">            final String key = SqlUtils.getMessageDigest(sql);</span>
+<span class="fc" id="L143">            return templateCache.computeIfAbsent(key, k -&gt;  parseTemplateByText(sql));</span>
+        } else {
+<span class="fc" id="L145">            return parseTemplateByText(sql);</span>
+        }
+
+    }
+
+    /**
+     * 文字列で指定されたSQLテンプレートをパースします。
+     * @param sql SQL
+     * @return パース結果。
+     */
+    private SqlTemplate parseTemplateByText(final String sql) {
+<span class="fc" id="L156">        SqlParser parser = createSqlParser(sql);</span>
+<span class="fc" id="L157">        Node node = parser.parse();</span>
+<span class="fc" id="L158">        return new SqlTemplate(parser.getSql(), node);</span>
+    }
+
+    /**
+     * {@link SqlParser} のインスタンスを作成します。
+     * @param sql パース対象のSQLテンプレート
+     * @return {@link SqlParser} のインスタンス
+     */
+    protected SqlParser createSqlParser(final String sql) {
+<span class="fc" id="L167">        return new SqlParser(sql, expressionParser);</span>
+    }
+
+    /**
+     * 現在キャッシュしている情報をクリアします。
+     */
+    public void clearCache() {
+<span class="fc" id="L174">        this.templateCache.clear();</span>
+<span class="fc" id="L175">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

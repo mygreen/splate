@@ -19,6 +19,7 @@
 		</breadcrumbs>
 		<menu name="使い方について">
 			<item name="基本的な使い方" href="howtouse.html" />
+			<item name="高度な使い方" href="otherwise.html" />
 			<item name="2Way-SQLとは" href="2waysql.html" />
 			<item name="型変換処理" href="typeconversion.html" />
 			<item name="設定" href="configuration.html" />

@@ -15,8 +15,6 @@
  */
 package com.github.mygreen.splate.node;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.springframework.expression.EvaluationContext;
@@ -39,23 +37,17 @@ import lombok.Setter;
  * @author higa
  *
  */
-public class NodeProcessContext {
+public abstract class NodeProcessContext {
 
     /**
      * SQLテンプレートのコンテキスト
      */
-    private final SqlTemplateContext<?> templateContext;
+    protected final SqlTemplateContext<?> templateContext;
 
     /**
      * 組み立てたSQL
      */
-    private StringBuffer sqlBuf = new StringBuffer(255);
-
-    /**
-     * SQLテンプレート中の変数をバインドしたパラメータ
-     */
-    @Getter
-    private List<Object> bindParams = new ArrayList<>();
+    protected StringBuffer sqlBuf = new StringBuffer(255);
 
     /**
      * {@code BEGIN} コメントと{@code END} コメントで、囲まれた子供のコンテキストが有効かどうか。
@@ -68,7 +60,7 @@ public class NodeProcessContext {
      * 親のノードの情報。
      */
     @Getter
-    private NodeProcessContext parent;
+    protected NodeProcessContext parent;
 
     /**
      * パースされた状態のSQLテンプレート。
@@ -117,27 +109,6 @@ public class NodeProcessContext {
      */
     public void addSql(String sql) {
         sqlBuf.append(sql);
-    }
-
-    /**
-     * {@code SQL} とバインド変数を追加します。
-     * @param sql SQL
-     * @param bindValue バインドする変数の値
-     */
-    public void addSql(String sql, Object bindValue) {
-        sqlBuf.append(sql);
-        bindParams.add(bindValue);
-    }
-
-    /**
-     * {@code SQL} とバインド変数を追加します。
-     * @param sql SQL
-     * @param bindParams バインドする変数情報
-     */
-    public void addSql(final String sql, final List<Object> bindParams) {
-        this.sqlBuf.append(sql);
-        this.bindParams.addAll(bindParams);
-
     }
 
     /**

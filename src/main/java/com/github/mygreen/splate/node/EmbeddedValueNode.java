@@ -56,7 +56,7 @@ public class EmbeddedValueNode extends AbstractNode {
     }
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
+    public void accept(final ListParamNodeProcessContext ctx) {
 
         EvaluationContext evaluationContext = ctx.getEvaluationContext();
         Object value = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
@@ -77,6 +77,26 @@ public class EmbeddedValueNode extends AbstractNode {
     }
 
     @Override
+    public void accept(NamedParamNodeProcessContext ctx) {
+
+        EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        Object value = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
+
+        if (value != null) {
+            // SQLファイルに埋め込むために、文字列に変換する。
+            final Class<?> clazz = parsedExpression.getValueType(evaluationContext);
+            SqlTemplateValueType<?> valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
+            final String sql = getEmbeddedValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
+
+            if (sql.indexOf(';') >= 0) {
+                // SQLインジェクションの原因となるセミコロンが含まれる場合は例外をスローする。
+                throw new NodeProcessException(SqlUtils.resolveSqlPosition(ctx.getParsedSql(), getPosition()),
+                        String.format("Not allowed semicolon at embedded value '%s' to '%s'.", expression, sql));
+            }
+            ctx.addSql(sql);
+        }
+    }
+    @Override
     public String toString() {
         return new ToStringCreator(this)
                 .append("position", getPosition())
@@ -85,4 +105,5 @@ public class EmbeddedValueNode extends AbstractNode {
                 .append("children", children)
                 .toString();
     }
+
 }

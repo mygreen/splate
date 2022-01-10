@@ -57,7 +57,7 @@ public class BindVariableNode extends AbstractNode {
     }
 
     @Override
-    public void accept(final NodeProcessContext ctx) {
+    public void accept(final ListParamNodeProcessContext ctx) {
 
         final EvaluationContext evaluationContext = ctx.getEvaluationContext();
         Object value = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
@@ -69,6 +69,19 @@ public class BindVariableNode extends AbstractNode {
     }
 
     @Override
+    public void accept(final NamedParamNodeProcessContext ctx) {
+        final EvaluationContext evaluationContext = ctx.getEvaluationContext();
+        Object value = evaluateExpression(parsedExpression, evaluationContext, Object.class, getPosition(), ctx.getParsedSql());
+        Class<?> clazz = parsedExpression.getValueType(evaluationContext);
+
+        SqlTemplateValueType<?> valueType = ctx.getValueTypeRegistry().findValueType(clazz, expression);
+        value = getBindVariableValue(value, valueType, getPosition(), ctx.getParsedSql(), expression);
+
+        String bindName = ctx.allocateBindName(expression);
+        ctx.addSql(":" + bindName, bindName, value);
+
+    }
+    @Override
     public String toString() {
         return new ToStringCreator(this)
                 .append("position", getPosition())
@@ -77,4 +90,5 @@ public class BindVariableNode extends AbstractNode {
                 .append("children", children)
                 .toString();
     }
+
 }

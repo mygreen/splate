@@ -33,7 +33,7 @@ Add dependency. ex) pom.xml
 <dependency>
 	<groupId>com.github.mygreen</groupId>
 	<artifactId>splate</artifactId>
-	<version>0.2.1</version>
+	<version>0.3</version>
 </dependency>
 ```
 
@@ -42,7 +42,7 @@ Add dependency. ex) pom.xml
 1. Define SQL file.
   ```sql
   select * from employee
-  /*BEGIN*
+  /*BEGIN*/
   where
   /*IF salaryMin != null*/
   salary >= /*salaryMin*/1000

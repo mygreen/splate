@@ -9,7 +9,7 @@ SQLテンプレートをファイルに定義します。
 
 ```sql
 select * from employee
-/*BEGIN*
+/*BEGIN*/
 where
 /*IF salaryMin != null*/
 salary >= /*salaryMin*/1000

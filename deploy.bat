@@ -5,6 +5,7 @@ cd %~p0
 
 call env.bat
 
-mvn clean deploy
+call mvn -version
+call mvn clean deploy
 
 pause

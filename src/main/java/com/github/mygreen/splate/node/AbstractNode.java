@@ -84,7 +84,7 @@ public abstract class AbstractNode implements Node {
      * @param <T> 戻り値のタイプ
      * @param expression EL式
      * @param evaluationContext EL式のコンテキスト
-     * @param requriedType EL式の戻り値
+     * @param requriedType EL式の戻り値のタイプ
      * @param position テンプレートの位置情報
      * @param parsedSql パース済みのSQLテンプレート
      * @return EL式の評価結果

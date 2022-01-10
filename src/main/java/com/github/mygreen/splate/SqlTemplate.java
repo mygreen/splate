@@ -36,7 +36,7 @@ public class SqlTemplate {
      * @param templateContext SQLテンプレートに渡すコンテキスト。
      * @return SQLテンプレートを評価した結果。
      */
-    public ProcessResult process(final SqlTemplateContext templateContext) {
+    public ProcessResult process(final SqlTemplateContext<?> templateContext) {
 
         final NodeProcessContext processContext = new NodeProcessContext(templateContext);
         processContext.setParsedSql(sql);

@@ -37,3 +37,12 @@ hs_err_pid*
 /.factorypath
 /.project
 
+
+## for idea
+/.idea
+*.iml
+
+
+## for memo
+/memo
+
